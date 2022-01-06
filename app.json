@@ -1,0 +1,33 @@
+{
+  "expo": {
+    "name": "Manga App",
+    "slug": "firepunch",
+    "version": "0.6.9",
+    "orientation": "portrait",
+    "icon": "./assets/squareicon.png",
+    "splash": {
+      "image": "./assets/vaga.png",
+      "resizeMode": "contain",
+      "backgroundColor": "#163A4E"
+    },
+    "updates": {
+      "fallbackToCacheTimeout": 0
+    },
+    "assetBundlePatterns": [
+      "**/*"
+    ],
+    "ios": {
+      "supportsTablet": true
+    },
+    "android": {
+      "adaptiveIcon": {
+        "foregroundImage": "./assets/squareicon.png",
+        "backgroundColor": "#FFFFFF"
+      },
+      "package": "manga.app.beta"
+    },
+    "web": {
+      "favicon": "./assets/favicon.png"
+    }
+  }
+}
