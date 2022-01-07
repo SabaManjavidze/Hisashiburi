@@ -76,11 +76,8 @@ const styles = StyleSheet.create({
     alignItems:'center'
   },
   image:{
-    minHeight:500,
-    maxHeight:740,
-    borderWidth: StyleSheet.hairlineWidth,
-    minWidth:windowWidth/1.2,
-    maxWidth:windowWidth,
+    width:windowWidth,
+    height:740,
     resizeMode:"contain",
   },
   navigation:{

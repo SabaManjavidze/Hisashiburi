@@ -1,5 +1,6 @@
-import React, { useEffect, useState } from 'react'
-import { View, Text, FlatList, Image, TouchableOpacity, Dimensions } from 'react-native'
+import React, { useEffect, useState} from 'react'
+import { StatusBar } from 'expo-status-bar';
+import { View, Text, FlatList, Image, TouchableOpacity, Dimensions, SafeAreaView } from 'react-native'
 import { main_url,domain, img_url } from '../components/variables'
 import { Toolbar} from 'react-native-material-ui';
 import MangaCard from '../components/MangaCard';
@@ -37,7 +38,13 @@ export default function HomePage({navigation}) {
         }
     }, [input])
     return (
-        <View style={{alignItems:'center',backgroundColor: '#282A36',marginTop:30}}>
+        <SafeAreaView style={{alignItems:'center',flex:1,backgroundColor: '#282A36',marginTop:30}}>
+            <StatusBar 
+                animated={true}
+                backgroundColor="#282A36"
+                hidden={false}
+                style={'light'}
+            />
             <Toolbar
             leftElement="menu"
             centerElement="HomePage"
@@ -65,6 +72,6 @@ export default function HomePage({navigation}) {
                     <View style={{width:"100%",height:"100%",backgroundColor:"#282A36"}}></View>
                 )
             }
-        </View>
+        </SafeAreaView>
     )
 }

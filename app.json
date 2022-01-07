@@ -1,14 +1,14 @@
 {
   "expo": {
     "name": "Manga App",
-    "slug": "firepunch",
+    "slug": "mangaApp",
     "version": "0.6.9",
     "orientation": "portrait",
-    "icon": "./assets/squareicon.png",
+    "icon": "./assets/takezosquare.png",
     "splash": {
       "image": "./assets/vaga.png",
-      "resizeMode": "contain",
-      "backgroundColor": "#163A4E"
+      "resizeMode": "cover",
+      "backgroundColor": "#B6D4DB"
     },
     "updates": {
       "fallbackToCacheTimeout": 0
@@ -21,7 +21,7 @@
     },
     "android": {
       "adaptiveIcon": {
-        "foregroundImage": "./assets/squareicon.png",
+        "foregroundImage": "./assets/takezosquare.png",
         "backgroundColor": "#FFFFFF"
       },
       "package": "manga.app.beta"

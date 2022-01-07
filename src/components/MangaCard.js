@@ -8,7 +8,7 @@ const windowHeight = Dimensions.get('window').height;
 
 export default function MangaCard({navigation,item}) {
     return (
-        <View key={item.manga_id} style={styles.container}>
+        <View style={styles.container}>
             <TouchableOpacity 
                 style={{flex:1,flexDirection:"row",alignItems:'center'}} 
                 onPress={()=>navigation.navigate("MangaDetails",{item:item})}
@@ -33,7 +33,7 @@ export default function MangaCard({navigation,item}) {
                         {
                             item.chapters.map((child,i)=>{
                                 return(
-                                    <View style={{
+                                    <View key={i} style={{
                                         flex:1,
                                         flexDirection:'row',
                                         justifyContent:'space-between',
