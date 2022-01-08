@@ -1,9 +1,11 @@
 import React,{useRef,useEffect,useState,useContext} from 'react';
 import { StyleSheet,View,Image, ScrollView,SafeAreaView, Text,FlatList, Dimensions,} from 'react-native';
+import FitImage from 'react-native-fit-image';
 import NavBar from '../../NavBar';
 import { main_url } from '../components/variables';
 
 const windowWidth = Dimensions.get('window').width;
+const windowHeight = Dimensions.get('window').height;
 
 export default function ChapterPage({navigation,route}) {
   const {manga_id,chapters,index} = route.params
@@ -11,7 +13,7 @@ export default function ChapterPage({navigation,route}) {
   const [chapter, setChapter] = useState(chapters[index])
   const [loaded, setLoaded] = useState(false);
   const scroll_ref = useRef(null)
-
+  
   const fetchData = async ()=>{
     const url = `${main_url}/manga/${manga_id}/${chapter.chapter_num}`
     const data= await fetch(url)
@@ -31,10 +33,9 @@ export default function ChapterPage({navigation,route}) {
     }
   }, [chapter]);
 
-
     const renderItem = ({item,index})=>{
         return(
-          <Image key={index} source={{uri:item.src}} style={styles.image}/>
+            <FitImage source={{uri:item.src}} style={styles.image}/>
         )
     }
     return (
@@ -48,7 +49,7 @@ export default function ChapterPage({navigation,route}) {
                 ref={scroll_ref}
                 renderItem={renderItem}
                 keyExtractor={item=>item.src}
-                style={{height:"100%"}}
+                style={{height:"100%",width:"95%",marginTop:20}}
               />
               </>
             )}
@@ -59,9 +60,10 @@ export default function ChapterPage({navigation,route}) {
 
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: '#282A36',
+    backgroundColor: '#15101f',
     width:'100%',
-    alignItems:'center'
+    alignItems:'center',
+    justifyContent:'center',
   },
   scrollView: {
     flex:2,
@@ -76,9 +78,7 @@ const styles = StyleSheet.create({
     alignItems:'center'
   },
   image:{
-    width:windowWidth,
-    height:740,
-    resizeMode:"contain",
+    maxWidth:"95%",
   },
   navigation:{
     flex:2,

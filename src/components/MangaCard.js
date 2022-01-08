@@ -7,13 +7,24 @@ const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
 
 export default function MangaCard({navigation,item}) {
+
+    const goToChapter = async ( i )=>{
+        const chapters = await fetchData(item.manga_id)
+        navigation.navigate("ChapterPage",{
+            chapters:chapters,
+            manga_id:item.manga_id,
+            index:i
+        })
+    }
+
     return (
         <View style={styles.container}>
             <TouchableOpacity 
                 style={{flex:1,flexDirection:"row",alignItems:'center'}} 
                 onPress={()=>navigation.navigate("MangaDetails",{item:item})}
             >
-                <Image source={{uri:`${domain}${img_url}${item.manga_id}.jpg`}} style={{width:115,height:170}}/>
+                <Image source={{uri:`${domain}${img_url}${item.manga_id}.jpg`}} 
+                style={styles.image}/>
                 <View style={{
                     flex:1,
                     alignItems:'center',
@@ -37,22 +48,21 @@ export default function MangaCard({navigation,item}) {
                                         flex:1,
                                         flexDirection:'row',
                                         justifyContent:'space-between',
-                                        marginHorizontal:5
+                                        marginHorizontal:0
                                     }}>
-                                        <Text 
-                                            onPress={async ()=>{
-                                                const chapters = await fetchData(item.manga_id)
-                                                navigation.navigate("ChapterPage",{
-                                                    chapters:chapters,
-                                                    manga_id:item.manga_id,
-                                                    index:i
-                                                })
-                                            }} 
-                                            style={{color:"magenta",fontSize:17}}
-                                        >
-                                            {child.chap_title}
-                                        </Text>
-                                        <Text style={{color:"gray",fontSize:10,marginTop:12}}>{child.upload_date}</Text>
+                                        <View style={{flex:3}}>
+                                            <Text 
+                                                onPress={()=>goToChapter(i)} 
+                                                style={{color:"#A07BDF",textAlign:'center',fontSize:13}}
+                                                >
+                                                {child.chap_title}
+                                            </Text>
+                                        </View>
+                                        <View style={{flex:1,justifyContent:'center'}}>
+                                            <Text style={{color:"gray",fontSize:10,textAlign:'center'}}>
+                                                {child.upload_date}
+                                            </Text>
+                                        </View>
                                     </View>
                                 )
                             })
@@ -68,10 +78,27 @@ const styles = StyleSheet.create({
     container: {
         marginVertical:10,
         width:windowWidth-20,
-        backgroundColor:"#494A62"
+        backgroundColor:"#2F2C4B",
+        borderRadius:10,
+        borderColor:"#A285CA",
+        borderWidth:2,
+        padding:10,
+    },
+    image:{
+        width:115,
+        height:170,
+        borderTopLeftRadius:10,
+        borderBottomLeftRadius:10,
+        shadowColor: "#000",
+        shadowOffset: {
+            width: 0,
+            height: 7,
+        },
+        shadowOpacity: 0.43,
+        shadowRadius: 9.51,
     },
     title:{
         color:"white",
-        maxWidth:windowWidth/2,
+        maxWidth:windowWidth/4,
     },
   })

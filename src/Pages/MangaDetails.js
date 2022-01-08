@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { View, Text, Image, TouchableOpacity, ScrollView, Dimensions, useWindowDimensions, StyleSheet, SafeAreaView } from 'react-native'
 import ChapterItem from '../components/ChapterItem';
-import { main_url,domain, img_url } from '../components/variables'
+import { main_url,domain, img_url, main_color } from '../components/variables'
 
 export const fetchData = async (manga_id) =>{
     const url = `${main_url}/manga/${manga_id}`
@@ -29,8 +29,8 @@ export default function MangaDetails({navigation,route}) {
     return (
         <View style={styles.container}>
             <ScrollView contentContainerStyle={{alignItems:'center'}}>
-                <Image source={{uri:`${domain}${img_url}${manga_id}.jpg`}} style={{width:200,height:400}} />
-                <View style={{alignItems:"baseline",marginTop:25,width:"100%",height:"100%",backgroundColor:"#282A36"}}>
+                <Image source={{uri:`${domain}${img_url}${manga_id}.jpg`}} style={{width:200,height:300,resizeMode:"cover"}} />
+                <View style={{alignItems:"baseline",marginTop:25,width:"100%",height:"100%",backgroundColor:main_color}}>
                     {
                         loaded?(
                             chapters.map((child,i)=>
@@ -49,7 +49,7 @@ export default function MangaDetails({navigation,route}) {
                                 )
                                 :
                                 (
-                                    <View style={{width:"100%",height:"100%",backgroundColor:"#282A36"}}></View>
+                                    <View style={{width:"100%",height:"100%",backgroundColor:main_color}}></View>
                                     )
                                 }
                 </View>
@@ -62,6 +62,6 @@ const styles = StyleSheet.create({
         alignItems:'center',
         width:"100%",
         height:"100%",
-        backgroundColor:"#282A36"
+        backgroundColor:main_color
     },
   })

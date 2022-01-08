@@ -2,7 +2,9 @@
   "expo": {
     "name": "Manga App",
     "slug": "mangaApp",
-    "version": "0.6.9",
+    "version": "1.0.0",
+    "privacy":"public",
+    "description":"app for reading manga bich",
     "orientation": "portrait",
     "icon": "./assets/takezosquare.png",
     "splash": {

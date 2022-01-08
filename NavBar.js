@@ -1,9 +1,10 @@
 import React from 'react'
 import { useState,useRef,useEffect } from 'react';
-import { StyleSheet,TextInput, Text, View,StatusBar,SafeAreaView, TouchableOpacity, Button } from 'react-native';
+import { StyleSheet,TextInput, Text, View,StatusBar,SafeAreaView, TouchableOpacity, Button, Dimensions } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import DropDownPicker from 'react-native-dropdown-picker';
 
+const windowWidth = Dimensions.get('window').width;
 
 
 
@@ -17,15 +18,18 @@ export default function NavBar({chapters,setChap}) {
 
 
     return (
-        <SafeAreaView>
+        <SafeAreaView style={{justifyContent:'center',alignItems:"center",flex:1,paddingBottom:50}}>
           <DropDownPicker
             open={open}
             value={value}
             schema={{
               label:"chap_title",
               selectable:true,
-              value:"chap_title"
+              value:"chap_title",
             }}
+            placeholderStyle={{color:"#BB86FC"}}
+            labelStyle={{color:"#BB86FC",fontWeight:"bold"}}
+            style={{borderColor:"#BB86FC",borderWidth:2,maxWidth:windowWidth/1.03,backgroundColor:"#211B3A"}}
             items={items}
             autoScroll={true}
             theme={"DARK"}
@@ -79,12 +83,7 @@ const styles = StyleSheet.create({
       justifyContent:'center',
       alignItems:'center'
     },
-    input:{
-      backgroundColor:'rgb(68,65,65)',
-      borderRadius:10,
-      width:120,
-      height:45,
-      color:'white'},
       secNavigation:{
+
       },
   })

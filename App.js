@@ -11,7 +11,7 @@ export default function App() {
   const Stack = createNativeStackNavigator()
   const mangaDetailsHeader={
     headerStyle:{
-      backgroundColor:"#282A36",
+      backgroundColor:"#18161B",
       color:"white"
     },
     headerTitleStyle:{
@@ -35,7 +35,7 @@ export default function App() {
 
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: '#121212',
+    backgroundColor: '#282A41',
     width:'100%',
   },
 })
