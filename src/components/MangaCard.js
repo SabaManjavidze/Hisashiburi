@@ -1,7 +1,7 @@
 import React from 'react'
 import { View, Text,Image, TouchableOpacity, Dimensions, StyleSheet } from 'react-native'
 import { fetchData } from '../Pages/MangaDetails';
-import { domain,img_url } from './variables'
+import { domain,img_url, primary_color } from './variables'
 
 const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
@@ -23,8 +23,10 @@ export default function MangaCard({navigation,item}) {
                 style={{flex:1,flexDirection:"row",alignItems:'center'}} 
                 onPress={()=>navigation.navigate("MangaDetails",{item:item})}
             >
+
                 <Image source={{uri:`${domain}${img_url}${item.manga_id}.jpg`}} 
                 style={styles.image}/>
+
                 <View style={{
                     flex:1,
                     alignItems:'center',
@@ -53,7 +55,7 @@ export default function MangaCard({navigation,item}) {
                                         <View style={{flex:3}}>
                                             <Text 
                                                 onPress={()=>goToChapter(i)} 
-                                                style={{color:"#A07BDF",textAlign:'center',fontSize:13}}
+                                                style={{color:primary_color,textAlign:'center',fontSize:13}}
                                                 >
                                                 {child.chap_title}
                                             </Text>
@@ -80,7 +82,7 @@ const styles = StyleSheet.create({
         width:windowWidth-20,
         backgroundColor:"#2F2C4B",
         borderRadius:10,
-        borderColor:"#A285CA",
+        borderColor:primary_color,
         borderWidth:2,
         padding:10,
     },
@@ -89,13 +91,6 @@ const styles = StyleSheet.create({
         height:170,
         borderTopLeftRadius:10,
         borderBottomLeftRadius:10,
-        shadowColor: "#000",
-        shadowOffset: {
-            width: 0,
-            height: 7,
-        },
-        shadowOpacity: 0.43,
-        shadowRadius: 9.51,
     },
     title:{
         color:"white",

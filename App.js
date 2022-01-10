@@ -5,6 +5,7 @@ import MangaDetails from './src/Pages/MangaDetails';
 import {createNativeStackNavigator} from "@react-navigation/native-stack"
 import { NavigationContainer } from '@react-navigation/native';
 import ChapterPage from './src/Pages/ChapterPage';
+import { Provider } from 'react-native-paper';
 
 export default function App() {
   
@@ -22,6 +23,7 @@ export default function App() {
     
   }
     return (
+      <Provider>
       <NavigationContainer>
         <Stack.Navigator>
           <Stack.Screen name="Home" options={{headerShown:false}} component={HomePage} />
@@ -29,6 +31,7 @@ export default function App() {
           <Stack.Screen name="ChapterPage" options={mangaDetailsHeader} component={ChapterPage} />
         </Stack.Navigator>
       </NavigationContainer>
+      </Provider>
 
   );
 }
