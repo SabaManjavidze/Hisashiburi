@@ -1,5 +1,6 @@
 import React, { useContext } from 'react'
 import { View, Text, StyleSheet, Dimensions, TouchableOpacity } from 'react-native'
+import { primary_color } from './variables';
 
 const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
@@ -22,9 +23,8 @@ export default function ChapterItem({navigation,manga_id,chapters,child,index}) 
 const styles = StyleSheet.create({
     chapter_container: {
         padding:10,
-        borderColor:"cyan",
-        borderWidth:0.6,
-        borderTopWidth:0.2,
+        borderColor:primary_color,
+        borderWidth:1,
         width:windowWidth
     },
   })

@@ -1,24 +1,25 @@
 import React from 'react'
-import { useState,useRef,useEffect } from 'react';
-import { StyleSheet,TextInput, Text, View,StatusBar,SafeAreaView, TouchableOpacity, Button, Dimensions } from 'react-native';
-import AsyncStorage from '@react-native-async-storage/async-storage';
+import { useState } from 'react';
+import { StyleSheet,Dimensions } from 'react-native';
 import DropDownPicker from 'react-native-dropdown-picker';
 
 const windowWidth = Dimensions.get('window').width;
 
 
 
-export default function NavBar({chapters,setChap}) {
+export default function NavBar({chapters,setChap,setIndex}) {
     const [open, setOpen] = useState(false);
-    const [value, setValue] = useState(null);
+    const [value, setValue] = useState();
     const [items, setItems] = useState(chapters)
     const itemSelected = (item)=>{
+      const index = chapters.indexOf(item)
       setChap(item)
+      setIndex(index)
     }
 
 
     return (
-        <SafeAreaView style={{justifyContent:'center',alignItems:"center",flex:1,paddingBottom:50}}>
+      <>
           <DropDownPicker
             open={open}
             value={value}
@@ -29,17 +30,17 @@ export default function NavBar({chapters,setChap}) {
             }}
             placeholderStyle={{color:"#BB86FC"}}
             labelStyle={{color:"#BB86FC",fontWeight:"bold"}}
-            style={{borderColor:"#BB86FC",borderWidth:2,maxWidth:windowWidth/1.03,backgroundColor:"#211B3A"}}
+            style={{borderColor:"#BB86FC",borderRadius:0,borderWidth:2,maxWidth:windowWidth,backgroundColor:"#211B3A"}}
             items={items}
             autoScroll={true}
             theme={"DARK"}
-            onSelectItem={(item)=>itemSelected(item)}
+            onSelectItem={item=>{itemSelected(item)}}
             setOpen={setOpen}
             setValue={setValue}
             setItems={setItems}
             itemKey={"chapter_num"}
           />
-        </SafeAreaView>
+        </>
     )
 }
 const styles = StyleSheet.create({
@@ -47,43 +48,4 @@ const styles = StyleSheet.create({
       backgroundColor: '#121212',
       width:'100%'
     },
-    scrollView: {
-      backgroundColor: 'white',
-      marginHorizontal: 20,
-    },
-    image:{
-      height:550,
-      width:400,
-      marginBottom:0,
-      marginLeft:0,
-      marginRight:0,
-      resizeMode:"contain",
-    },
-    navigation:{
-      flex:2,
-      height:200,
-      justifyContent:"space-around",
-      flexDirection:"row",
-      alignItems:"center",
-      backgroundColor:"#121212"
-    },
-    prev_btn:{
-      height:60,
-      backgroundColor:'red',
-      flex:1,
-      justifyContent:'center',
-      alignItems:'center',
-      borderRadius:15,
-    },
-    nex_btn:{
-      height:60,
-      backgroundColor:'purple',
-      flex:1,
-      borderRadius:15,
-      justifyContent:'center',
-      alignItems:'center'
-    },
-      secNavigation:{
-
-      },
   })

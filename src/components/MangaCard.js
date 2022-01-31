@@ -1,31 +1,73 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import { View, Text,Image, TouchableOpacity, Dimensions, StyleSheet } from 'react-native'
+import { PanGestureHandler } from 'react-native-gesture-handler';
+import { IconButton } from 'react-native-paper';
+import Animated, { useAnimatedGestureHandler, useAnimatedStyle, useSharedValue, withTiming } from 'react-native-reanimated';
 import { fetchData } from '../Pages/MangaDetails';
 import { domain,img_url, primary_color } from './variables'
 
 const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
 
-export default function MangaCard({navigation,item}) {
+export default function MangaCard({route,navigation,item}) {
 
     const goToChapter = async ( i )=>{
-        const chapters = await fetchData(item.manga_id)
+        const {chapters} = await fetchData(item.manga_id)
         navigation.navigate("ChapterPage",{
             chapters:chapters,
             manga_id:item.manga_id,
             index:i
         })
     }
-
+    const translateX = useSharedValue(0)
+    const TRANSLATE_X_THRESHOLD= -windowWidth*0.5
+    const panGesture = useAnimatedGestureHandler({
+        onActive:(event)=>{
+          translateX.value=event.translationX
+        },
+        onEnd:()=>{
+          const dissmised = translateX.value<TRANSLATE_X_THRESHOLD 
+          dissmised?translateX.value=withTiming(-windowWidth):
+          translateX.value = withTiming(0)
+        }
+    })
+    const rStyle = useAnimatedStyle(()=>({
+        transform:[
+            {
+                translateX:translateX.value
+            }
+        ]
+    }))
+    
     return (
-        <View style={styles.container}>
-            <TouchableOpacity 
+        <Animated.View style={{width:"100%",alignItems:"center"}}>
+            <Animated.View style={{
+                position:"absolute",
+                height:"90%",
+                right:"5%",
+                width:"20%",
+                justifyContent:"center",
+                alignItems:"center",
+            }}>
+                <IconButton icon="delete" color='red' size={40} style={{
+                    // height:"100%",
+                    alignItems:"center",
+                    justifyContent:"center"
+                }}/>
+            </Animated.View>
+            <PanGestureHandler enabled={route.name=="Favorites"&&true} onGestureEvent={panGesture}>
+            <Animated.View style={[rStyle,styles.container]}>
+
+            <View
                 style={{flex:1,flexDirection:"row",alignItems:'center'}} 
-                onPress={()=>navigation.navigate("MangaDetails",{item:item})}
             >
 
-                <Image source={{uri:`${domain}${img_url}${item.manga_id}.jpg`}} 
+            <TouchableOpacity 
+                onPress={()=>navigation.navigate("MangaDetails",{item:item})}
+            >
+                <Image source={{uri:item.img_url?item.img_url:`${domain}${img_url}${item.manga_id}.jpg`}} 
                 style={styles.image}/>
+            </TouchableOpacity>
 
                 <View style={{
                     flex:1,
@@ -52,10 +94,17 @@ export default function MangaCard({navigation,item}) {
                                         justifyContent:'space-between',
                                         marginHorizontal:0
                                     }}>
-                                        <View style={{flex:3}}>
+                                        <View style={{flex:3,alignItems:"center"}}>
                                             <Text 
                                                 onPress={()=>goToChapter(i)} 
-                                                style={{color:primary_color,textAlign:'center',fontSize:13}}
+                                                style={{
+                                                    color:primary_color,
+                                                    borderColor:primary_color,
+                                                    borderWidth:0.2,
+                                                    width:"80%",
+                                                    textAlign:'center',
+                                                    fontSize:13
+                                                }}
                                                 >
                                                 {child.chap_title}
                                             </Text>
@@ -70,9 +119,11 @@ export default function MangaCard({navigation,item}) {
                             })
                         }
                     </View>
+                    </View>
                 </View>
-            </TouchableOpacity>
-        </View> 
+                </Animated.View>
+                </PanGestureHandler>
+            </Animated.View>
     )
 }
 
@@ -82,6 +133,7 @@ const styles = StyleSheet.create({
         width:windowWidth-20,
         backgroundColor:"#2F2C4B",
         borderRadius:10,
+        flexDirection:"row",
         borderColor:primary_color,
         borderWidth:2,
         padding:10,
