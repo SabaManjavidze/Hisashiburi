@@ -1,16 +1,18 @@
-import React, { useEffect } from 'react'
-import { View, Text,Image, TouchableOpacity, Dimensions, StyleSheet } from 'react-native'
+import React, { useEffect, useState } from 'react'
+import { View, Text,Image, TouchableOpacity, Dimensions, StyleSheet, AsyncStorage } from 'react-native'
 import { PanGestureHandler } from 'react-native-gesture-handler';
 import { IconButton } from 'react-native-paper';
-import Animated, { useAnimatedGestureHandler, useAnimatedStyle, useSharedValue, withTiming } from 'react-native-reanimated';
+import Animated, { runOnJS, useAnimatedGestureHandler, useAnimatedStyle, useSharedValue, withTiming } from 'react-native-reanimated';
 import { fetchData } from '../Pages/MangaDetails';
+import { addToFavorites, checkIfFavorited, removeFromFavorites } from './FavServices';
 import { domain,img_url, primary_color } from './variables'
 
 const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
 
-export default function MangaCard({route,navigation,item}) {
-
+export default function MangaCard({route,navigation,item,data,favs,setdata}) {
+    const [fav, setfav] = useState(false);
+    const [star, setstar] = useState(not_fav_icon);
     const goToChapter = async ( i )=>{
         const {chapters} = await fetchData(item.manga_id)
         navigation.navigate("ChapterPage",{
@@ -19,16 +21,29 @@ export default function MangaCard({route,navigation,item}) {
             index:i
         })
     }
+    const fav_icon ="star"
+    const not_fav_icon="star-outline"
+
     const translateX = useSharedValue(0)
     const TRANSLATE_X_THRESHOLD= -windowWidth*0.5
+
+    const removeSwiped=async ()=>{
+        const new_data = data.filter(child=>child.manga_id!=item.manga_id)
+        setdata(new_data)
+        removeFromFavorites(favs,item.manga_id)
+    }
     const panGesture = useAnimatedGestureHandler({
         onActive:(event)=>{
-          translateX.value=event.translationX
+            translateX.value=event.translationX
         },
         onEnd:()=>{
-          const dissmised = translateX.value<TRANSLATE_X_THRESHOLD 
-          dissmised?translateX.value=withTiming(-windowWidth):
-          translateX.value = withTiming(0)
+            const dissmised = translateX.value<TRANSLATE_X_THRESHOLD 
+            if(dissmised){
+                //   translateX.value=withTiming(-windowWidth)
+                runOnJS(removeSwiped)(setdata,data,favs)
+            }else{
+                translateX.value = withTiming(0)
+            }
         }
     })
     const rStyle = useAnimatedStyle(()=>({
@@ -38,7 +53,37 @@ export default function MangaCard({route,navigation,item}) {
             }
         ]
     }))
+    const addToFavs = ()=>{
+        addToFavorites(favs,item.manga_id)
+        setfav(true)
+    }
+    const removeFromFavs = ()=>{
+        removeFromFavorites(favs,item.manga_id)
+        setfav(false)
+    }
+    const checkFavorites=async()=>{
+        const isfav = await checkIfFavorited(favs,item.manga_id)
+        setfav(isfav)
+    }
+    const onPress=async()=>{
+        if (fav) {
+            removeFromFavs()
+        }else{
+            addToFavs()
+        }
+    }
+    useEffect(() => {
+        if (fav) {
+            setstar(fav_icon)
+        }else{
+            setstar(not_fav_icon)
+        }
+    }, [fav]);
     
+    useEffect(() => {
+        checkFavorites()
+    }, []);
+        const atHome = route.name=="Home"
     return (
         <Animated.View style={{width:"100%",alignItems:"center"}}>
             <Animated.View style={{
@@ -75,11 +120,17 @@ export default function MangaCard({route,navigation,item}) {
                     justifyContent:'center'
                     }}>
                     <View style={{
-                        flex:2,
-                        justifyContent:'center',
-                        alignItems:'center',
+                        flex:1,
+                        width:"100%",
+                        justifyContent:atHome?'space-between':"center",
+                        flexDirection:"row"
                         }}>
-                        <Text style={{color:"white",textAlign:"center",fontSize:20}}>{item.title}</Text>
+                        <View style={{flex:4,justifyContent:"center"}}>
+                            <Text style={{color:"white",textAlign:"center",fontSize:20}}>{item.title}</Text>
+                        </View>
+                        {atHome&&<View style={{flex:1,alignItems:"center"}}>
+                            <IconButton icon={star} onPress={()=>onPress()} color={primary_color}/>
+                        </View>}
                     </View>
                     <View style={{
                         flex:1,

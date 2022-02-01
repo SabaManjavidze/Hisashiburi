@@ -1,8 +1,9 @@
 import React, { useEffect, useRef, useState} from 'react'
-import { View, Text, FlatList, Image, TouchableOpacity, Dimensions, SafeAreaView, Animated } from 'react-native'
+import { View, Text, FlatList, Image, TouchableOpacity, Dimensions, SafeAreaView, Animated, AsyncStorage } from 'react-native'
 import { main_url,domain, img_url, main_color, primary_color, secondary_color } from '../components/variables'
 import { ActivityIndicator, Appbar,IconButton,Searchbar } from 'react-native-paper';
 import MangaCard from '../components/MangaCard';
+import { checkIfFavorited } from '../components/FavServices';
 const AnimatedIcon = Animated.createAnimatedComponent(IconButton);
 
 const width = Dimensions.get('window').width;
@@ -14,8 +15,10 @@ export default function HomePage({ navigation,route }) {
     const [loaded, setLoaded] = useState(false)
     const [input, setInput] = useState(" ")
     const [showInput, setShowInput] = useState(false)
+    const [favs, setfavs] = useState();
     const fadeAnim = useRef(new Animated.Value(0)).current;
     const inputRef = useRef(null)
+
     const fetchData = async ()=>{
         const url = `${main_url}/homepage`
         const res = await fetch(url)
@@ -31,7 +34,12 @@ export default function HomePage({ navigation,route }) {
         setData(json)
         setLoaded(true)
     }
+    const getFavorites=async()=>{
+        const value = await AsyncStorage.getItem('FavoriteManga');
+        setfavs(value)
+    }
     useEffect(() => {
+        getFavorites()
         fetchData()
     }, [])
 
@@ -44,10 +52,11 @@ export default function HomePage({ navigation,route }) {
                 fetchResults()
             }
     }
-    
-    const renderItem = (child)=>(
-        <MangaCard route={route} navigation={navigation} item={child.item} />
-    )
+    const renderItem = (child)=>{
+        return(
+            <MangaCard route={route} favs={favs} navigation={navigation} item={child.item} />
+        )
+    }
     const backArrow = () =>(
         <Appbar.Action 
         style={{

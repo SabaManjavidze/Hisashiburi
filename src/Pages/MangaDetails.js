@@ -13,8 +13,9 @@ import
     AsyncStorage,
     Button
 } from 'react-native'
-import { TouchableRipple } from 'react-native-paper';
+import { ActivityIndicator, TouchableRipple } from 'react-native-paper';
 import ChapterItem from '../components/ChapterItem';
+import { addToFavorites, checkIfFavorited, removeFromFavorites } from '../components/FavServices';
 import { main_url,domain, img_url, main_color, primary_color } from '../components/variables'
 
 export const fetchData = async (manga_id) =>{
@@ -37,57 +38,35 @@ export default function MangaDetails({navigation,route}) {
         setChapters(json.chapters)
         setLoaded(true)
     }
-    const checkIfFavorited= async()=>{
+    const checkFavorites= async()=>{
         const value = await AsyncStorage.getItem('FavoriteManga');
-        if (value !== null) {
-          const parsed = JSON.parse(value)
-          const found = parsed.find(child=>child==manga_id)
-          if (found!==null&&found) {
-              setFav(true)
-          }
-        }
+        const isfav = await checkIfFavorited(value,manga_id)
+        setFav(isfav)
     }
     useEffect(() => {
         fetchChapters()
-        checkIfFavorited()
+        checkFavorites()
     }, [])
 
     // useEffect(() => {
     //     logFavorites()
     // }, [fav]);
 
-    const logFavorites = async ()=>{
-        const value = await AsyncStorage.getItem("FavoriteManga")
-        console.log(value);
-    }
-    const addToFavorites = async (value)=>{
-        if(value===null){
-            const parsed = [manga_id]
-            await AsyncStorage.setItem("FavoriteManga",JSON.stringify(parsed))
-        }else{
-            const parsed = JSON.parse(value)
-            parsed.push(manga_id)
-            await AsyncStorage.setItem("FavoriteManga",JSON.stringify(parsed))
-        }
-        setFav(true)
-    }
-    const removeFromFavorites = async (value)=>{
-        if(value!==null){
-            const parsed = JSON.parse(value) 
-            const modded = parsed.filter(child=>child!=manga_id)
-            if(modded.length==0){
-                AsyncStorage.removeItem("FavoriteManga")
-            }
-            else{
-                await AsyncStorage.setItem("FavoriteManga",JSON.stringify(modded))
-            }
-            setFav(false)
-        }
-    }
+    // const logFavorites = async ()=>{
+    //     const value = await AsyncStorage.getItem("FavoriteManga")
+    //     console.log(value);
+    // }
+
 
     const onPress = async ()=>{
         const value = await AsyncStorage.getItem("FavoriteManga")
-        fav?removeFromFavorites(value):addToFavorites(value)
+        if(fav){
+            removeFromFavorites(value,manga_id)
+            setFav(false)
+        }else{
+            addToFavorites(value,manga_id)
+            setFav(true)
+        }
     }
     return (
         <View style={styles.container}>
@@ -127,8 +106,15 @@ export default function MangaDetails({navigation,route}) {
                                 )
                                 :
                                 (
-                                    <View style={{width:"100%",height:"100%",backgroundColor:main_color}}></View>
-                                    )
+                                    <View style={{
+                                        width:"100%",
+                                        backgroundColor:main_color,
+                                        justifyContent:"center",
+                                        alignItems:"center"
+                                    }}>
+                                        <ActivityIndicator animating={true} size="large" color={primary_color} />
+                                    </View>
+                                )
                                 }
                 </View>
             </ScrollView>

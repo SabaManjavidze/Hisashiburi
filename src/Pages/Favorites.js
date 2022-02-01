@@ -7,13 +7,10 @@ import Animated,{useAnimatedGestureHandler, useAnimatedStyle, useSharedValue, wi
 import { domain, main_color, main_url, primary_color } from '../components/variables';
 import { fetchData } from './MangaDetails';
 
-
-const windowWidth = Dimensions.get('window').width;
-const windowHeight = Dimensions.get('window').height;
-
 export default function Favorites({navigation,route}) {
     const [data, setData] = useState([]);
     const [loaded, setLoaded] = useState(false);
+    const [favs, setFavs] = useState();
     const [isEmpty, setIsEmpty] = useState(false);
     const formatObj = async (child)=>{
 
@@ -39,6 +36,7 @@ export default function Favorites({navigation,route}) {
                 setLoaded(true)
                 return;
             }
+            setFavs(value)
             const parsed = JSON.parse(value)
             const manga_data = []
             for(let i =0;i<parsed.length;i++)
@@ -50,8 +48,11 @@ export default function Favorites({navigation,route}) {
             setData(manga_data)
             setLoaded(true)
       };
+    //   useEffect(() => {
+    //   }, [favs]);
+      
     const renderItem = (child)=>(
-        <MangaCard item={child.item} route={route} navigation={navigation}/>
+        <MangaCard item={child.item} setdata={setData} data={data} favs={favs} route={route} navigation={navigation}/>
     )
     useEffect(() => {
         getData()

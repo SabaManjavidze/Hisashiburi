@@ -1,6 +1,7 @@
 import React,{useRef,useEffect,useState,useContext} from 'react';
 import { StyleSheet,View,Image, ScrollView,SafeAreaView, Text,FlatList, Dimensions,TouchableOpacity,} from 'react-native';
 import FitImage from 'react-native-fit-image';
+import { ActivityIndicator } from 'react-native-paper';
 import NavBar from '../../NavBar';
 import ChapterNav from '../components/ChapterNav';
 import { main_color, main_url, primary_color } from '../components/variables';
@@ -16,12 +17,6 @@ export default function ChapterPage({navigation,route}) {
   const [idx, setIndex] = useState(index);
   const [loaded, setLoaded] = useState(false);
   const scroll_ref = useRef(null)
-
-  // const fakeChaps= [
-  //     {
-  //       src: "https://cm.blazefast.co/89/e9/89e9b45238f3fb4c158cc7f865def99f.jpg"
-  //     }
-  // ]
 
   const fetchData = async ()=>{
     const url = `${main_url}/manga/${manga_id}/${chapter.chapter_num}`
@@ -42,16 +37,11 @@ export default function ChapterPage({navigation,route}) {
     }
   }, [chapter]);
 
-    const renderItem = ({item,index})=>{
-        return(
-          <FitImage source={{uri:item.src}}/>
-        )
-    }
     return (
             <View 
               style={{width:"100%",height:"100%"}}
             >
-            {loaded&&(
+            {loaded?(
                 <View
                   style={{width:"100%",height:"100%"}}
                 >
@@ -78,15 +68,16 @@ export default function ChapterPage({navigation,route}) {
                     keyExtractor={item=>item.src}
                     style={{width:"100%",height:"100%"}}
                   /> */}
-                  <View style={{width:windowWidth}}>
+                  <View style={{width:windowWidth,backgroundColor:main_color}}>
                   {
                     data.map(child=>{
                       return(
-                        <FitImage source={{uri:child.src}} />
+                        <FitImage key={child.src} source={{uri:child.src}} />
                         )
                       })
                     }
                     </View>
+
                 <View style={{ height:windowHeight*0.2,width:"100%",backgroundColor:main_color,justifyContent:"center"}}>
 
                   <ChapterNav 
@@ -98,16 +89,13 @@ export default function ChapterPage({navigation,route}) {
                     />
                 </View>
                 </ScrollView>
-
-                  {/* {
-                    data.map(child=>{
-                      return(
-                        <FitImage key={child.src} source={{uri:child.src}} />
-                      )
-                    })
-                  } */}
                 </View>
-            )}
+            )
+          :
+          (
+            <ActivityIndicator animating={true} color={primary_color} />
+          )
+          }
             </View>
 
   );
