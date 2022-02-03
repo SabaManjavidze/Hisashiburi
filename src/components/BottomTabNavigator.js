@@ -10,13 +10,17 @@ export default function BottomTabNavigator() {
     <View style={{backgroundColor:primary_color,flexDirection:"row",justifyContent:"space-around"}}>
     <Button 
       icon={"home"}
-      onPress={()=>{navigation.navigate("Home")}}
+      onPress={()=>{
+        navigation.navigate("Home",{refresh:"hello"})
+      }}
     >
       <Text style={{color:"black"}}>Home</Text>
     </Button>
     <Button 
       icon={"star"}
-      onPress={()=>{navigation.navigate("Favorites")}}
+      onPress={()=>{
+        navigation.navigate("Favorites")
+      }}
     >
       <Text>Favorites</Text>
       </Button>

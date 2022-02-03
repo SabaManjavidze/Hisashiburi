@@ -1,23 +1,26 @@
-import React,{useRef,useEffect,useState,useContext} from 'react';
-import { StyleSheet,View,Image, ScrollView,SafeAreaView, Text,FlatList, Dimensions,TouchableOpacity, AsyncStorage,} from 'react-native';
+import React,{useRef,useEffect,useState,useContext, useCallback} from 'react';
+import { StyleSheet,View,Image,SafeAreaView, Text, Dimensions,TouchableOpacity, AsyncStorage,} from 'react-native';
 import { ActivityIndicator, Button, IconButton } from 'react-native-paper';
 import MangaCard from '../components/MangaCard';
 import {PanGestureHandler} from "react-native-gesture-handler"
 import Animated,{useAnimatedGestureHandler, useAnimatedStyle, useSharedValue, withTiming} from 'react-native-reanimated';
 import { domain, main_color, main_url, primary_color } from '../components/variables';
 import { fetchData } from './MangaDetails';
+import { FlatList,ScrollView } from 'react-native-gesture-handler';
+import { removeFromFavorites } from '../components/FavServices';
 
 export default function Favorites({navigation,route}) {
     const [data, setData] = useState([]);
     const [loaded, setLoaded] = useState(false);
     const [favs, setFavs] = useState();
     const [isEmpty, setIsEmpty] = useState(false);
+    const listRef = useRef(null)
     const formatObj = async (child)=>{
 
         const json = await fetchData(child)
         const chapters = []
+        const length = json.chapters.length<3?json.chapters.length:3
         json.chapters.map((child,i)=>{
-            const length = json.chapters.length<3?json.chapters.length:3
             if(i<length){
                 chapters.push(child)
               }
@@ -50,9 +53,21 @@ export default function Favorites({navigation,route}) {
       };
     //   useEffect(() => {
     //   }, [favs]);
-      
+    const onDismiss=useCallback((manga_id)=>{
+        const new_data = data.filter(child=>child.manga_id!=manga_id)
+        setData(new_data)
+        removeFromFavorites(favs,manga_id)
+    })
+
     const renderItem = (child)=>(
-        <MangaCard item={child.item} setdata={setData} data={data} favs={favs} route={route} navigation={navigation}/>
+        <MangaCard 
+            item={child.item}  
+            onDismiss={onDismiss} 
+            favs={favs} 
+            route={route} 
+            navigation={navigation}
+            simultHandler={listRef}
+        />
     )
     useEffect(() => {
         getData()
@@ -67,12 +82,33 @@ export default function Favorites({navigation,route}) {
                 </View>
                 :
                 <View style={{flex:1}}>
-                    <FlatList
+                    {/* <FlatList
                         data={data}
                         renderItem={renderItem}
                         style={{height:"100%",width:"100%"}}
                         keyExtractor={item=>item.manga_id}
-                    />
+                        scrollToOverflowEnabled
+                        bounces={2}
+                    /> */}
+                    <ScrollView ref={listRef}>
+
+                    {
+                       loaded&& data.map(child=>{
+                            return(
+                                <MangaCard 
+                                    item={child}  
+                                    onDismiss={onDismiss} 
+                                    favs={favs} 
+                                    key={child.manga_id}
+                                    route={route} 
+                                    navigation={navigation}
+                                    simultHandler={listRef}
+                                />
+                            )
+                        })
+                    }
+                    </ScrollView>
+
                     </View>
                     )
             :

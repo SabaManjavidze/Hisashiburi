@@ -13,13 +13,14 @@ export default function HomePage({ navigation,route }) {
 
     const [data, setData] = useState([])
     const [loaded, setLoaded] = useState(false)
-    const [input, setInput] = useState(" ")
+    const [input, setInput] = useState("")
     const [showInput, setShowInput] = useState(false)
     const [favs, setfavs] = useState();
     const fadeAnim = useRef(new Animated.Value(0)).current;
     const inputRef = useRef(null)
 
     const fetchData = async ()=>{
+        setData([])
         const url = `${main_url}/homepage`
         const res = await fetch(url)
         const json = await res.json()
@@ -39,10 +40,12 @@ export default function HomePage({ navigation,route }) {
         setfavs(value)
     }
     useEffect(() => {
-        getFavorites()
-        fetchData()
-    }, [])
-
+        navigation.addListener('focus', () => {
+            getFavorites()
+            fetchData()
+        })
+    })
+    
     const onSubmit=()=>{
             if(input==null||input==""){
                 setData([])

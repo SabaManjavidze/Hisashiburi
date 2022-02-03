@@ -22,7 +22,6 @@ export const removeFromFavorites = async (value,manga_id)=>{
     if(value!==null){
         const parsed = JSON.parse(value) 
         const modded = parsed.filter(child=>child!=manga_id)
-        console.log(JSON.stringify(modded))
         if(modded.length==0){
             await AsyncStorage.removeItem("FavoriteManga")
         }

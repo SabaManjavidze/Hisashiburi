@@ -39,9 +39,9 @@ export default function App() {
             />
         <Stack.Navigator>
           <Stack.Screen name="Home" options={{headerShown:false}} component={HomePage} />
+          <Stack.Screen name="Favorites" options={mangaDetailsHeader} component={Favorites} />
           <Stack.Screen name="MangaDetails" options={mangaDetailsHeader} component={MangaDetails} />
           <Stack.Screen name="ChapterPage" options={mangaDetailsHeader} component={ChapterPage} />
-          <Stack.Screen name="Favorites" options={mangaDetailsHeader} component={Favorites} />
         </Stack.Navigator>
 
         <TouchableRipple rippleColor={main_color}>

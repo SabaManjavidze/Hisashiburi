@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import { View, Text,Image, TouchableOpacity, Dimensions, StyleSheet, AsyncStorage } from 'react-native'
 import { PanGestureHandler } from 'react-native-gesture-handler';
 import { IconButton } from 'react-native-paper';
@@ -10,7 +10,7 @@ import { domain,img_url, primary_color } from './variables'
 const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
 
-export default function MangaCard({route,navigation,item,data,favs,setdata}) {
+export default function MangaCard({route,navigation,item,favs,onDismiss,simultHandler}) {
     const [fav, setfav] = useState(false);
     const [star, setstar] = useState(not_fav_icon);
     const goToChapter = async ( i )=>{
@@ -21,17 +21,16 @@ export default function MangaCard({route,navigation,item,data,favs,setdata}) {
             index:i
         })
     }
+    const contRef = useRef(null)
     const fav_icon ="star"
     const not_fav_icon="star-outline"
 
     const translateX = useSharedValue(0)
+    const opacity = useSharedValue(1);
+    // const height = useSharedValue(contRef.current.height);
     const TRANSLATE_X_THRESHOLD= -windowWidth*0.5
 
-    const removeSwiped=async ()=>{
-        const new_data = data.filter(child=>child.manga_id!=item.manga_id)
-        setdata(new_data)
-        removeFromFavorites(favs,item.manga_id)
-    }
+
     const panGesture = useAnimatedGestureHandler({
         onActive:(event)=>{
             translateX.value=event.translationX
@@ -39,13 +38,19 @@ export default function MangaCard({route,navigation,item,data,favs,setdata}) {
         onEnd:()=>{
             const dissmised = translateX.value<TRANSLATE_X_THRESHOLD 
             if(dissmised){
-                //   translateX.value=withTiming(-windowWidth)
-                runOnJS(removeSwiped)(setdata,data,favs)
+                  translateX.value=withTiming(-windowWidth)
+                runOnJS(onDismiss)(item.manga_id)
             }else{
                 translateX.value = withTiming(0)
             }
         }
     })
+    const rContainerStyle = useAnimatedStyle(() => {
+        return {
+        //   height: itemHeight.value,
+          opacity: opacity.value,
+        };
+      });
     const rStyle = useAnimatedStyle(()=>({
         transform:[
             {
@@ -53,6 +58,12 @@ export default function MangaCard({route,navigation,item,data,favs,setdata}) {
             }
         ]
     }))
+    const rIconContainerStyle = useAnimatedStyle(() => {
+        const opacity = withTiming(
+          translateX.value < -windowWidth*0.2 ? 1 : 0
+        );
+        return { opacity };
+      });
     const addToFavs = ()=>{
         addToFavorites(favs,item.manga_id)
         setfav(true)
@@ -85,22 +96,17 @@ export default function MangaCard({route,navigation,item,data,favs,setdata}) {
     }, []);
         const atHome = route.name=="Home"
     return (
-        <Animated.View style={{width:"100%",alignItems:"center"}}>
-            <Animated.View style={{
-                position:"absolute",
-                height:"90%",
-                right:"5%",
-                width:"20%",
-                justifyContent:"center",
-                alignItems:"center",
-            }}>
-                <IconButton icon="delete" color='red' size={40} style={{
+        <Animated.View ref={contRef} style={[rContainerStyle,{width:"100%",height:windowHeight*0.25,alignItems:"center"}]}>
+
+            <Animated.View style={[rIconContainerStyle,styles.delete_container]}>
+                <IconButton icon="delete-outline" color='#a91ce6' size={40} style={{
                     // height:"100%",
                     alignItems:"center",
                     justifyContent:"center"
                 }}/>
             </Animated.View>
-            <PanGestureHandler enabled={route.name=="Favorites"&&true} onGestureEvent={panGesture}>
+
+            <PanGestureHandler simultaneousHandlers={simultHandler} enabled={route.name=="Favorites"&&true} onGestureEvent={panGesture}>
             <Animated.View style={[rStyle,styles.container]}>
 
             <View
@@ -123,18 +129,20 @@ export default function MangaCard({route,navigation,item,data,favs,setdata}) {
                         flex:1,
                         width:"100%",
                         justifyContent:atHome?'space-between':"center",
+                        height:"50%",
                         flexDirection:"row"
                         }}>
-                        <View style={{flex:4,justifyContent:"center"}}>
-                            <Text style={{color:"white",textAlign:"center",fontSize:20}}>{item.title}</Text>
+                        <View style={{justifyContent:"center",alignItems:"center",width:"90%"}}>
+                            <Text style={{color:"white",textAlign:"center",maxWidth:"80%"}}>{item.title}</Text>
                         </View>
-                        {atHome&&<View style={{flex:1,alignItems:"center"}}>
+                        {atHome&&<View style={{alignItems:"center",left:"85%",bottom:"50%",position:"absolute"}}>
                             <IconButton icon={star} onPress={()=>onPress()} color={primary_color}/>
                         </View>}
                     </View>
                     <View style={{
                         flex:1,
                         width:"100%",
+                        height:"50%",
                         }}>
                         {
                             item.chapters.map((child,i)=>{
@@ -157,7 +165,7 @@ export default function MangaCard({route,navigation,item,data,favs,setdata}) {
                                                     fontSize:13
                                                 }}
                                                 >
-                                                {child.chap_title}
+                                                {child.chap_title.length>18?`${child.chap_title.substring(0,18)}...`:child.chap_title}
                                             </Text>
                                         </View>
                                         <View style={{flex:1,justifyContent:'center'}}>
@@ -188,6 +196,14 @@ const styles = StyleSheet.create({
         borderColor:primary_color,
         borderWidth:2,
         padding:10,
+    },
+    delete_container:{
+        position:"absolute",
+        height:"90%",
+        right:"5%",
+        width:"20%",
+        justifyContent:"center",
+        alignItems:"center",
     },
     image:{
         width:115,
