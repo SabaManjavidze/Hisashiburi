@@ -1,20 +1,20 @@
-import { View, Text } from 'react-native';
+import { View, Text, StyleSheet } from 'react-native';
 import React from 'react';
 import { Button } from 'react-native-paper';
 import { primary_color } from './variables';
 import { useNavigation } from '@react-navigation/native';
 
 export default function BottomTabNavigator() {
-    const navigation=useNavigation()
+  const navigation=useNavigation()
   return (
-    <View style={{backgroundColor:primary_color,flexDirection:"row",justifyContent:"space-around"}}>
+    <View style={styles.container}>
     <Button 
       icon={"home"}
       onPress={()=>{
-        navigation.navigate("Home",{refresh:"hello"})
+        navigation.navigate("Home")
       }}
     >
-      <Text style={{color:"black"}}>Home</Text>
+      <Text>Home</Text>
     </Button>
     <Button 
       icon={"star"}
@@ -27,3 +27,13 @@ export default function BottomTabNavigator() {
   </View>
   );
 }
+
+const styles = StyleSheet.create({
+  container: {
+    backgroundColor:primary_color,
+    borderColor:"black",
+    borderWidth:1,
+    flexDirection:"row",
+    justifyContent:"space-around"
+  },
+})

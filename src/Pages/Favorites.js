@@ -8,6 +8,7 @@ import { domain, main_color, main_url, primary_color } from '../components/varia
 import { fetchData } from './MangaDetails';
 import { FlatList,ScrollView } from 'react-native-gesture-handler';
 import { removeFromFavorites } from '../components/FavServices';
+import FavCard from '../components/FavCard';
 
 export default function Favorites({navigation,route}) {
     const [data, setData] = useState([]);
@@ -60,7 +61,7 @@ export default function Favorites({navigation,route}) {
     })
 
     const renderItem = (child)=>(
-        <MangaCard 
+        <FavCard 
             item={child.item}  
             onDismiss={onDismiss} 
             favs={favs} 
@@ -81,7 +82,7 @@ export default function Favorites({navigation,route}) {
                     <Text style={{color:"white",fontSize:30,textAlign:"center"}}>No Favorites Added</Text>
                 </View>
                 :
-                <View style={{flex:1}}>
+                <View style={{alignItems:"center"}}>
                     {/* <FlatList
                         data={data}
                         renderItem={renderItem}
@@ -91,11 +92,10 @@ export default function Favorites({navigation,route}) {
                         bounces={2}
                     /> */}
                     <ScrollView ref={listRef}>
-
                     {
                        loaded&& data.map(child=>{
                             return(
-                                <MangaCard 
+                                <FavCard 
                                     item={child}  
                                     onDismiss={onDismiss} 
                                     favs={favs} 
@@ -121,13 +121,5 @@ export default function Favorites({navigation,route}) {
     )
 }
 const styles=StyleSheet.create({
-    task:{
-        backgroundColor:"black",
-        marginBottom:100,
-        width:"100%",
-        justifyContent:"center",
-        alignItems:"center",
-        borderWidth:2,
-        borderColor:"white"
-    }
+
 })

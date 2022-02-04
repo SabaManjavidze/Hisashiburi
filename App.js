@@ -44,9 +44,7 @@ export default function App() {
           <Stack.Screen name="ChapterPage" options={mangaDetailsHeader} component={ChapterPage} />
         </Stack.Navigator>
 
-        <TouchableRipple rippleColor={main_color}>
           <BottomTabNavigator/>
-        </TouchableRipple>
 
       </NavigationContainer> 
       </Provider>

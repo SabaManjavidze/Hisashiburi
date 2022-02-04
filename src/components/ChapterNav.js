@@ -10,9 +10,10 @@ export default function ChapterNav({setChapter,setIndex,idx,chapters,navigation}
         <View style={{
             justifyContent:"space-between",
             flexDirection:"row",
-            alignItems:'center',
+            alignItems:'flex-start',
             backgroundColor:main_color,
             width:"100%",
+            height:"60%"
             }}>
              <TouchableOpacity style={styles.prev_btn} onPress={()=>{
                const prev = idx+1

@@ -10,6 +10,7 @@ import { main_color, main_url, primary_color } from '../components/variables';
 const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
 
+
 export default function ChapterPage({navigation,route}) {
   const {manga_id,chapters,index} = route.params
   const [data, setData] = useState([]);
@@ -30,13 +31,16 @@ export default function ChapterPage({navigation,route}) {
     if(chapter!=null){
       fetchData()
       navigation.setOptions({title:chapter.chap_title})
+
       if(loaded&&scroll_ref!=null&&scroll_ref.current!=null)
       {
         scroll_ref.current.scrollToOffset({animated:true,offset:0})
       }
     }
   }, [chapter]);
-
+  const renderItem=({item})=>(
+    <FitImage key={item.src} source={{uri:item.src}} />
+  )
     return (
             <View 
               style={{width:"100%",height:"100%"}}
@@ -45,30 +49,36 @@ export default function ChapterPage({navigation,route}) {
                 <View
                   style={{width:"100%",height:"100%"}}
                 >
-                <View style={{flexDirection:"column", height:windowHeight*0.2}}>
-                  <ChapterNav 
-                    setChapter={setChapter} 
-                    setIndex={setIndex} 
-                    idx={idx}
-                    navigation={navigation}
-                    chapters={chapters}
-                  />
-                  <View>
-                    <NavBar chapters={chapters} setIndex={setIndex} scroll_ref={scroll_ref.current} setChap={setChapter} />
-                  </View>
+                <View style={{flexDirection:"column", height:windowHeight*0.06}}>
+{loaded&&                    <NavBar 
+                      chapters={chapters} 
+                      setIndex={setIndex} 
+                      scroll_ref={scroll_ref.current} 
+                      setChap={setChapter} 
+                      idx={idx}
+                    />}
                 </View>
 
-                <ScrollView style={{height:"100%",width:"100%"}} contentContainerStyle={{alignItems:"center"}}>
-                  {/* <FlatList
+                <View style={{width:"100%",height:"100%",flexDirection:"column"}}>
+                {/* <ScrollView nestedScrollEnabled style={{width:"100%"}}> */}
+                  <FlatList
                     data={data}
-                    scrollEnabled={false}
-                    nestedScrollEnabled
                     ref={scroll_ref}
                     renderItem={renderItem}
                     keyExtractor={item=>item.src}
-                    style={{width:"100%",height:"100%"}}
-                  /> */}
-                  <View style={{width:windowWidth,backgroundColor:main_color}}>
+                    style={{width:"100%"}}
+                    />
+                  <View style={{height:"15%",backgroundColor:main_color}}>
+                    <ChapterNav
+                      setChapter={setChapter} 
+                      setIndex={setIndex} 
+                      idx={idx}
+                      navigation={navigation}
+                      chapters={chapters}
+                      />
+                  </View>
+                  </View>
+                  {/* 
                   {
                     data.map(child=>{
                       return(
@@ -76,19 +86,8 @@ export default function ChapterPage({navigation,route}) {
                         )
                       })
                     }
-                    </View>
-
-                <View style={{ height:windowHeight*0.2,width:"100%",backgroundColor:main_color,justifyContent:"center"}}>
-
-                  <ChapterNav 
-                    setChapter={setChapter} 
-                    setIndex={setIndex} 
-                    idx={idx}
-                    navigation={navigation}
-                    chapters={chapters}
-                    />
-                </View>
-                </ScrollView>
+                     */}
+                {/* </ScrollView> */}
                 </View>
             )
           :

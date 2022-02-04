@@ -20,7 +20,6 @@ export default function HomePage({ navigation,route }) {
     const inputRef = useRef(null)
 
     const fetchData = async ()=>{
-        setData([])
         const url = `${main_url}/homepage`
         const res = await fetch(url)
         const json = await res.json()
@@ -40,11 +39,11 @@ export default function HomePage({ navigation,route }) {
         setfavs(value)
     }
     useEffect(() => {
-        navigation.addListener('focus', () => {
+        // navigation.addListener('focus', () => {
             getFavorites()
             fetchData()
-        })
-    })
+        // })
+    },[])
     
     const onSubmit=()=>{
             if(input==null||input==""){
@@ -131,6 +130,7 @@ export default function HomePage({ navigation,route }) {
                         renderItem={renderItem}
                         keyExtractor={item=>item.manga_id}
                         style={{height:"100%",width:"100%"}}
+                        contentContainerStyle={{alignItems:'center'}}
                     />
                 )
                 :
