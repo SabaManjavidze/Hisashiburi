@@ -1,8 +1,0 @@
-export const main_url = "https://express-manga-api.herokuapp.com/api"
-// export const main_url = "http://192.168.0.107:4000/api"
-export const img_url = "/mangaimage/manga-"
-export const domain = "https://ww.mangakakalot.tv"
-export const main_color = "#282A41"
-export const secondary_color = "#2c3159"
-export const primary_color = "#a265f7"
-export const light_primary_color = "#a91ce6"

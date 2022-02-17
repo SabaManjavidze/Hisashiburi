@@ -3,7 +3,7 @@ import { View, Text, FlatList, Image, TouchableOpacity, Dimensions, SafeAreaView
 import { main_url,domain, img_url, main_color, primary_color, secondary_color } from '../components/variables'
 import { ActivityIndicator, Appbar,IconButton,Searchbar } from 'react-native-paper';
 import MangaCard from '../components/MangaCard';
-import { checkIfFavorited } from '../components/FavServices';
+import { checkIfFavorited } from '../Services/FavServices';
 const AnimatedIcon = Animated.createAnimatedComponent(IconButton);
 
 const width = Dimensions.get('window').width;
@@ -18,6 +18,20 @@ export default function HomePage({ navigation,route }) {
     const [favs, setfavs] = useState();
     const fadeAnim = useRef(new Animated.Value(0)).current;
     const inputRef = useRef(null)
+
+    const isAuthenticated = async () => {
+        try {
+            const value = await AsyncStorage.getItem('access_token');
+            if (value !== null) {
+                console.log(value)
+                return true;
+            }
+        } catch (error) {
+            // Error retrieving data
+            return false;
+        }
+    }
+
 
     const fetchData = async ()=>{
         const url = `${main_url}/homepage`
@@ -42,6 +56,7 @@ export default function HomePage({ navigation,route }) {
         // navigation.addListener('focus', () => {
             getFavorites()
             fetchData()
+            // isAuthenticated()
         // })
     },[])
     
