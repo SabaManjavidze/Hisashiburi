@@ -10,5 +10,8 @@ npm-debug.*
 web-build/
 src/components/variables.js
 
+
+
+
 # macOS
 .DS_Store
