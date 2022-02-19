@@ -14,11 +14,7 @@ import {
 } from "react-native";
 import { ActivityIndicator, TouchableRipple } from "react-native-paper";
 import ChapterItem from "../components/ChapterItem";
-import {
-  addToFavorites,
-  checkIfFavorited,
-  removeFromFavorites,
-} from "../Services/FavServices";
+import { getMangaOnMAL } from "../Services/MalServices";
 import {
   main_url,
   domain,
@@ -26,6 +22,7 @@ import {
   main_color,
   primary_color,
 } from "../components/variables";
+import { useAuth } from "../Hooks/useAuth";
 
 export const fetchData = async (manga_id) => {
   const url = `${main_url}/manga/${manga_id}`;
@@ -37,26 +34,46 @@ export const fetchData = async (manga_id) => {
 export default function MangaDetails({ navigation, route }) {
   const { item } = route.params;
   const { manga_id, title } = item;
+  const { token } = useAuth();
+  const [mal, setMAL] = useState();
+  const [mal_loaded, setMALLoaded] = useState();
   const [chapters, setChapters] = useState([]);
   const [loaded, setLoaded] = useState(false);
   const [fav, setFav] = useState(false);
-
+  const mal_dict = {
+    reading: "Reading",
+    plan_to_read: "Plan to Read",
+    completed: "Completed",
+    on_hold: "On Hold",
+    dropped: "Dropped",
+  };
   const fetchChapters = async () => {
     navigation.setOptions({ title: title });
     const json = await fetchData(manga_id);
     setChapters(json.chapters);
     setLoaded(true);
   };
-  const checkFavorites = async () => {
-    const value = await AsyncStorage.getItem("FavoriteManga");
-    const isfav = await checkIfFavorited(value, manga_id);
-    setFav(isfav);
+  const fetchMAL = async () => {
+    const data = await getMangaOnMAL(title, token);
+    // console.log(data ? JSON.stringify(data, null, 2) : "nope");
+    setMAL(data);
+    setMALLoaded(true);
   };
+
   useEffect(() => {
     fetchChapters();
-    checkFavorites();
+    fetchMAL();
   }, []);
-
+  const getStatus = () => {
+    if (mal !== null) {
+      if (mal.my_list_status == null) {
+        return "Add To My List";
+      } else {
+        return mal_dict[mal.my_list_status.status];
+      }
+    }
+    return "This Manga Is Not On MyAnimeList";
+  };
   return (
     <View style={styles.container}>
       <ScrollView contentContainerStyle={{ alignItems: "center" }}>
@@ -76,7 +93,7 @@ export default function MangaDetails({ navigation, route }) {
             onPress={() => onPress()}
           >
             <Text style={{ color: "white", textAlign: "center", fontSize: 20 }}>
-              {fav ? "Remove From Favorites" : "Add To Favorites"}
+              {mal_loaded && getStatus()}
             </Text>
           </TouchableRipple>
         </View>

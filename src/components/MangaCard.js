@@ -23,6 +23,7 @@ import {
   checkIfFavorited,
   removeFromFavorites,
 } from "../Services/FavServices";
+import { logOut } from "../Services/MalServices";
 import {
   domain,
   img_url,
@@ -59,11 +60,12 @@ export default function MangaCard({ route, navigation, item, favs }) {
     setfav(isfav);
   };
   const onPress = async () => {
-    if (fav) {
-      removeFromFavs();
-    } else {
-      addToFavs();
-    }
+    // if (fav) {
+    //   removeFromFavs();
+    // } else {
+    //   addToFavs();
+    // }
+    await logOut();
   };
   useEffect(() => {
     if (fav) {
