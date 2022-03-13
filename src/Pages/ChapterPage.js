@@ -9,21 +9,31 @@ import {
   FlatList,
   Dimensions,
   TouchableOpacity,
+  StatusBar,
 } from "react-native";
 import FitImage from "react-native-fit-image";
-import { ActivityIndicator } from "react-native-paper";
+import { TouchableWithoutFeedback } from "react-native-gesture-handler";
+import { ActivityIndicator, Portal } from "react-native-paper";
+import WebView from "react-native-webview";
 import NavBar from "../../NavBar";
 import ChapterNav from "../components/ChapterNav";
-import { main_color, main_url, primary_color } from "../components/variables";
-
-const windowWidth = Dimensions.get("window").width;
-const windowHeight = Dimensions.get("window").height;
+import FadeView from "../components/Testing/FadeView";
+import ReaderAppbar from "../components/Testing/ReaderAppbar";
+import {
+  html,
+  main_color,
+  main_url,
+  primary_color,
+} from "../components/variables";
 
 export default function ChapterPage({ navigation, route }) {
   const { manga_id, chapters, index } = route.params;
   const [data, setData] = useState([]);
+
   const [chapter, setChapter] = useState(chapters[index]);
   const [idx, setIndex] = useState(index);
+  const [hide, sethide] = useState(false);
+
   const [loaded, setLoaded] = useState(false);
   const scroll_ref = useRef(null);
 
@@ -45,64 +55,64 @@ export default function ChapterPage({ navigation, route }) {
       }
     }
   }, [chapter]);
-  const renderItem = ({ item }) => (
-    <FitImage key={item.src} source={{ uri: item.src }} />
-  );
   return (
-    <View
-      style={{ width: "100%", height: "100%", backgroundColor: main_color }}
-    >
-      {loaded ? (
-        <View style={{ width: "100%", height: "100%" }}>
-          <View
-            style={{ flexDirection: "column", height: windowHeight * 0.06 }}
-          >
-            {loaded && (
-              <NavBar
-                chapters={chapters}
-                setIndex={setIndex}
-                scroll_ref={scroll_ref.current}
-                setChap={setChapter}
-                idx={idx}
-              />
-            )}
-          </View>
+    <View style={{ backgroundColor: main_color, flex: 1 }}>
+      <StatusBar
+        backgroundColor={hide ? "transparent" : "rgba(40, 42, 65, 0.45)"}
+        translucent
+      />
+      <ReaderAppbar
+        chapters={chapters}
+        setIndex={setIndex}
+        navigation={navigation}
+        route={route}
+        setChap={setChapter}
+        idx={idx}
+        hide={hide}
+      />
 
-          <View
-            style={{ width: "100%", height: "100%", flexDirection: "column" }}
-          >
-            {/* <ScrollView nestedScrollEnabled style={{width:"100%"}}> */}
-            <FlatList
-              data={data}
-              ref={scroll_ref}
-              renderItem={renderItem}
-              keyExtractor={(item) => item.src}
-              style={{ width: "100%" }}
-            />
-            <View style={{ height: "15%", backgroundColor: main_color }}>
-              <ChapterNav
-                setChapter={setChapter}
-                setIndex={setIndex}
-                idx={idx}
-                navigation={navigation}
-                chapters={chapters}
-              />
-            </View>
-          </View>
-          {/* 
-                  {
-                    data.map(child=>{
-                      return(
-                        <FitImage key={child.src} source={{uri:child.src}} />
-                        )
-                      })
-                    }
-                     */}
-          {/* </ScrollView> */}
+      {loaded && (
+        <View style={{ flex: 1 }}>
+          <WebView
+            style={{
+              backgroundColor: main_color,
+              alignItems: "center",
+              justifyContent: "center",
+              width: "100%",
+            }}
+            originWhitelist={["*"]}
+            // onTouchEnd={() => hide && sethide(false)}
+            // onTouchStart={() => sethide(true)}
+            onTouchMove={() => sethide(true)}
+            nestedScrollEnabled={true}
+            scalesPageToFit={true}
+            showsVerticalScrollIndicator={false}
+            onMessage={() => sethide(!hide)}
+            source={{
+              html: `
+                  ${html}
+                  ${data
+                    .map(
+                      (item) =>
+                        `<img src="${item.src}" onClick={window.ReactNativeWebView.postMessage("helo")}>`
+                    )
+                    .join("")}
+                  </body>
+                  </html>
+                  `,
+            }}
+          />
         </View>
-      ) : (
-        <ActivityIndicator animating={true} color={primary_color} />
       )}
+      <ChapterNav
+        setChapter={setChapter}
+        setIndex={setIndex}
+        idx={idx}
+        navigation={navigation}
+        chapters={chapters}
+        hide={hide}
+      />
+      {/* <ActivityIndicator animating={true} color={primary_color} /> */}
     </View>
   );
 }

@@ -7,23 +7,45 @@ const windowWidth = Dimensions.get("window").width;
 const windowHeight = Dimensions.get("window").height;
 
 export default function MalCard({ node, navigation, route }) {
+  function removePunctuation(string) {
+    let regex = /[^a-zA-Z0-9]/g;
+    return string.toLowerCase().replace(regex, "");
+  }
   const handlePress = async (node) => {
-    // console.log(JSON.stringify(node, null, 2));
-    const { title, alternative_titles } = node;
-    const { synonyms, en } = alternative_titles;
-    const data = await fetch(`${main_url}/search/${en || title}`);
-    const json = await data.json();
-    const title_lower = title.toLowerCase();
-    const alt_lower = en.toLowerCase();
-    const synonym = synonyms.length > 0 ? synonyms[0].toLowerCase() : null;
-    const obj = json.find(
-      (item) =>
-        item.title.toLowerCase().replace(":", "").replace("-", "") ===
-          title_lower ||
-        alt_lower ||
-        synonym
+    const alt_titles = node.alternative_titles;
+    const title = removePunctuation(node.title);
+    const en = removePunctuation(alt_titles.en);
+    const synonym =
+      alt_titles.synonyms.length > 0
+        ? removePunctuation(alt_titles.synonyms[0])
+        : "";
+    // console.log({ synonym, title, en });
+    // console.log(`${main_url}/search/${title || en}`);
+    const data = await fetch(
+      `${main_url}/search/${node.title || alt_titles.en}`
     );
-    navigation.navigate("MangaDetails", { item: obj });
+    const json = await data.json();
+
+    // const obj = json.find(
+    //   (item) =>
+    //     item.title.toLowerCase().replace(":", "").replace("-", "") ===
+    //       title ||
+    //     en ||
+    //     synonym
+    // );
+    json.map((item) => {
+      const str = removePunctuation(item.title);
+      const item_title = str;
+      if (item_title === title || item_title === en || item_title === synonym) {
+        // alert(
+        //   JSON.stringify({ title, en, synonym, found: item.title }, null, 2)
+        // );
+        navigation.navigate("MangaDetails", {
+          item: item,
+        });
+      }
+    });
+    // navigation.navigate("MangaDetails", { item: obj });
   };
   // console.log(JSON.stringify(obj ? obj.title : "not found"));
 
@@ -48,7 +70,9 @@ export default function MalCard({ node, navigation, route }) {
         <View style={{ height: "10%", justifyContent: "center" }}>
           <View style={styles.titleContainer}></View>
           <Text style={{ color: "white", textAlign: "center" }}>
-            {node.title}
+            {node.title.length > 40
+              ? `${node.title.substring(0, 35)}...`
+              : node.title}
           </Text>
         </View>
       </View>

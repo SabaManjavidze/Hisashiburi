@@ -1,9 +1,9 @@
 import { View, Alert, Text, StyleSheet, AsyncStorage } from "react-native";
 import React, { useState } from "react";
-import { Button } from "react-native-paper";
 import {
   auth_url,
   CLIENT_ID,
+  html,
   main_color,
   STATE_VAR,
   token_url,
@@ -27,15 +27,24 @@ export default function Auth({ navigation, route }) {
         await AsyncStorage.setItem("access_token", data.access_token);
         await AsyncStorage.setItem("refresh_token", data.refresh_token);
         await AsyncStorage.setItem("expires_in", data.expires_in);
-        Alert.alert("Successfully logged in");
+        alert("Successfully logged in");
       } catch (error) {
-        Alert.alert("There was an error", error.response.data);
+        alert("There was an error", error.response.data);
       }
     }
   };
   return (
     <WebView
-      source={{ uri: auth_url }}
+      // source={{ uri: auth_url }}
+      source={{
+        html: `${html}                  
+          <h1 style="color:white;font-size:60px;text-align:center;max-width:50%;right:27%;top:40%;position:absolute">
+            Coming Soon! cuz im a lazy fuk
+          </h1>
+        </body>
+      </html>`,
+      }}
+      style={{ backgroundColor: main_color }}
       onNavigationStateChange={onNavStateChange}
     />
   );

@@ -18,6 +18,7 @@ import ProfilePage from "../Pages/ProfilePage";
 import HomeScreenNav from "../Pages/HomeScreenNav";
 import TopManga from "../Pages/TopManga";
 import { useAuth } from "../Hooks/useAuth";
+import TopMangaScreenNav from "./Testing/TopMangaStack";
 
 export default function MainNavigation() {
   const Tab = createBottomTabNavigator();
@@ -30,7 +31,7 @@ export default function MainNavigation() {
       setToken(value);
       setLoaded(true);
     } catch (error) {
-      Alert.alert(error, "There was an error");
+      alert(error, "There was an error");
     }
   };
   useEffect(() => {
@@ -70,43 +71,54 @@ export default function MainNavigation() {
       {loaded && (
         <NavigationContainer>
           <StatusBar
-            animated={true}
-            backgroundColor="#282A41"
+            animated={false}
+            backgroundColor={main_color}
             hidden={false}
             style={"light"}
           />
           <Tab.Navigator
             screenOptions={{
-              tabBarStyle: { backgroundColor: main_color, display: "flex" },
+              tabBarStyle: {
+                backgroundColor: main_color,
+                display: "flex",
+                borderTopColor: "black",
+              },
               tabBarActiveTintColor: "white",
             }}
           >
             <Tab.Screen
-              name="HomeScreen"
+              name="Home Screen"
               options={{
                 headerShown: false,
                 tabBarIcon: ({ focused, color }) =>
                   renderItem(focused, "home", color),
                 tabBarLabel: "Home",
+                tabBarStyle: { borderTopColor: "black" },
               }}
               component={HomeScreenNav}
             />
             <Tab.Screen
-              name="Top Manga"
+              name="Top Manga Screen"
               options={{
-                // headerShown: false,
+                headerTitle: "Top Manga",
+                title: "Top Manga",
                 tabBarIcon: ({ focused, color }) =>
                   renderItem(focused, "format-list-bulleted", color, "square"),
                 ...mangaDetailsHeader,
               }}
-              component={TopManga}
+              component={TopMangaScreenNav}
             />
             {token !== null || (
               <Tab.Screen
                 name="LogIn"
                 component={Auth}
                 options={{
-                  // headerShown: false,
+                  headerStyle: {
+                    backgroundColor: main_color,
+                    borderBottomColor: "black",
+                    borderBottomWidth: 0.5,
+                  },
+                  headerTitleStyle: { color: "white" },
                   tabBarIcon: ({ focused, color }) =>
                     renderItem(focused, "account-circle", color),
                 }}
@@ -130,7 +142,6 @@ export default function MainNavigation() {
               />
             )}
           </Tab.Navigator>
-          {/* <BottomTabNavigator /> */}
         </NavigationContainer>
       )}
     </>

@@ -17,7 +17,7 @@ import Animated, {
   useSharedValue,
   withTiming,
 } from "react-native-reanimated";
-import { fetchData } from "../Pages/MangaDetails";
+import { fetchData } from "../Pages/MangaDetails/MangaDetails";
 import {
   addToFavorites,
   checkIfFavorited,
@@ -47,37 +47,11 @@ export default function MangaCard({ route, navigation, item, favs }) {
   };
   const fav_icon = "star";
   const not_fav_icon = "star-outline";
-  const addToFavs = () => {
-    addToFavorites(favs, item.manga_id);
-    setfav(true);
-  };
-  const removeFromFavs = () => {
-    removeFromFavorites(favs, item.manga_id);
-    setfav(false);
-  };
-  const checkFavorites = async () => {
-    const isfav = await checkIfFavorited(favs, item.manga_id);
-    setfav(isfav);
-  };
   const onPress = async () => {
-    // if (fav) {
-    //   removeFromFavs();
-    // } else {
-    //   addToFavs();
-    // }
     await logOut();
+    navigation.navigate("Auth");
   };
-  useEffect(() => {
-    if (fav) {
-      setstar(fav_icon);
-    } else {
-      setstar(not_fav_icon);
-    }
-  }, [fav]);
 
-  useEffect(() => {
-    checkFavorites();
-  }, []);
   const atHome = route.name == "Home";
   return (
     <View
@@ -85,10 +59,15 @@ export default function MangaCard({ route, navigation, item, favs }) {
         { height: atHome ? windowHeight * 0.25 : "100%" },
         styles.container,
       ]}
+      key={item.manga_id}
     >
       <View style={{ flex: 1, flexDirection: "row", alignItems: "center" }}>
         <TouchableOpacity
-          onPress={() => navigation.navigate("MangaDetails", { item: item })}
+          onPress={() =>
+            navigation.navigate("MangaDetails", {
+              item: item,
+            })
+          }
         >
           <Image
             source={{

@@ -1,29 +1,27 @@
 {
   "expo": {
-    "name": "Manga App",
-    "slug": "mangaApp",
-    "version": "1.0.0",
-    "privacy":"public",
-    "description":"app for reading manga bich",
+    "name": "Hisashiburi",
+    "slug": "hisashiburi",
+    "version": "1.0.2",
+    "privacy": "public",
+    "description": "App for reading manga with MyAnimeList integration",
     "orientation": "portrait",
-    "icon": "./assets/takezosquare.png",
+    "icon": "./assets/takezo.png",
     "splash": {
-      "image": "./assets/vaga.png",
+      "image": "./assets/splashh.png",
       "resizeMode": "cover",
-      "backgroundColor": "#B6D4DB"
+      "backgroundColor": "#282A41"
     },
     "updates": {
       "fallbackToCacheTimeout": 0
     },
-    "assetBundlePatterns": [
-      "**/*"
-    ],
+    "assetBundlePatterns": ["**/*"],
     "ios": {
       "supportsTablet": true
     },
     "android": {
       "adaptiveIcon": {
-        "foregroundImage": "./assets/takezosquare.png",
+        "foregroundImage": "./assets/takezo.png",
         "backgroundColor": "#FFFFFF"
       },
       "package": "manga.app.beta"
