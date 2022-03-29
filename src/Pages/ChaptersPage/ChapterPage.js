@@ -1,30 +1,9 @@
 import React, { useRef, useEffect, useState, useContext } from "react";
-import {
-  StyleSheet,
-  View,
-  Image,
-  ScrollView,
-  SafeAreaView,
-  Text,
-  FlatList,
-  Dimensions,
-  TouchableOpacity,
-  StatusBar,
-} from "react-native";
-import FitImage from "react-native-fit-image";
-import { TouchableWithoutFeedback } from "react-native-gesture-handler";
-import { ActivityIndicator, Portal } from "react-native-paper";
+import { StyleSheet, View, StatusBar } from "react-native";
 import WebView from "react-native-webview";
-import NavBar from "../../NavBar";
-import ChapterNav from "../components/ChapterNav";
-import FadeView from "../components/Testing/FadeView";
-import ReaderAppbar from "../components/Testing/ReaderAppbar";
-import {
-  html,
-  main_color,
-  main_url,
-  primary_color,
-} from "../components/variables";
+import ChapterNav from "./Components/ChapterNav";
+import ReaderAppbar from "./Components/ReaderAppbar";
+import { html, main_color, main_url } from "../../components/variables";
 
 export default function ChapterPage({ navigation, route }) {
   const { manga_id, chapters, index } = route.params;

@@ -153,16 +153,21 @@ export default function ChapterSearchModal({
                 paddingBottom: 35,
                 alignItems: "center",
               }}
-              renderItem={({ item, index }) => (
-                <ChapterItem
-                  chapters={chapters}
-                  child={item}
-                  navigation={navigation}
-                  manga_id={manga_id}
-                  index={index}
-                />
-              )}
-              keyExtractor={(item) => item.chapter_num}
+              renderItem={({ item }) => {
+                const index = chapters.findIndex(
+                  (child) => child.chapter_num === item.chapter_num
+                );
+                return (
+                  <ChapterItem
+                    chapters={chapters}
+                    child={item}
+                    navigation={navigation}
+                    manga_id={manga_id}
+                    index={index}
+                  />
+                );
+              }}
+              keyExtractor={(item) => item.chap_title}
             />
           </View>
         </View>

@@ -6,8 +6,12 @@ import {
   View,
 } from "react-native";
 import React from "react";
-import { primary_color, main_color, transp_main_color } from "./variables";
-import FadeView from "./Testing/FadeView";
+import {
+  primary_color,
+  main_color,
+  transp_main_color,
+} from "../../../components/variables";
+import FadeView from "./FadeView";
 const windowWidth = Dimensions.get("window").width;
 const windowHeight = Dimensions.get("window").height;
 

@@ -15,10 +15,9 @@ import { StatusBar } from "expo-status-bar";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import Auth from "../Pages/Auth";
 import ProfilePage from "../Pages/ProfilePage";
-import HomeScreenNav from "../Pages/HomeScreenNav";
-import TopManga from "../Pages/TopManga";
+import HomePageNav from "../Pages/HomePage/HomePageNav";
 import { useAuth } from "../Hooks/useAuth";
-import TopMangaScreenNav from "./Testing/TopMangaStack";
+import TopMangaScreenNav from "./TopMangaStack";
 
 export default function MainNavigation() {
   const Tab = createBottomTabNavigator();
@@ -95,7 +94,7 @@ export default function MainNavigation() {
                 tabBarLabel: "Home",
                 tabBarStyle: { borderTopColor: "black" },
               }}
-              component={HomeScreenNav}
+              component={HomePageNav}
             />
             <Tab.Screen
               name="Top Manga Screen"

@@ -17,16 +17,16 @@ import {
   main_color,
   primary_color,
   secondary_color,
-} from "../components/variables";
+} from "../../components/variables";
 import {
   ActivityIndicator,
   Appbar,
   IconButton,
   Searchbar,
 } from "react-native-paper";
-import MangaCard from "../components/MangaCard";
-import { checkIfFavorited } from "../Services/FavServices";
-import { useAuth } from "../Hooks/useAuth";
+import MangaCard from "../../components/MangaCard";
+import { checkIfFavorited } from "../../Services/FavServices";
+import { useAuth } from "../../Hooks/useAuth";
 const AnimatedIcon = Animated.createAnimatedComponent(IconButton);
 
 const width = Dimensions.get("window").width;
@@ -35,10 +35,9 @@ const height = Dimensions.get("window").height;
 export default function HomePage({ navigation, route }) {
   const [data, setData] = useState([]);
   const [loaded, setLoaded] = useState(false);
-  const { token } = useAuth();
+  // const { token } = useAuth();
   const [input, setInput] = useState("");
   const [showInput, setShowInput] = useState(false);
-  const [favs, setfavs] = useState();
   const fadeAnim = useRef(new Animated.Value(0)).current;
   const inputRef = useRef(null);
 
@@ -53,6 +52,7 @@ export default function HomePage({ navigation, route }) {
       alert(error);
     }
   };
+
   const fetchResults = async () => {
     setLoaded(false);
     setData([]);
@@ -61,6 +61,7 @@ export default function HomePage({ navigation, route }) {
     setData(json);
     setLoaded(true);
   };
+
   useEffect(() => {
     fetchData();
   }, []);
@@ -76,12 +77,7 @@ export default function HomePage({ navigation, route }) {
   };
   const renderItem = (child) => {
     return (
-      <MangaCard
-        route={route}
-        favs={favs}
-        navigation={navigation}
-        item={child.item}
-      />
+      <MangaCard route={route} navigation={navigation} item={child.item} />
     );
   };
   const backArrow = () => (

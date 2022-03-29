@@ -16,7 +16,7 @@ export default function Auth({ navigation, route }) {
 
   const onNavStateChange = async (navigationState) => {
     const url = navigationState.url;
-    if (url.includes("code")) {
+    if (url.includes("code=")) {
       const authorization_code = url.split("code=")[1].split("&")[0];
       navigation.navigate("Home");
       try {
@@ -24,6 +24,7 @@ export default function Auth({ navigation, route }) {
           code: authorization_code,
           state: STATE_VAR,
         });
+        console.log(data);
         await AsyncStorage.setItem("access_token", data.access_token);
         await AsyncStorage.setItem("refresh_token", data.refresh_token);
         await AsyncStorage.setItem("expires_in", data.expires_in);
@@ -35,15 +36,19 @@ export default function Auth({ navigation, route }) {
   };
   return (
     <WebView
-      // source={{ uri: auth_url }}
       source={{
-        html: `${html}                  
-          <h1 style="color:white;font-size:60px;text-align:center;max-width:50%;right:27%;top:40%;position:absolute">
-            Coming Soon! cuz im a lazy fuk
-          </h1>
-        </body>
-      </html>`,
+        // uri: "https://node-mal-oauth.herokuapp.com/auth",
+        uri: "http://10.0.2.2:3000/auth",
       }}
+      // onLoad={() => console.log("helloo")}
+      // source={{
+      //   html: `${html}
+      //     <h1 style="color:white;font-size:60px;text-align:center;max-width:50%;right:27%;top:40%;position:absolute">
+      //       Coming Soon! cuz im a lazy fuk
+      //     </h1>
+      //   </body>
+      // </html>`,
+      // }}
       style={{ backgroundColor: main_color }}
       onNavigationStateChange={onNavStateChange}
     />

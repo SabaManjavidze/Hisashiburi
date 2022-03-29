@@ -1,12 +1,12 @@
 import { View, Text } from "react-native";
 import React, { useEffect } from "react";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
-import MangaDetails from "./MangaDetails/MangaDetails";
-import ChapterPage from "./ChapterPage";
-import { main_color } from "../components/variables";
-import HomePage from "./HomePage";
+import TopManga from "../Pages/TopManga";
+import MangaDetails from "../Pages/MangaDetails/MangaDetails";
+import { main_color } from "./variables";
+import ChapterPage from "../Pages/ChaptersPage/ChapterPage";
 
-export default function HomeScreenNav({ navigation, route }) {
+export default function TopMangaScreenNav({ navigation, route }) {
   const Stack = createNativeStackNavigator();
   const mangaDetailsHeader = {
     headerStyle: {
@@ -25,9 +25,9 @@ export default function HomeScreenNav({ navigation, route }) {
   return (
     <Stack.Navigator>
       <Stack.Screen
-        name="Home"
+        name="Top Manga"
         options={{ headerShown: false }}
-        component={HomePage}
+        component={TopManga}
         listeners={{
           focus: () => {
             navigation.setOptions({
@@ -36,6 +36,7 @@ export default function HomeScreenNav({ navigation, route }) {
                 backgroundColor: main_color,
                 borderTopColor: "black",
               },
+              headerShown: true,
             });
           },
         }}
@@ -52,6 +53,7 @@ export default function HomeScreenNav({ navigation, route }) {
                 backgroundColor: main_color,
                 borderTopColor: "black",
               },
+              headerShown: false,
             });
           },
         }}
@@ -68,6 +70,7 @@ export default function HomeScreenNav({ navigation, route }) {
                 backgroundColor: main_color,
                 borderTopColor: "black",
               },
+              headerShown: false,
             });
           },
         }}

@@ -29,14 +29,15 @@ import {
   img_url,
   light_primary_color,
   primary_color,
-} from "./variables";
+} from "../components/variables";
 
 const windowWidth = Dimensions.get("window").width;
 const windowHeight = Dimensions.get("window").height;
 
-export default function MangaCard({ route, navigation, item, favs }) {
+export default function MangaCard({ route, navigation, item }) {
   const [fav, setfav] = useState(false);
   const [star, setstar] = useState(not_fav_icon);
+
   const goToChapter = async (i) => {
     const { chapters } = await fetchData(item.manga_id);
     navigation.navigate("ChapterPage", {
@@ -45,8 +46,10 @@ export default function MangaCard({ route, navigation, item, favs }) {
       index: i,
     });
   };
+
   const fav_icon = "star";
   const not_fav_icon = "star-outline";
+
   const onPress = async () => {
     await logOut();
     navigation.navigate("Auth");

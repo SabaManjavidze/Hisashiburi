@@ -6,10 +6,10 @@ import {
   primary_color,
   transp_main_color,
   secondary_color,
-} from "../../components/variables";
+} from "../../../components/variables";
 import { Appbar, List } from "react-native-paper";
 import FadeView from "./FadeView";
-import NavBar from "../../../NavBar";
+import NavBar from "./NavBar";
 
 export default function ReaderAppbar({
   navigation,

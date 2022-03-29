@@ -6,7 +6,7 @@ import {
   light_primary_color,
   main_color,
   primary_color,
-} from "./src/components/variables";
+} from "../../../components/variables";
 
 const windowWidth = Dimensions.get("window").width;
 

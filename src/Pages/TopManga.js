@@ -55,6 +55,7 @@ export default function TopManga({ navigation, route }) {
   }, [currPage]);
   const loadMoreItems = () => {
     setCurrPage(paging.next);
+    // console.log("first");
     // console.log(JSON.stringify(data));
   };
   return (
@@ -68,7 +69,7 @@ export default function TopManga({ navigation, route }) {
             style={{ height: "100%", width: "100%" }}
             keyExtractor={(item) => item.node.id}
             onEndReached={loadMoreItems}
-            onEndReachedThreshold={0.2}
+            onEndReachedThreshold={3}
             numColumns={2}
             ListFooterComponent={
               <ActivityIndicator animating={true} color={primary_color} />
