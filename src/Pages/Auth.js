@@ -1,5 +1,5 @@
 import { View, Alert, Text, StyleSheet, AsyncStorage } from "react-native";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   auth_url,
   CLIENT_ID,
@@ -10,15 +10,28 @@ import {
 } from "../components/variables";
 import { WebView } from "react-native-webview";
 import axios from "axios";
+import { gql, useQuery } from "@apollo/client";
+import { getProfile } from "../Services/MalServices";
 
 export default function Auth({ navigation, route }) {
   const [show, setShow] = useState(false);
-
+  const CreateUser = (user_id) => {
+    const CREATE_USER = gql`
+    {
+      createUser(user_id:${user_id}) {
+        picture
+        user_id
+        user_name
+      }
+    }
+  `;
+    const { loading, data, error } = useQuery(CREATE_USER);
+  };
   const onNavStateChange = async (navigationState) => {
     const url = navigationState.url;
     if (url.includes("code=")) {
       const authorization_code = url.split("code=")[1].split("&")[0];
-      navigation.navigate("Home");
+      // console.log(authorization_code);
       try {
         const { data } = await axios.post(token_url, {
           code: authorization_code,
@@ -28,10 +41,14 @@ export default function Auth({ navigation, route }) {
         await AsyncStorage.setItem("access_token", data.access_token);
         await AsyncStorage.setItem("refresh_token", data.refresh_token);
         await AsyncStorage.setItem("expires_in", data.expires_in);
+        // const user = await getProfile(data.access_token);
+        // console.log(user);
+        // CreateUser(user.data.user_id);
         alert("Successfully logged in");
       } catch (error) {
-        alert("There was an error", error.response.data);
+        alert("erori iyo bichooo", error.response.data);
       }
+      // navigation.navigate("Home");
     }
   };
   return (
@@ -49,8 +66,10 @@ export default function Auth({ navigation, route }) {
       //   </body>
       // </html>`,
       // }}
+      onNavigationStateChange={(navigationState) =>
+        onNavStateChange(navigationState)
+      }
       style={{ backgroundColor: main_color }}
-      onNavigationStateChange={onNavStateChange}
     />
   );
 }

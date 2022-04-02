@@ -3,13 +3,19 @@ import React from "react";
 import { AuthProvider } from "./src/Hooks/useAuth";
 import MainNavigation from "./src/components/MainNavigation";
 import { Provider } from "react-native-paper";
-
+import { ApolloClient, ApolloProvider, InMemoryCache } from "@apollo/client";
+const client = new ApolloClient({
+  uri: "http://10.0.2.2:3000/graphql",
+  cache: new InMemoryCache(),
+});
 export default function App() {
   return (
-    <AuthProvider>
-      <Provider>
-        <MainNavigation />
-      </Provider>
-    </AuthProvider>
+    <ApolloProvider client={client}>
+      <AuthProvider>
+        <Provider>
+          <MainNavigation />
+        </Provider>
+      </AuthProvider>
+    </ApolloProvider>
   );
 }

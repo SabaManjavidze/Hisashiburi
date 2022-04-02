@@ -10,8 +10,6 @@ import {
 import React, { useEffect, useState } from "react";
 import { getMangaList, getProfile } from "../Services/MalServices";
 import { main_color, main_url, primary_color } from "../components/variables";
-import { FlatList } from "react-native-gesture-handler";
-import FitImage from "react-native-fit-image";
 import { ActivityIndicator, TouchableRipple } from "react-native-paper";
 import MalCard from "../components/MalCard";
 
