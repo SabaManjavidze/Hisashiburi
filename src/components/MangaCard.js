@@ -8,28 +8,10 @@ import {
   StyleSheet,
   AsyncStorage,
 } from "react-native";
-import { PanGestureHandler } from "react-native-gesture-handler";
 import { IconButton, TouchableRipple } from "react-native-paper";
-import Animated, {
-  runOnJS,
-  useAnimatedGestureHandler,
-  useAnimatedStyle,
-  useSharedValue,
-  withTiming,
-} from "react-native-reanimated";
 import { fetchData } from "../Pages/MangaDetails/MangaDetails";
-import {
-  addToFavorites,
-  checkIfFavorited,
-  removeFromFavorites,
-} from "../Services/FavServices";
 import { logOut } from "../Services/MalServices";
-import {
-  domain,
-  img_url,
-  light_primary_color,
-  primary_color,
-} from "../components/variables";
+import { domain, img_url, primary_color } from "../components/variables";
 
 const windowWidth = Dimensions.get("window").width;
 const windowHeight = Dimensions.get("window").height;

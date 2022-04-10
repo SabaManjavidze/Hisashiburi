@@ -2,12 +2,18 @@ import axios from "axios";
 import { AsyncStorage } from "react-native";
 import { CLIENT_ID, profile_url, top_manga_url } from "../components/variables";
 
+import { useAuth } from "../Hooks/useAuth";
 export const getProfile = async (access_token) => {
   const headers = {
     Authorization: `Bearer ${access_token}`,
   };
-  const { data } = await axios.get(profile_url, { headers });
-  return data;
+  try {
+    const { data } = await axios.get(profile_url, { headers });
+    // console.log(JSON.stringify(data, null, 2));
+    return data;
+  } catch (error) {
+    return error;
+  }
 };
 export const logOut = async () => {
   try {

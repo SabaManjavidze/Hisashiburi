@@ -8,10 +8,15 @@ import {
   StyleSheet,
 } from "react-native";
 import React, { useEffect, useState } from "react";
-import { getMangaList, getProfile } from "../Services/MalServices";
-import { main_color, main_url, primary_color } from "../components/variables";
+import { getMangaList, getProfile, logOut } from "../../Services/MalServices";
+import {
+  main_color,
+  main_url,
+  primary_color,
+} from "../../components/variables";
 import { ActivityIndicator, TouchableRipple } from "react-native-paper";
-import MalCard from "../components/MalCard";
+import MalCard from "../../components/MalCard";
+import { useAuth } from "../../Hooks/useAuth";
 
 const windowHeight = Dimensions.get("window").height;
 
@@ -20,14 +25,14 @@ export default function ProfilePage({ route, navigation }) {
   const [mangaList, setMangaList] = useState({});
   const [manga_loaded, setMangaLoaded] = useState(false);
   const [profile_loaded, setProfileLoaded] = useState(false);
-  const getAccessToken = async () => {
-    const access_token = await AsyncStorage.getItem("access_token");
+  const { token, setToken } = useAuth();
 
-    if (access_token && access_token !== "null") {
-      const profile = await getProfile(access_token);
+  const getAccessToken = async () => {
+    if (token && token !== "null") {
+      const profile = await getProfile(token);
       setProfile(profile);
       setProfileLoaded(true);
-      const mangaList = await getMangaList(access_token);
+      const mangaList = await getMangaList(token);
       setMangaList(mangaList.data);
       setMangaLoaded(true);
     } else {
@@ -68,33 +73,58 @@ export default function ProfilePage({ route, navigation }) {
           alignItems: "center",
         }}
       >
-        {profile_loaded ? (
-          <>
-            <Text style={{ fontSize: 30, fontWeight: "bold", color: "white" }}>
-              {profile.name}
-            </Text>
-            <Image
-              source={{ uri: profile.picture }}
-              style={{ width: 200, height: 200 }}
-            />
-          </>
-        ) : (
+        <>
           <View
             style={{
+              flexDirection: "row",
               width: "100%",
-              height: "100%",
-              backgroundColor: main_color,
               justifyContent: "center",
-              alignItems: "center",
             }}
           >
-            <ActivityIndicator
-              animating={true}
-              size="large"
-              color={primary_color}
-            />
+            {profile_loaded ? (
+              <Text
+                style={{
+                  fontSize: 30,
+                  fontWeight: "bold",
+                  color: "white",
+                  textAlign: "center",
+                  left: 30,
+                }}
+              >
+                {profile.name}
+              </Text>
+            ) : (
+              <View
+                style={{
+                  width: "100%",
+                  height: "100%",
+                  backgroundColor: main_color,
+                  justifyContent: "center",
+                  alignItems: "center",
+                }}
+              >
+                <ActivityIndicator
+                  animating={true}
+                  size="large"
+                  color={primary_color}
+                />
+              </View>
+            )}
+            <TouchableRipple
+              style={{ backgroundColor: primary_color, left: 100 }}
+              onPress={async () => {
+                await logOut();
+                setToken(null);
+              }}
+            >
+              <Text style={{ color: "white", fontSize: 20 }}>Log out</Text>
+            </TouchableRipple>
           </View>
-        )}
+          <Image
+            source={{ uri: profile.picture }}
+            style={{ width: 200, height: 200 }}
+          />
+        </>
         {manga_loaded && (
           // <FlatList
           //   nestedScrollEnabled

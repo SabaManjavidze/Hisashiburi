@@ -9,6 +9,8 @@ import {
   SafeAreaView,
   Animated,
   AsyncStorage,
+  Alert,
+  BackHandler,
 } from "react-native";
 import {
   main_url,
@@ -35,7 +37,7 @@ const height = Dimensions.get("window").height;
 export default function HomePage({ navigation, route }) {
   const [data, setData] = useState([]);
   const [loaded, setLoaded] = useState(false);
-  // const { token } = useAuth();
+  const { token } = useAuth();
   const [input, setInput] = useState("");
   const [showInput, setShowInput] = useState(false);
   const fadeAnim = useRef(new Animated.Value(0)).current;
@@ -64,8 +66,41 @@ export default function HomePage({ navigation, route }) {
 
   useEffect(() => {
     fetchData();
-  }, []);
+    // console.log(token || "token is null");
+    const backAction = () => {
+      Alert.alert("Hold on!", "Are you sure you want to go back?", [
+        {
+          text: "Cancel",
+          onPress: () => null,
+          style: "cancel",
+        },
+        { text: "YES", onPress: () => BackHandler.exitApp() },
+      ]);
+      return true;
+    };
 
+    const backHandler = BackHandler.addEventListener(
+      "hardwareBackPress",
+      LoadHome
+    );
+
+    return () => backHandler.remove();
+  }, []);
+  const LoadHome = async () => {
+    setShowInput(false);
+
+    inputRef.current.clear();
+    setInput("");
+    setData([]);
+    setLoaded(false);
+    fetchData();
+
+    Animated.timing(fadeAnim, {
+      toValue: 0,
+      duration: 500,
+      useNativeDriver: false,
+    }).start();
+  };
   const onSubmit = () => {
     if (input == null || input == "") {
       setData([]);
@@ -90,21 +125,7 @@ export default function HomePage({ navigation, route }) {
       }}
       color="white"
       icon={"navigation"}
-      onPress={() => {
-        setShowInput(false);
-
-        inputRef.current.clear();
-        setInput("");
-        setData([]);
-        setLoaded(false);
-        fetchData();
-
-        Animated.timing(fadeAnim, {
-          toValue: 0,
-          duration: 500,
-          useNativeDriver: false,
-        }).start();
-      }}
+      onPress={LoadHome}
     />
   );
   return (
