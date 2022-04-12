@@ -75,7 +75,7 @@ export default function MangaCard({ route, navigation, item }) {
             style={{
               flex: 1,
               width: "100%",
-              justifyContent: atHome ? "space-between" : "center",
+              justifyContent: "space-between",
               height: "40%",
               flexDirection: "row",
             }}
@@ -95,23 +95,6 @@ export default function MangaCard({ route, navigation, item }) {
                   : item.title}
               </Text>
             </View>
-            {atHome && (
-              <View
-                style={{
-                  alignItems: "center",
-                  justifyContent: "flex-start",
-                  height: "100%",
-                  width: "10%",
-                }}
-              >
-                <IconButton
-                  icon={star}
-                  style={{ bottom: 10 }}
-                  onPress={() => onPress()}
-                  color={primary_color}
-                />
-              </View>
-            )}
           </View>
           {item.chapters && (
             <View

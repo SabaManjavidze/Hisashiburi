@@ -29,6 +29,7 @@ import {
 import MangaCard from "../../components/MangaCard";
 import { checkIfFavorited } from "../../Services/FavServices";
 import { useAuth } from "../../Hooks/useAuth";
+import MangaSkeleton from "../../components/MangaSkeleton";
 const AnimatedIcon = Animated.createAnimatedComponent(IconButton);
 
 const width = Dimensions.get("window").width;
@@ -67,17 +68,6 @@ export default function HomePage({ navigation, route }) {
   useEffect(() => {
     fetchData();
     // console.log(token || "token is null");
-    const backAction = () => {
-      Alert.alert("Hold on!", "Are you sure you want to go back?", [
-        {
-          text: "Cancel",
-          onPress: () => null,
-          style: "cancel",
-        },
-        { text: "YES", onPress: () => BackHandler.exitApp() },
-      ]);
-      return true;
-    };
 
     const backHandler = BackHandler.addEventListener(
       "hardwareBackPress",
@@ -182,27 +172,23 @@ export default function HomePage({ navigation, route }) {
           />
         </Animated.View>
       </Appbar.Header>
-      {loaded ? (
-        <FlatList
-          data={data}
-          renderItem={renderItem}
-          keyExtractor={(item) => item.manga_id}
-          style={{ height: "100%", width: "100%" }}
-          contentContainerStyle={{ alignItems: "center" }}
-        />
-      ) : (
-        <View
-          style={{
-            width: "100%",
-            height: "100%",
-            backgroundColor: main_color,
-            justifyContent: "center",
-            alignItems: "center",
-          }}
-        >
-          <ActivityIndicator animating={true} color={primary_color} />
-        </View>
-      )}
+      <>
+        {loaded ? (
+          <FlatList
+            data={data}
+            renderItem={renderItem}
+            keyExtractor={(item) => item.manga_id}
+            style={{ height: "100%", width: "100%" }}
+            contentContainerStyle={{ alignItems: "center" }}
+          />
+        ) : (
+          <Animated.View>
+            {[...Array(5)].map((_, i) => (
+              <MangaSkeleton key={i} />
+            ))}
+          </Animated.View>
+        )}
+      </>
     </SafeAreaView>
   );
 }

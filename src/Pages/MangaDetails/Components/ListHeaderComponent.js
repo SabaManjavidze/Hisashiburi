@@ -2,6 +2,7 @@ import { Dimensions, Image, Text, View } from "react-native";
 import { ActivityIndicator, TouchableRipple } from "react-native-paper";
 import {
   domain,
+  main_color,
   mal_dict,
   primary_color,
   secondary_color,
@@ -91,15 +92,39 @@ export default function ListHeaderComponent({
         }}
         onPress={() => onPress()}
       >
-        <Text
-          style={{
-            color: "white",
-            textAlign: "center",
-            fontSize: 20,
-          }}
-        >
-          {token ? mal_loaded && getStatus() : "Sign In To Add To Your List"}
-        </Text>
+        {token ? (
+          mal_loaded ? (
+            <Text
+              style={{
+                color: "white",
+                textAlign: "center",
+                fontSize: 20,
+              }}
+            >
+              {getStatus()}
+            </Text>
+          ) : (
+            <ActivityIndicator
+              size="small"
+              color={primary_color}
+              style={{
+                width: "100%",
+                height: 300,
+                resizeMode: "cover",
+              }}
+            />
+          )
+        ) : (
+          <Text
+            style={{
+              color: "white",
+              textAlign: "center",
+              fontSize: 20,
+            }}
+          >
+            Sign In To Add To Your List
+          </Text>
+        )}
       </TouchableRipple>
     </View>
   );

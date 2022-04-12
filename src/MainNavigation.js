@@ -1,15 +1,19 @@
-import React, { useRef, useEffect, useState } from "react";
+import React from "react";
 import { StyleSheet } from "react-native";
 import { NavigationContainer } from "@react-navigation/native";
 import { Avatar } from "react-native-paper";
-import { main_color, paper_primary_color, primary_color } from "./variables";
+import {
+  main_color,
+  paper_primary_color,
+  primary_color,
+} from "./components/variables";
 import { StatusBar } from "expo-status-bar";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
-import Auth from "../Pages/Auth";
-import HomePageNav from "../Pages/HomePage/HomePageNav";
-import { useAuth } from "../Hooks/useAuth";
-import TopMangaScreenNav from "./TopMangaStack";
-import ProfileScreenNav from "../Pages/ProfilePage/ProfileScreenNav";
+import { useAuth } from "./Hooks/useAuth";
+import Auth from "./Pages/Auth";
+import HomePageNav from "./Pages/HomePage/HomePageNav";
+import TopMangaScreenNav from "./Pages/TopMangaPage/TopMangaStack";
+import ProfileScreenNav from "./Pages/ProfilePage/ProfileScreenNav";
 
 export default function MainNavigation() {
   const Tab = createBottomTabNavigator();

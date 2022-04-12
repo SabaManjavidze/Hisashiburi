@@ -1,7 +1,7 @@
 import { View, Text } from "react-native";
 import React from "react";
 import { AuthProvider } from "./src/Hooks/useAuth";
-import MainNavigation from "./src/components/MainNavigation";
+import MainNavigation from "./src/MainNavigation";
 import { Provider } from "react-native-paper";
 import { ApolloClient, ApolloProvider, InMemoryCache } from "@apollo/client";
 const client = new ApolloClient({

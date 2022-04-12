@@ -19,35 +19,20 @@ export default function MalCard({ node, navigation, route }) {
       alt_titles.synonyms.length > 0
         ? removePunctuation(alt_titles.synonyms[0])
         : "";
-    // console.log({ synonym, title, en });
-    // console.log(`${main_url}/search/${title || en}`);
     const data = await fetch(
       `${main_url}/search/${node.title || alt_titles.en}`
     );
     const json = await data.json();
-
-    // const obj = json.find(
-    //   (item) =>
-    //     item.title.toLowerCase().replace(":", "").replace("-", "") ===
-    //       title ||
-    //     en ||
-    //     synonym
-    // );
     json.map((item) => {
       const str = removePunctuation(item.title);
       const item_title = str;
       if (item_title === title || item_title === en || item_title === synonym) {
-        // alert(
-        //   JSON.stringify({ title, en, synonym, found: item.title }, null, 2)
-        // );
         navigation.navigate("MangaDetails", {
           item: item,
         });
       }
     });
-    // navigation.navigate("MangaDetails", { item: obj });
   };
-  // console.log(JSON.stringify(obj ? obj.title : "not found"));
 
   return (
     <TouchableRipple

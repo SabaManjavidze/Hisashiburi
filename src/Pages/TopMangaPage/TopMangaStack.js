@@ -1,10 +1,10 @@
 import { View, Text } from "react-native";
 import React, { useEffect } from "react";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
-import TopManga from "../Pages/TopManga";
-import MangaDetails from "../Pages/MangaDetails/MangaDetails";
-import { main_color } from "./variables";
-import ChapterPage from "../Pages/ChaptersPage/ChapterPage";
+import TopManga from "./TopManga";
+import MangaDetails from "../MangaDetails/MangaDetails";
+import ChapterPage from "../ChaptersPage/ChapterPage";
+import { main_color } from "../../components/variables";
 
 export default function TopMangaScreenNav({ navigation, route }) {
   const Stack = createNativeStackNavigator();

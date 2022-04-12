@@ -1,24 +1,10 @@
-import { View, Alert, Text, StyleSheet, AsyncStorage } from "react-native";
+import { View, Text, StyleSheet, AsyncStorage } from "react-native";
 import React, { useEffect, useState } from "react";
-import {
-  auth_url,
-  CLIENT_ID,
-  html,
-  main_color,
-  STATE_VAR,
-  token_url,
-} from "../components/variables";
+import { main_color, STATE_VAR, token_url } from "../components/variables";
 import { WebView } from "react-native-webview";
 import axios from "axios";
-import {
-  gql,
-  useQuery,
-  useMutation,
-  fromError,
-  ApolloError,
-} from "@apollo/client";
+import { gql, useMutation } from "@apollo/client";
 import { getProfile } from "../Services/MalServices";
-import GraphqlTest from "./graphqlTest";
 import { useAuth } from "../Hooks/useAuth";
 
 export default function Auth({ navigation, route }) {
