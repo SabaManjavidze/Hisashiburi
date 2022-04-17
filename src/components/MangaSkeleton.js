@@ -1,31 +1,15 @@
 import { View, Animated, StyleSheet, Dimensions } from "react-native";
 import React, { useEffect, useRef } from "react";
 import {
+  boneColor,
   light_primary_color,
   primary_color,
   secondary_color,
 } from "./variables";
+import SkeletonContent from "react-native-skeleton-content";
 
 const { width, height } = Dimensions.get("window");
-
-export default function MangaSkeleton() {
-  const opacity = useRef(new Animated.Value(0.4));
-  useEffect(() => {
-    Animated.loop(
-      Animated.sequence([
-        Animated.timing(opacity.current, {
-          toValue: 0.4,
-          duration: 500,
-          useNativeDriver: true,
-        }),
-        Animated.timing(opacity.current, {
-          toValue: 0.7,
-          duration: 500,
-          useNativeDriver: true,
-        }),
-      ])
-    ).start();
-  }, [opacity]);
+export default function MangaSkeleton({ index, loaded }) {
   const initialArr = [1, 2, 3];
   const ChapterSkeleton = () => (
     <View
@@ -37,7 +21,20 @@ export default function MangaSkeleton() {
       }}
     >
       <View style={{ flex: 3.3, alignItems: "center" }}>
-        <Animated.View style={[{ opacity: opacity.current }, styles.title]} />
+        <SkeletonContent
+          containerStyle={styles.title}
+          animationDirection="horizontalLeft"
+          isLoading={!loaded}
+          boneColor={boneColor}
+          highlightColor={primary_color}
+          layout={[
+            {
+              width: "100%",
+              height: "90%",
+              borderRadius: styles.title.borderRadius,
+            },
+          ]}
+        />
       </View>
       <View
         style={{
@@ -46,13 +43,26 @@ export default function MangaSkeleton() {
           alignItems: "center",
         }}
       >
-        <Animated.View style={[{ opacity: opacity.current }, styles.title]} />
+        <SkeletonContent
+          containerStyle={styles.title}
+          animationDirection="horizontalLeft"
+          isLoading={!loaded}
+          boneColor={boneColor}
+          highlightColor={primary_color}
+          layout={[
+            {
+              width: "100%",
+              height: "60%",
+              marginTop: 5,
+              borderRadius: styles.title.borderRadius,
+            },
+          ]}
+        />
       </View>
     </View>
   );
-
   return (
-    <Animated.View style={[{ opacity: opacity.current }, styles.container]}>
+    <View style={styles.container}>
       <View
         style={{
           flex: 1,
@@ -61,7 +71,19 @@ export default function MangaSkeleton() {
           justifyContent: "space-around",
         }}
       >
-        <Animated.View style={[{ opacity: opacity.current }, styles.image]} />
+        <SkeletonContent
+          containerStyle={styles.image}
+          animationDirection="horizontalLeft"
+          isLoading={!loaded}
+          boneColor={boneColor}
+          highlightColor={primary_color}
+          layout={[
+            {
+              width: "100%",
+            },
+            styles.image,
+          ]}
+        />
         <View
           style={{ flex: 1, justifyContent: "center", alignItems: "center" }}
         >
@@ -74,10 +96,19 @@ export default function MangaSkeleton() {
               flexDirection: "row",
             }}
           >
-            <Animated.View
-              style={[
-                { opacity: opacity.current, marginTop: 40 },
-                styles.title,
+            <SkeletonContent
+              containerStyle={styles.title}
+              animationDirection="horizontalLeft"
+              isLoading={!loaded}
+              boneColor={boneColor}
+              highlightColor={primary_color}
+              layout={[
+                {
+                  width: "100%",
+                  height: "100%",
+                  marginTop: 20,
+                  borderRadius: styles.title.borderRadius,
+                },
               ]}
             />
           </View>
@@ -94,7 +125,7 @@ export default function MangaSkeleton() {
           </View>
         </View>
       </View>
-    </Animated.View>
+    </View>
   );
 }
 const styles = StyleSheet.create({
@@ -102,7 +133,6 @@ const styles = StyleSheet.create({
     marginVertical: 10,
     width: width - 20,
     height: height * 0.25,
-    backgroundColor: "#2F2C4B",
     borderRadius: 10,
     flexDirection: "row",
     borderColor: primary_color,
@@ -114,13 +144,11 @@ const styles = StyleSheet.create({
     height: 170,
     borderTopLeftRadius: 10,
     borderBottomLeftRadius: 10,
-    backgroundColor: primary_color,
   },
 
   title: {
-    backgroundColor: primary_color,
     width: "75%",
     height: 20,
-    borderRadius: 5,
+    borderRadius: 3,
   },
 });

@@ -14,7 +14,6 @@ const windowWidth = Dimensions.get("window").width;
 const windowHeight = Dimensions.get("window").height;
 export default function ListHeaderComponent({
   mal_loaded,
-  loaded,
   poster_loaded,
   poster,
   mal,
@@ -28,7 +27,7 @@ export default function ListHeaderComponent({
       if (mal.my_list_status == null) {
         return "Add To My List";
       } else {
-        return mal_dict[mal.my_list_status.status];
+        return mal_dict[mal.my_list_status.status].text;
       }
     }
     return "This Manga Is Not On MyAnimeList";

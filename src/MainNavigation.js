@@ -88,7 +88,7 @@ export default function MainNavigation() {
             }}
             component={TopMangaScreenNav}
           />
-          {token !== null || (
+          {token === null ? (
             <Tab.Screen
               name="LogIn"
               component={Auth}
@@ -103,8 +103,7 @@ export default function MainNavigation() {
                   renderItem(focused, "account-circle", color),
               }}
             />
-          )}
-          {token !== null && (
+          ) : (
             <Tab.Screen
               name="Profile Screen"
               options={{

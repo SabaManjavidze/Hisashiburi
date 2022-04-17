@@ -5,11 +5,8 @@ import {
   Image,
   SafeAreaView,
   Text,
-  Dimensions,
-  TouchableOpacity,
-  AsyncStorage,
-  Animated,
   BackHandler,
+  FlatList,
 } from "react-native";
 import { ActivityIndicator, Button, IconButton } from "react-native-paper";
 import {
@@ -19,7 +16,6 @@ import {
   primary_color,
   top_manga_url,
 } from "../../components/variables";
-import { FlatList, ScrollView } from "react-native-gesture-handler";
 import { getTopManga } from "../../Services/MalServices";
 import MalCard from "../../components/MalCard";
 import { useAuth } from "../../Hooks/useAuth";
@@ -28,16 +24,14 @@ import MalSkeleton from "../../components/MalSkeleton";
 export default function TopManga({ navigation, route }) {
   const [data, setData] = useState([]);
   const [paging, setPaging] = useState();
-  const [currPage, setCurrPage] = useState(top_manga_url);
   const [loaded, setLoaded] = useState(false);
   const { token } = useAuth();
+  const fields = `alternative_titles,mean,my_list_status{status,score}&limit=15`;
+  const [currPage, setCurrPage] = useState(`${top_manga_url}${fields}`);
   const listRef = useRef(null);
 
   const getData = async () => {
     try {
-      setData([]);
-      setLoaded(false);
-      setPaging(null);
       const resp = await getTopManga(token, currPage);
       setData([...data, ...resp.data]);
       setPaging(resp.paging);
@@ -47,7 +41,6 @@ export default function TopManga({ navigation, route }) {
     }
   };
   const renderItem = ({ item }) => (
-    // console.log({ title: item.node.title, img: item.node.main_picture.large }),
     <MalCard node={item.node} route={route} navigation={navigation} />
   );
   useEffect(() => {
@@ -66,7 +59,7 @@ export default function TopManga({ navigation, route }) {
     // console.log("first");
     // console.log(JSON.stringify(data));
   };
-  const initArray = [1, 2, 3, 4, 5];
+  const initArray = [1, 2, 3, 4];
   return (
     <SafeAreaView style={{ backgroundColor: main_color, flex: 1 }}>
       {loaded ? (
@@ -75,22 +68,30 @@ export default function TopManga({ navigation, route }) {
             data={data}
             ref={listRef}
             renderItem={renderItem}
+            onRefresh={() => {
+              setLoaded(false);
+              setCurrPage(top_manga_url + fields);
+              setData([]);
+              getData();
+            }}
+            refreshing={false}
             style={{ height: "100%", width: "100%" }}
             keyExtractor={(item) => item.node.id}
             onEndReached={loadMoreItems}
-            onEndReachedThreshold={3}
+            onEndReachedThreshold={4}
             numColumns={2}
             ListFooterComponent={
-              <ActivityIndicator animating={true} color={primary_color} />
+              <ActivityIndicator
+                style={{ padding: 25 }}
+                animating={true}
+                color={primary_color}
+              />
             }
           />
         </View>
       ) : (
-        <Animated.View style={{ flex: 1 }}>
-          <Animated.View style={{ alignItems: "center" }}>
-            {/* {[...Array(5)].map((_, i) => (
-              <MalSkeleton key={i} />
-            ))} */}
+        <View style={{ flex: 1 }}>
+          <View style={{ alignItems: "center" }}>
             <FlatList
               data={initArray}
               renderItem={() => {
@@ -100,8 +101,8 @@ export default function TopManga({ navigation, route }) {
               style={{ height: "100%", width: "100%" }}
               numColumns={2}
             />
-          </Animated.View>
-        </Animated.View>
+          </View>
+        </View>
       )}
     </SafeAreaView>
   );

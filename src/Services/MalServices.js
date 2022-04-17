@@ -1,15 +1,13 @@
 import axios from "axios";
-import { AsyncStorage } from "react-native";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import { CLIENT_ID, profile_url, top_manga_url } from "../components/variables";
 
-import { useAuth } from "../Hooks/useAuth";
 export const getProfile = async (access_token) => {
   const headers = {
     Authorization: `Bearer ${access_token}`,
   };
   try {
     const { data } = await axios.get(profile_url, { headers });
-    // console.log(JSON.stringify(data, null, 2));
     return data;
   } catch (error) {
     return error;
@@ -29,7 +27,7 @@ export const getMangaList = async (access_token) => {
     Authorization: `Bearer ${access_token}`,
   };
   const { data } = await axios.get(
-    `${profile_url}/mangalist?fields=alternative_titles`,
+    `${profile_url}/mangalist?fields=alternative_titles,my_list_status{score,status}`,
     { headers }
   );
   return data;
@@ -55,13 +53,11 @@ export const getMangaOnMAL = async (title, access_token) => {
   };
   const { data } = await axios.get(url, { headers });
   const title_lower = title.toLowerCase().replace(":", "").replace("-", "");
-  // console.log(data.data[0].node, null, 2);
   const obj = data.data.find(
     (child) =>
       title_lower ===
       child.node.title.toLowerCase().replace(":", "").replace("-", "")
   );
-  // console.log(obj ? obj : "object is null");
 
   return obj ? obj.node : null;
 };

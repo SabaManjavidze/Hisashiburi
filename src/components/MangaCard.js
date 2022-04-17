@@ -6,20 +6,17 @@ import {
   TouchableOpacity,
   Dimensions,
   StyleSheet,
-  AsyncStorage,
 } from "react-native";
 import { IconButton, TouchableRipple } from "react-native-paper";
 import { fetchData } from "../Pages/MangaDetails/MangaDetails";
 import { logOut } from "../Services/MalServices";
 import { domain, img_url, primary_color } from "../components/variables";
+import SkeletonContent from "react-native-skeleton-content";
 
 const windowWidth = Dimensions.get("window").width;
 const windowHeight = Dimensions.get("window").height;
 
 export default function MangaCard({ route, navigation, item }) {
-  const [fav, setfav] = useState(false);
-  const [star, setstar] = useState(not_fav_icon);
-
   const goToChapter = async (i) => {
     const { chapters } = await fetchData(item.manga_id);
     navigation.navigate("ChapterPage", {
@@ -27,14 +24,6 @@ export default function MangaCard({ route, navigation, item }) {
       manga_id: item.manga_id,
       index: i,
     });
-  };
-
-  const fav_icon = "star";
-  const not_fav_icon = "star-outline";
-
-  const onPress = async () => {
-    await logOut();
-    navigation.navigate("Auth");
   };
 
   const atHome = route.name == "Home";

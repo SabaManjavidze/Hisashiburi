@@ -1,9 +1,9 @@
 import {
   View,
   Text,
-  AsyncStorage,
   Image,
   ScrollView,
+  FlatList,
   Dimensions,
   StyleSheet,
 } from "react-native";
@@ -16,16 +16,16 @@ import {
 } from "../../components/variables";
 import { ActivityIndicator, TouchableRipple } from "react-native-paper";
 import MalCard from "../../components/MalCard";
+import ProfileHeader from "./components/ProfileHeader";
 import { useAuth } from "../../Hooks/useAuth";
-
-const windowHeight = Dimensions.get("window").height;
+const { height, width } = Dimensions.get("window");
 
 export default function ProfilePage({ route, navigation }) {
   const [profile, setProfile] = useState({});
-  const [mangaList, setMangaList] = useState({});
+  const [mangaList, setMangaList] = useState([]);
   const [manga_loaded, setMangaLoaded] = useState(false);
   const [profile_loaded, setProfileLoaded] = useState(false);
-  const { token, setToken } = useAuth();
+  const { token } = useAuth();
 
   const getAccessToken = async () => {
     if (token && token !== "null") {
@@ -65,92 +65,51 @@ export default function ProfilePage({ route, navigation }) {
         backgroundColor: main_color,
       }}
     >
-      <ScrollView
+      {manga_loaded ? null : (
+        <View
+          style={{
+            flex: 1,
+            top: height / 2,
+            alignItems: "center",
+            justifyContent: "flex-start",
+          }}
+        >
+          <ActivityIndicator animating={true} color={primary_color} />
+        </View>
+      )}
+      <FlatList
         nestedScrollEnabled
-        contentContainerStyle={{
-          flexDirection: "column",
-          width: "100%",
-          alignItems: "center",
+        data={mangaList}
+        renderItem={renderItem}
+        keyExtractor={(item) => item.node.id}
+        numColumns={2}
+        onRefresh={() => {
+          setMangaLoaded(false);
+          setMangaList([]);
+          setProfileLoaded(false);
+          setProfile({});
+          getAccessToken();
         }}
-      >
-        <>
-          <View
-            style={{
-              flexDirection: "row",
-              width: "100%",
-              justifyContent: "center",
-            }}
-          >
-            {profile_loaded ? (
-              <Text
-                style={{
-                  fontSize: 30,
-                  fontWeight: "bold",
-                  color: "white",
-                  textAlign: "center",
-                  left: 30,
-                }}
-              >
-                {profile.name}
-              </Text>
-            ) : (
-              <View
-                style={{
-                  width: "100%",
-                  height: "100%",
-                  backgroundColor: main_color,
-                  justifyContent: "center",
-                  alignItems: "center",
-                }}
-              >
-                <ActivityIndicator
-                  animating={true}
-                  size="large"
-                  color={primary_color}
-                />
-              </View>
-            )}
-            <TouchableRipple
-              style={{ backgroundColor: primary_color, left: 100 }}
-              onPress={async () => {
-                await logOut();
-                setToken(null);
-              }}
-            >
-              <Text style={{ color: "white", fontSize: 20 }}>Log out</Text>
-            </TouchableRipple>
-          </View>
-          <Image
-            source={{ uri: profile.picture }}
-            style={{ width: 200, height: 200 }}
-          />
-        </>
-        {manga_loaded && (
-          // <FlatList
-          //   nestedScrollEnabled
-          //   data={mangaList}
-          //   renderItem={renderItem}
-          //   keyExtractor={(item) => item.node.id}
-          //   numColumns={2}
-          //   style={{ height: "100%", width: "100%" }}
-          //   // contentContainerStyle={{alignItems:'center',justifyContent:"center"}}
-          // />
-          <View
-            style={{
-              flex: 1,
-              flexDirection: "row",
-              flexWrap: "wrap",
-              alignItems: "flex-start",
-            }}
-          >
-            {mangaList.map((item, index) => {
-              return renderItem({ item, index });
-            })}
-          </View>
-        )}
-      </ScrollView>
+        refreshing={false}
+        ListHeaderComponent={
+          <ProfileHeader profile_loaded={profile_loaded} profile={profile} />
+        }
+        style={{ height: "100%", width: "100%" }}
+      />
     </View>
   );
 }
 
+// <View
+//   style={{
+//     flex: 1,
+//     flexDirection: "row",
+//     flexWrap: "wrap",
+//     alignItems: "flex-start",
+//   }}
+// >
+//   {mangaList.map((item, index) => {
+//     return renderItem({ item, index });
+//   })}
+// </View>
 const styles = StyleSheet.create({});

@@ -1,12 +1,16 @@
 import { View, Text, Dimensions, StyleSheet, Image } from "react-native";
-import React from "react";
+import React, { useState } from "react";
 import { TouchableRipple } from "react-native-paper";
-import { light_primary_color, main_url } from "./variables";
+import { mal_dict, light_primary_color, main_url } from "./variables";
 
 const windowWidth = Dimensions.get("window").width;
 const windowHeight = Dimensions.get("window").height;
 
 export default function MalCard({ node, navigation, route }) {
+  const [show_score, setShowScore] = useState(false);
+  const { text, color } = node.my_list_status
+    ? mal_dict[node.my_list_status.status]
+    : { text: "", color: "gray" };
   function removePunctuation(string) {
     let regex = /[^a-zA-Z0-9]/g;
     return string.toLowerCase().replace(regex, "");
@@ -36,12 +40,23 @@ export default function MalCard({ node, navigation, route }) {
 
   return (
     <TouchableRipple
-      style={{ width: "50%", alignItems: "center", marginTop: 25 }}
+      style={{
+        width: "45%",
+        marginHorizontal: 10,
+        alignItems: "center",
+        marginTop: 25,
+        borderWidth: 3,
+        borderColor: color,
+        borderBottomLeftRadius: 10,
+        borderBottomRightRadius: 10,
+      }}
       onPress={() => handlePress(node)}
+      onPressIn={() => setShowScore(true)}
+      onPressOut={() => setShowScore(false)}
     >
       <View
         style={{
-          width: "90%",
+          width: "100%",
           height: windowHeight * 0.4,
           flexDirection: "column",
         }}

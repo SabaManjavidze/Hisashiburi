@@ -1,4 +1,5 @@
-import { View, Text, StyleSheet, AsyncStorage } from "react-native";
+import { View, Text, StyleSheet } from "react-native";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import React, { useEffect, useState } from "react";
 import { main_color, STATE_VAR, token_url } from "../components/variables";
 import { WebView } from "react-native-webview";

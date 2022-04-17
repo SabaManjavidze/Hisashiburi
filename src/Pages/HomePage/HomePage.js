@@ -8,7 +8,6 @@ import {
   Dimensions,
   SafeAreaView,
   Animated,
-  AsyncStorage,
   Alert,
   BackHandler,
 } from "react-native";
@@ -27,7 +26,6 @@ import {
   Searchbar,
 } from "react-native-paper";
 import MangaCard from "../../components/MangaCard";
-import { checkIfFavorited } from "../../Services/FavServices";
 import { useAuth } from "../../Hooks/useAuth";
 import MangaSkeleton from "../../components/MangaSkeleton";
 const AnimatedIcon = Animated.createAnimatedComponent(IconButton);
@@ -43,8 +41,8 @@ export default function HomePage({ navigation, route }) {
   const [showInput, setShowInput] = useState(false);
   const fadeAnim = useRef(new Animated.Value(0)).current;
   const inputRef = useRef(null);
-
-  const fetchData = async () => {
+  const initArray = [1, 2, 3, 4];
+  const fetchHome = async () => {
     const url = `${main_url}/homepage`;
     try {
       const res = await fetch(url);
@@ -56,7 +54,7 @@ export default function HomePage({ navigation, route }) {
     }
   };
 
-  const fetchResults = async () => {
+  const fetchSearchResults = async () => {
     setLoaded(false);
     setData([]);
     const data = await fetch(`${main_url}/search/${input}`);
@@ -64,40 +62,67 @@ export default function HomePage({ navigation, route }) {
     setData(json);
     setLoaded(true);
   };
-
   useEffect(() => {
-    fetchData();
     // console.log(token || "token is null");
 
     const backHandler = BackHandler.addEventListener(
       "hardwareBackPress",
-      LoadHome
+      handleBackButton
     );
-
     return () => backHandler.remove();
+  }, [showInput]);
+  useEffect(() => {
+    fetchHome();
+    // console.log(token || "token is null");
   }, []);
-  const LoadHome = async () => {
+  const show_alert = () => {
+    Alert.alert("Hold On!", "Are you sure you want to exit", [
+      {
+        text: "Cancel",
+        onPress: () => null,
+        style: "cancel",
+      },
+      {
+        text: "Yes",
+        onPress: () => {
+          BackHandler.exitApp();
+        },
+      },
+    ]);
+  };
+  const handleBackButton = () => {
+    if (showInput) {
+      LoadHome();
+      return true;
+    }
+    show_alert();
+    return true;
+  };
+
+  const LoadHome = () => {
+    // console.log(showInput, "from load home");
     setShowInput(false);
 
     inputRef.current.clear();
     setInput("");
     setData([]);
     setLoaded(false);
-    fetchData();
+    fetchHome();
 
     Animated.timing(fadeAnim, {
       toValue: 0,
       duration: 500,
       useNativeDriver: false,
     }).start();
+    // return true;
   };
   const onSubmit = () => {
     if (input == null || input == "") {
       setData([]);
       setLoaded(false);
-      fetchData();
+      fetchHome();
     } else {
-      fetchResults();
+      fetchSearchResults();
     }
   };
   const renderItem = (child) => {
@@ -115,7 +140,16 @@ export default function HomePage({ navigation, route }) {
       }}
       color="white"
       icon={"navigation"}
-      onPress={LoadHome}
+      onPress={() => {
+        setShowInput(false);
+        setInput("");
+        fetchHome();
+        Animated.timing(fadeAnim, {
+          toValue: 0,
+          duration: 500,
+          useNativeDriver: false,
+        }).start();
+      }}
     />
   );
   return (
@@ -129,12 +163,7 @@ export default function HomePage({ navigation, route }) {
           alignItems: "center",
         }}
       >
-        {showInput || (
-          <Appbar.Content
-            title="Hisashiburi"
-            // title="baraqi shenstavs"
-          />
-        )}
+        {showInput || <Appbar.Content title="Hisashiburi" />}
         <Appbar.Action
           icon="magnify"
           style={{ display: showInput ? "none" : "flex", marginRight: 20 }}
@@ -177,16 +206,30 @@ export default function HomePage({ navigation, route }) {
           <FlatList
             data={data}
             renderItem={renderItem}
+            onRefresh={() => {
+              setLoaded(false);
+              setData([]);
+              fetchHome();
+            }}
+            refreshing={false}
             keyExtractor={(item) => item.manga_id}
             style={{ height: "100%", width: "100%" }}
             contentContainerStyle={{ alignItems: "center" }}
           />
         ) : (
-          <Animated.View>
-            {[...Array(5)].map((_, i) => (
-              <MangaSkeleton key={i} />
-            ))}
-          </Animated.View>
+          <View>
+            <FlatList
+              data={initArray}
+              renderItem={({ item, index }) => {
+                return <MangaSkeleton index={index} loaded={loaded} />;
+              }}
+              keyExtractor={(item) => item.toString()}
+              style={{ height: "100%", width: "100%" }}
+            />
+            {/* {[...Array(4)].map((_, i) => (
+              <MangaSkeleton key={i} index={i} loaded={loaded} />
+            ))} */}
+          </View>
         )}
       </>
     </SafeAreaView>
