@@ -8,14 +8,18 @@ import {
 } from "react-native";
 import { Avatar } from "react-native-paper";
 import { main_color, primary_color } from "../../../components/variables";
+import { useGetManga } from "../MangaDetails";
+import SubButton from "./SubButton";
 
 export default function FAB({
   setModalVisible,
   modalVisible,
-  manga_id,
   navigation,
-  chapters,
+  // manga_id,
+  // chapters,
 }) {
+  const { manga_id, chapters } = useGetManga();
+
   const [isOpen, setIsOpen] = useState(false);
   const toggleAnimation = useRef(new Animated.Value(0)).current;
 
@@ -23,11 +27,12 @@ export default function FAB({
     const toValue = isOpen ? 0 : 1;
     Animated.timing(toggleAnimation, {
       toValue: toValue,
-      duration: 300,
+      duration: 170,
       useNativeDriver: false,
     }).start();
     setIsOpen(!isOpen);
   };
+
   const child_size = 45;
   return (
     <View
@@ -40,75 +45,36 @@ export default function FAB({
         right: 25,
       }}
     >
-      <TouchableWithoutFeedback
-        onPress={() => {
-          navigation.navigate("ChapterPage", {
-            chapters: chapters,
-            manga_id: manga_id,
-            index: chapters.length - 1,
-          });
-        }}
-      >
-        <Animated.View
-          style={{
-            transform: [
-              {
-                translateY: toggleAnimation.interpolate({
-                  inputRange: [0, 1],
-                  outputRange: [90, -20],
-                }),
-              },
-            ],
-            backgroundColor: main_color,
-            width: child_size,
-            height: child_size,
-            borderRadius: 20,
-            alignItems: "center",
-            justifyContent: "center",
-          }}
-        >
-          <Avatar.Icon
-            icon="alpha-i"
-            size={50}
-            style={{ backgroundColor: "transparent" }}
-          />
-        </Animated.View>
-      </TouchableWithoutFeedback>
-
-      <TouchableWithoutFeedback
-        onPress={() => {
-          navigation.navigate("ChapterPage", {
-            chapters: chapters,
-            manga_id: manga_id,
-            index: 0,
-          });
-        }}
-      >
-        <Animated.View
-          style={{
-            backgroundColor: main_color,
-            width: child_size,
-            height: child_size,
-            borderRadius: 20,
-            alignItems: "center",
-            justifyContent: "center",
-            transform: [
-              {
-                translateY: toggleAnimation.interpolate({
-                  inputRange: [0, 1],
-                  outputRange: [40, -10],
-                }),
-              },
-            ],
-          }}
-        >
-          <Avatar.Icon
-            icon="roman-numeral-9"
-            size={50}
-            style={{ backgroundColor: "transparent" }}
-          />
-        </Animated.View>
-      </TouchableWithoutFeedback>
+      <SubButton
+        IconSize={50}
+        index={0}
+        outputRange={[140, -20]}
+        navigation={navigation}
+        icon={"history"}
+        toggleAnimation={toggleAnimation}
+        startAnimation={startAnimation}
+        setIsOpen={setIsOpen}
+      />
+      <SubButton
+        IconSize={50}
+        index={chapters.length - 1}
+        navigation={navigation}
+        outputRange={[90, -15]}
+        icon={"alpha-i"}
+        toggleAnimation={toggleAnimation}
+        setIsOpen={setIsOpen}
+        startAnimation={startAnimation}
+      />
+      <SubButton
+        IconSize={50}
+        index={0}
+        navigation={navigation}
+        outputRange={[50, -10]}
+        icon={"roman-numeral-9"}
+        toggleAnimation={toggleAnimation}
+        setIsOpen={setIsOpen}
+        startAnimation={startAnimation}
+      />
       <TouchableWithoutFeedback
         onPress={() => {
           startAnimation();

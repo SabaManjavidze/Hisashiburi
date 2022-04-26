@@ -7,17 +7,20 @@ import {
   TouchableOpacity,
 } from "react-native";
 import { primary_color, secondary_color } from "../../../components/variables";
+import { useGetManga } from "../MangaDetails";
 
 const windowWidth = Dimensions.get("window").width;
 const windowHeight = Dimensions.get("window").height;
 
 export default function ChapterItem({
   navigation,
-  manga_id,
-  chapters,
+  // manga_id,
+  // manga_title,
+  // chapters,
   child,
   index,
 }) {
+  const { manga_id, title, chapters } = useGetManga();
   return (
     <View style={styles.chapter_container}>
       <TouchableOpacity
@@ -27,6 +30,7 @@ export default function ChapterItem({
           navigation.navigate("ChapterPage", {
             index: index,
             manga_id: manga_id,
+            manga_title: title,
             chapters: chapters,
           })
         }

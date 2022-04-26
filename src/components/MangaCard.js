@@ -11,7 +11,6 @@ import { IconButton, TouchableRipple } from "react-native-paper";
 import { fetchData } from "../Pages/MangaDetails/MangaDetails";
 import { logOut } from "../Services/MalServices";
 import { domain, img_url, primary_color } from "../components/variables";
-import SkeletonContent from "react-native-skeleton-content";
 
 const windowWidth = Dimensions.get("window").width;
 const windowHeight = Dimensions.get("window").height;
@@ -22,11 +21,13 @@ export default function MangaCard({ route, navigation, item }) {
     navigation.navigate("ChapterPage", {
       chapters: chapters,
       manga_id: item.manga_id,
+      manga_title: item.title,
       index: i,
     });
   };
 
   const atHome = route.name == "Home";
+  // const atHome = true;
   return (
     <View
       style={[

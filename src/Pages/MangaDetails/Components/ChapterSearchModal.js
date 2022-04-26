@@ -7,16 +7,19 @@ import {
 } from "../../../components/variables";
 import { Avatar, TextInput } from "react-native-paper";
 import ChapterItem from "./ChapterItem";
+import { useGetManga } from "../MangaDetails";
 
 export default function ChapterSearchModal({
-  chapters,
   navigation,
-  manga_id,
+  // chapters,
+  // manga_id,
+  // manga_title,
   setModalVisible,
   modalVisible,
 }) {
   const [filtered_chapters, setFilteredChapters] = useState([]);
   const [input, setInput] = useState("");
+  const { chapters, manga_id, title } = useGetManga();
 
   const onSubmit = () => {
     const index = chapters.findIndex((child) => child.chapter_num === input);
@@ -28,6 +31,7 @@ export default function ChapterSearchModal({
       navigation.navigate("ChapterPage", {
         chapters: chapters,
         manga_id: manga_id,
+        manga_title: title,
         index: index,
       });
     }
@@ -159,10 +163,11 @@ export default function ChapterSearchModal({
                 );
                 return (
                   <ChapterItem
-                    chapters={chapters}
                     child={item}
                     navigation={navigation}
-                    manga_id={manga_id}
+                    // manga_id={manga_id}
+                    // manga_title={manga_title}
+                    // chapters={chapters}
                     index={index}
                   />
                 );

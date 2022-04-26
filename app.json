@@ -2,7 +2,7 @@
   "expo": {
     "name": "Hisashiburi",
     "slug": "hisashiburi",
-    "version": "1.0.2",
+    "version": "2.0.0",
     "privacy": "public",
     "description": "App for reading manga with MyAnimeList integration",
     "orientation": "portrait",
@@ -15,9 +15,12 @@
     "updates": {
       "fallbackToCacheTimeout": 0
     },
-    "assetBundlePatterns": ["**/*"],
+    "assetBundlePatterns": [
+      "**/*"
+    ],
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "bundleIdentifier": "manga.app.beta"
     },
     "android": {
       "adaptiveIcon": {

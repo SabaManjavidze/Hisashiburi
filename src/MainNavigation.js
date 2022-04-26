@@ -14,10 +14,13 @@ import Auth from "./Pages/Auth";
 import HomePageNav from "./Pages/HomePage/HomePageNav";
 import TopMangaScreenNav from "./Pages/TopMangaPage/TopMangaStack";
 import ProfileScreenNav from "./Pages/ProfilePage/ProfileScreenNav";
+import History from "./Pages/History/HistoryPage";
 
 export default function MainNavigation() {
   const Tab = createBottomTabNavigator();
+
   const { token, setToken } = useAuth();
+
   const mangaDetailsHeader = {
     headerStyle: {
       backgroundColor: main_color,
@@ -30,6 +33,7 @@ export default function MainNavigation() {
     },
     headerTintColor: "white",
   };
+
   const renderItem = (
     focused,
     icon_name,
@@ -47,6 +51,7 @@ export default function MainNavigation() {
       />
     );
   };
+
   return (
     <>
       <NavigationContainer>
@@ -56,6 +61,7 @@ export default function MainNavigation() {
           hidden={false}
           style={"light"}
         />
+
         <Tab.Navigator
           screenOptions={{
             tabBarStyle: {
@@ -87,6 +93,21 @@ export default function MainNavigation() {
               ...mangaDetailsHeader,
             }}
             component={TopMangaScreenNav}
+          />
+
+          <Tab.Screen
+            name="History"
+            component={History}
+            options={{
+              headerStyle: {
+                backgroundColor: main_color,
+                borderBottomColor: "black",
+                borderBottomWidth: 0.5,
+              },
+              headerTitleStyle: { color: "white" },
+              tabBarIcon: ({ focused, color }) =>
+                renderItem(focused, "clock", color),
+            }}
           />
           {token === null ? (
             <Tab.Screen

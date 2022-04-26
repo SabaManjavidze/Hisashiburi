@@ -8,6 +8,7 @@ const windowHeight = Dimensions.get("window").height;
 
 export default function MalCard({ node, navigation, route }) {
   const [show_score, setShowScore] = useState(false);
+
   const { text, color } = node.my_list_status
     ? mal_dict[node.my_list_status.status]
     : { text: "", color: "gray" };
@@ -28,12 +29,15 @@ export default function MalCard({ node, navigation, route }) {
     );
     const json = await data.json();
     json.map((item) => {
+
       const str = removePunctuation(item.title);
       const item_title = str;
+
       if (item_title === title || item_title === en || item_title === synonym) {
         navigation.navigate("MangaDetails", {
           item: item,
         });
+	      return;
       }
     });
   };

@@ -62,15 +62,15 @@ export default function HomePage({ navigation, route }) {
     setData(json);
     setLoaded(true);
   };
-  useEffect(() => {
-    // console.log(token || "token is null");
+  // useEffect(() => {
+  // console.log(token || "token is null");
 
-    const backHandler = BackHandler.addEventListener(
-      "hardwareBackPress",
-      handleBackButton
-    );
-    return () => backHandler.remove();
-  }, [showInput]);
+  // const backHandler = BackHandler.addEventListener(
+  //   "hardwareBackPress",
+  //   handleBackButton
+  // );
+  // return () => backHandler.remove();
+  // }, []);
   useEffect(() => {
     fetchHome();
     // console.log(token || "token is null");
