@@ -2,8 +2,10 @@ import { View, Text } from "react-native";
 import React from "react";
 import { Appbar } from "react-native-paper";
 import { main_color } from "../../../components/variables";
+import { useGetManga } from "../MangaDetails";
 
-export default function DetailsAppbar({ navigation, title }) {
+export default function DetailsAppbar() {
+  const { title, navigation } = useGetManga();
   return (
     <Appbar.Header
       style={{

@@ -1,3 +1,4 @@
+import { gql, useQuery } from "@apollo/client";
 import React, { useEffect, useRef, useState } from "react";
 import {
   Text,
@@ -8,18 +9,30 @@ import {
 } from "react-native";
 import { Avatar } from "react-native-paper";
 import { main_color, primary_color } from "../../../components/variables";
+import { useAuth } from "../../../Hooks/useAuth";
 import { useGetManga } from "../MangaDetails";
 import SubButton from "./SubButton";
 
-export default function FAB({
-  setModalVisible,
-  modalVisible,
-  navigation,
-  // manga_id,
-  // chapters,
-}) {
-  const { manga_id, chapters } = useGetManga();
+const GET_READ_MANGA = gql`
+  query GetReadManga($manga_id: String!, $user_id: Float!) {
+    getReadManga(options: { user_id: $user_id, manga_id: $manga_id }) {
+      manga_id
+      user_id
+      read_date
+      last_read_chapter
+    }
+  }
+`;
 
+export default function FAB({ setModalVisible, modalVisible }) {
+  const { navigation, chapters, manga_id, title } = useGetManga();
+  const {
+    user: { id },
+    token,
+  } = useAuth();
+  const { data, loading, error } = useQuery(GET_READ_MANGA, {
+    variables: { user_id: id, manga_id: manga_id },
+  });
   const [isOpen, setIsOpen] = useState(false);
   const toggleAnimation = useRef(new Animated.Value(0)).current;
 
@@ -33,7 +46,6 @@ export default function FAB({
     setIsOpen(!isOpen);
   };
 
-  const child_size = 45;
   return (
     <View
       style={{
@@ -45,32 +57,50 @@ export default function FAB({
         right: 25,
       }}
     >
+      {token && (
+        <SubButton
+          IconSize={50}
+          index={0}
+          outputRange={[170, -20]}
+          icon={"history"}
+          toggleAnimation={toggleAnimation}
+          startAnimation={startAnimation}
+          setIsOpen={setIsOpen}
+          onPress={() => {
+            if (!loading && data) {
+              const index = chapters.findIndex((chapter, i) => {
+                if (
+                  chapter.chapter_num == data.getReadManga[0].last_read_chapter
+                ) {
+                  return chapters.length - 1 - i;
+                }
+              });
+              console.log(index);
+              console.log(data.getReadManga[0].last_read_chapter);
+              navigation.navigate("ChapterPage", {
+                chapters: chapters,
+                manga_id: manga_id,
+                manga_title: title,
+                index: index,
+              });
+            }
+          }}
+        />
+      )}
       <SubButton
         IconSize={50}
         index={0}
-        outputRange={[140, -20]}
-        navigation={navigation}
-        icon={"history"}
+        outputRange={[115, -15]}
+        icon={"roman-numeral-9"}
         toggleAnimation={toggleAnimation}
-        startAnimation={startAnimation}
         setIsOpen={setIsOpen}
+        startAnimation={startAnimation}
       />
       <SubButton
         IconSize={50}
         index={chapters.length - 1}
-        navigation={navigation}
-        outputRange={[90, -15]}
+        outputRange={[60, -10]}
         icon={"alpha-i"}
-        toggleAnimation={toggleAnimation}
-        setIsOpen={setIsOpen}
-        startAnimation={startAnimation}
-      />
-      <SubButton
-        IconSize={50}
-        index={0}
-        navigation={navigation}
-        outputRange={[50, -10]}
-        icon={"roman-numeral-9"}
         toggleAnimation={toggleAnimation}
         setIsOpen={setIsOpen}
         startAnimation={startAnimation}
@@ -96,8 +126,8 @@ export default function FAB({
               },
             ],
             backgroundColor: primary_color,
-            width: 55,
-            height: 55,
+            width: 65,
+            height: 65,
             borderRadius: 30,
             alignItems: "center",
             justifyContent: "center",

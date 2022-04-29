@@ -8,7 +8,7 @@ import {
   StyleSheet,
 } from "react-native";
 import React, { useEffect, useState } from "react";
-import { getMangaList, getProfile, logOut } from "../../Services/MalServices";
+import { getMangaList, logOut } from "../../Services/MalServices";
 import {
   main_color,
   main_url,
@@ -21,17 +21,17 @@ import { useAuth } from "../../Hooks/useAuth";
 const { height, width } = Dimensions.get("window");
 
 export default function ProfilePage({ route, navigation }) {
-  const [profile, setProfile] = useState({});
+  // const [profile, setProfile] = useState({});
   const [mangaList, setMangaList] = useState([]);
   const [manga_loaded, setMangaLoaded] = useState(false);
-  const [profile_loaded, setProfileLoaded] = useState(false);
+  // const [profile_loaded, setProfileLoaded] = useState(true);
   const { token } = useAuth();
 
-  const getAccessToken = async () => {
+  const getUserMangaList = async () => {
     if (token && token !== "null") {
-      const profile = await getProfile(token);
-      setProfile(profile);
-      setProfileLoaded(true);
+      // const profile = await getProfile(token);
+      // setProfile(profile);
+      // setProfileLoaded(true);
       const mangaList = await getMangaList(token);
       setMangaList(mangaList.data);
       setMangaLoaded(true);
@@ -41,7 +41,7 @@ export default function ProfilePage({ route, navigation }) {
   };
 
   useEffect(() => {
-    getAccessToken();
+    getUserMangaList();
   }, []);
 
   const renderItem = ({ item, index }) => {
@@ -86,14 +86,10 @@ export default function ProfilePage({ route, navigation }) {
         onRefresh={() => {
           setMangaLoaded(false);
           setMangaList([]);
-          setProfileLoaded(false);
-          setProfile({});
-          getAccessToken();
+          getUserMangaList();
         }}
         refreshing={false}
-        ListHeaderComponent={
-          <ProfileHeader profile_loaded={profile_loaded} profile={profile} />
-        }
+        ListHeaderComponent={<ProfileHeader />}
         style={{ height: "100%", width: "100%" }}
       />
     </View>

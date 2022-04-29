@@ -22,6 +22,16 @@ export default function HistoryCard({
   navigation,
   onDismiss,
 }) {
+  const custom_item = {
+    ...item.manga_details,
+    chapters: [
+      {
+        upload_date: item.read_date,
+        chap_title: item.last_read_chapter + "",
+      },
+    ],
+  };
+  console.log(custom_item);
   const translateX = useSharedValue(0);
   const opacity = useSharedValue(1);
   const itemHeight = useSharedValue(windowHeight * 0.25);
@@ -79,7 +89,7 @@ export default function HistoryCard({
         hitSlop={{ width: 70, right: 0 }}
       >
         <Animated.View style={[styles.task, rStyle]}>
-          <MangaCard item={item} route={route} navigation={navigation} />
+          <MangaCard item={custom_item} route={route} navigation={navigation} />
         </Animated.View>
       </PanGestureHandler>
     </Animated.View>

@@ -5,7 +5,6 @@ import { useGetManga } from "../MangaDetails";
 import React from "react";
 
 export default function SubButton({
-  navigation,
   IconSize,
   index,
   toggleAnimation,
@@ -13,23 +12,24 @@ export default function SubButton({
   icon,
   setIsOpen,
   startAnimation,
+  onPress,
 }) {
-  const { manga_id, chapters, title } = useGetManga();
-  const child_size = 45;
-
+  const { manga_id, chapters, title, navigation } = useGetManga();
+  const child_size = 55;
+  const def_press = () => {
+    setIsOpen(false);
+    startAnimation();
+    navigation.navigate("ChapterPage", {
+      chapters: chapters,
+      manga_id: manga_id,
+      manga_title: title,
+      //   index: chapters.length - 1,
+      index: index,
+    });
+  };
   return (
     <TouchableWithoutFeedback
-      onPress={() => {
-        setIsOpen(false);
-        startAnimation();
-        navigation.navigate("ChapterPage", {
-          chapters: chapters,
-          manga_id: manga_id,
-          manga_title: title,
-          //   index: chapters.length - 1,
-          index: index,
-        });
-      }}
+      onPress={() => (onPress ? onPress() : def_press())}
     >
       <Animated.View
         style={{

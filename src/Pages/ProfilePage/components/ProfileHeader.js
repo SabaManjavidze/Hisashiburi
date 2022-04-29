@@ -15,13 +15,8 @@ import { logOut } from "../../../Services/MalServices";
 
 const windowWidth = Dimensions.get("window").width;
 const windowHeight = Dimensions.get("window").height;
-export default function ProfileHeader({
-  navigation,
-  route,
-  profile_loaded,
-  profile,
-}) {
-  const { setToken } = useAuth();
+export default function ProfileHeader({ navigation, route }) {
+  const { setToken, user: profile } = useAuth();
   return (
     <>
       <View
@@ -39,27 +34,17 @@ export default function ProfileHeader({
             backgroundColor: "transparent",
           }}
         >
-          {profile_loaded ? (
-            <Text
-              style={{
-                fontSize: 30,
-                fontWeight: "bold",
-                color: "white",
-                textAlign: "center",
-                left: 50,
-              }}
-            >
-              {profile.name}
-            </Text>
-          ) : (
-            <ActivityIndicator
-              size={50}
-              color={secondary_color}
-              style={{
-                left: 30,
-              }}
-            />
-          )}
+          <Text
+            style={{
+              fontSize: 30,
+              fontWeight: "bold",
+              color: "white",
+              textAlign: "center",
+              left: 50,
+            }}
+          >
+            {profile.name}
+          </Text>
         </View>
         <View
           style={{
@@ -90,7 +75,7 @@ export default function ProfileHeader({
       <View style={{ flex: 1, alignItems: "center" }}>
         {/* {console.log(profile_loaded)} */}
         <SkeletonContent
-          isLoading={!profile_loaded}
+          isLoading={false}
           highlightColor={primary_color}
           // containerStyle={{ width: 180, height: 180 }}
           duration={1000}

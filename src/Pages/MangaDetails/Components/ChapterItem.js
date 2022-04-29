@@ -13,14 +13,14 @@ const windowWidth = Dimensions.get("window").width;
 const windowHeight = Dimensions.get("window").height;
 
 export default function ChapterItem({
-  navigation,
+  // navigation,
   // manga_id,
   // manga_title,
   // chapters,
   child,
   index,
 }) {
-  const { manga_id, title, chapters } = useGetManga();
+  const { manga_id, title, chapters, navigation } = useGetManga();
   return (
     <View style={styles.chapter_container}>
       <TouchableOpacity

@@ -1,10 +1,12 @@
 import React, { useRef, useEffect, useState } from "react";
-import { View, Text, RefreshControl } from "react-native";
+import { View, Text, RefreshControl, StyleSheet } from "react-native";
 import { FlatList, ScrollView } from "react-native-gesture-handler";
 import { main_color } from "../../components/variables";
 import { gql, useMutation, useQuery } from "@apollo/client";
 import HistoryCard from "./components/HistoryCard";
 import { TouchableRipple } from "react-native-paper";
+import { useAuth } from "../../Hooks/useAuth";
+import { useIsFocused } from "@react-navigation/native";
 
 const GET_USERS = gql`
   query GetUsers($user_id: Int!) {
@@ -12,8 +14,12 @@ const GET_USERS = gql`
       user_id
       user_name
       manga {
-        title
-        manga_id
+        manga_details {
+          title
+          manga_id
+        }
+        read_date
+        last_read_chapter
       }
     }
   }
@@ -26,29 +32,69 @@ const REMOVE_READ_MANGA = gql`
 `;
 export default function History({ navigation, route }) {
   const [manga, setManga] = useState([]);
+
   const [loading, setLoading] = useState(true);
-  // const { user_id } = useAuth();
+
+  const {
+    token,
+    user: { id },
+  } = useAuth();
+
   const listRef = useRef(null);
   const {
     loading: user_loading,
-    error,
     data,
     refetch,
   } = useQuery(GET_USERS, {
-    variables: { user_id },
+    variables: { user_id: id },
     pollInterval: 1000,
   });
-  useEffect(() => {
-    if (data) {
-      setManga(data.getUsers[0].manga);
-    }
-    setLoading(user_loading);
-  }, [data, loading]);
 
+  // useEffect(() => {
+  //   console.log(isFocused);
+  //   if (isFocused) {
+  //     startPolling(1000);
+  //   } else {
+  //     stopPolling();
+  //   }
+  // }, [isFocused]);
+  const formatDate = (date) => {
+    const split = date.split(",");
+    const mm_dd_yyyy = split[0].split("/");
+    const hh_mm_ss = split[1].split(":");
+    const formated_date = new Date(
+      mm_dd_yyyy[2],
+      mm_dd_yyyy[0] - 1,
+      mm_dd_yyyy[1],
+      hh_mm_ss[0],
+      hh_mm_ss[1],
+      hh_mm_ss[2]
+    );
+    return formated_date;
+  };
+  useEffect(() => {
+    if (!user_loading && data) {
+      const manga_list = data.getUsers[0].manga;
+      // sort manga_list by read_date
+
+      const sorted_manga = [...manga_list].sort((a, b) => {
+        const a_date = formatDate(a.read_date);
+
+        const b_date = formatDate(b.read_date);
+        return b_date - a_date;
+      });
+      // sorted_manga.map((item, i) => {
+      //   console.log(`${i + 1}.  ${item.manga_details.title}`);
+      // });
+      setManga(sorted_manga);
+      setLoading(false);
+    }
+  }, [user_loading, loading, data]);
   const [
     removeReadManga,
     { loading: rm_loading, error: rm_error, data: rm_data },
   ] = useMutation(REMOVE_READ_MANGA);
+
   useEffect(() => {
     if (!rm_loading) {
       if (rm_data) {
@@ -69,7 +115,7 @@ export default function History({ navigation, route }) {
       await removeReadManga({
         variables: {
           // options: {
-          user_id,
+          user_id: id,
           manga_id,
           // },
         },
@@ -94,9 +140,13 @@ export default function History({ navigation, route }) {
         : loading
         ? console.log("loading ...")
         : console.log(JSON.stringify(data.getUsers[0].manga, null, 2))} */}
-      {!manga || manga.length == 0 ? (
+      {!token ? (
+        <Text style={styles.text}>Log in to see your history</Text>
+      ) : loading ? (
+        <Text style={styles.text}>loading...</Text>
+      ) : !manga || manga.length == 0 ? (
         <View style={{ alignItems: "center" }}>
-          <Text style={{ color: "white", fontSize: 15, textAlign: "center" }}>
+          <Text style={[styles.text, { textAlign: "center" }]}>
             No Manga Read You Peasent
           </Text>
           <TouchableRipple
@@ -105,8 +155,8 @@ export default function History({ navigation, route }) {
               padding: 4,
               marginTop: 10,
             }}
-            onPress={() => {
-              refetch();
+            onPress={async () => {
+              await refetch();
               setLoading(true);
             }}
           >
@@ -122,16 +172,14 @@ export default function History({ navigation, route }) {
             </Text>
           </TouchableRipple>
         </View>
-      ) : loading ? (
-        <Text style={{ color: "white", fontSize: 25 }}>loading...</Text>
       ) : (
         <ScrollView
           ref={listRef}
           refreshControl={
             <RefreshControl
               refreshing={loading}
-              onRefresh={() => {
-                refetch();
+              onRefresh={async () => {
+                await refetch();
                 setLoading(true);
               }}
             />
@@ -144,39 +192,16 @@ export default function History({ navigation, route }) {
                 navigation={navigation}
                 route={route}
                 item={item}
-                key={item.manga_id}
+                key={item.manga_details.manga_id}
                 onDismiss={onDismiss}
               />
             );
           })}
         </ScrollView>
-        // <FlatList
-        //   data={data.getUsers[0].manga}
-        //   ref={listRef}
-        //   renderItem={({ item }) => {
-        //     return (
-        //       <HistoryCard
-        //         simultHandler={listRef}
-        //         navigation={navigation}
-        //         route={route}
-        //         item={item}
-        //       />
-        //     );
-        //   }}
-        // onRefresh={() => {
-        //   setLoaded(false);
-        //   setData([]);
-        //   fetchHome();
-        // }}
-        // refreshing={false}
-        // keyExtractor={(item) => item.manga_id}
-        // style={{ height: "100%", width: "100%" }}
-        // style={{ flex: 1 }}
-        // contentContainerStyle={{
-        //   alignItems: "center",
-        // }}
-        //   />
       )}
     </View>
   );
 }
+const styles = StyleSheet.create({
+  text: { color: "white", fontSize: 25 },
+});

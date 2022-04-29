@@ -15,6 +15,7 @@ import HomePageNav from "./Pages/HomePage/HomePageNav";
 import TopMangaScreenNav from "./Pages/TopMangaPage/TopMangaStack";
 import ProfileScreenNav from "./Pages/ProfilePage/ProfileScreenNav";
 import History from "./Pages/History/HistoryPage";
+import HistoryPageNav from "./Pages/History/HistoryPageNav";
 
 export default function MainNavigation() {
   const Tab = createBottomTabNavigator();
@@ -96,14 +97,15 @@ export default function MainNavigation() {
           />
 
           <Tab.Screen
-            name="History"
-            component={History}
+            name="History Screen"
+            component={HistoryPageNav}
             options={{
               headerStyle: {
                 backgroundColor: main_color,
                 borderBottomColor: "black",
                 borderBottomWidth: 0.5,
               },
+              title: "History",
               headerTitleStyle: { color: "white" },
               tabBarIcon: ({ focused, color }) =>
                 renderItem(focused, "clock", color),

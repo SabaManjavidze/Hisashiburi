@@ -89,7 +89,9 @@ export default function MangaDetails({ navigation, route }) {
   }, []);
 
   return (
-    <MangaContext.Provider value={{ chapters, manga_id, title }}>
+    <MangaContext.Provider
+      value={{ navigation, route, chapters, manga_id, title }}
+    >
       <View style={styles.container}>
         <StatusBar
           backgroundColor={fab_open ? "#151623" : main_color}
@@ -101,11 +103,9 @@ export default function MangaDetails({ navigation, route }) {
           // chapters={chapters}
           // manga_id={manga_id}
           // manga_title={title}
-          navigation={navigation}
         />
-        <DetailsAppbar title={title} navigation={navigation} />
+        <DetailsAppbar />
         <FAB
-          navigation={navigation}
           // chapters={chapters}
           // manga_id={manga_id}
           setModalVisible={setModalVisible}
@@ -134,8 +134,6 @@ export default function MangaDetails({ navigation, route }) {
                 poster_loaded={poster_loaded}
                 mal={mal}
                 mal_loaded={mal_loaded}
-                navigation={navigation}
-                route={route}
                 loaded={loaded}
               />
             }
@@ -144,7 +142,7 @@ export default function MangaDetails({ navigation, route }) {
             renderItem={({ item, index }) => (
               <ChapterItem
                 child={item}
-                navigation={navigation}
+                // navigation={navigation}
                 // chapters={chapters}
                 // manga_id={manga_id}
                 // manga_title={title}

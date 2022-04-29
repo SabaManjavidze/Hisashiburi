@@ -9,6 +9,7 @@ import {
 } from "../../../components/variables";
 import { useAuth } from "../../../Hooks/useAuth";
 import React from "react";
+import { useGetManga } from "../MangaDetails";
 
 const windowWidth = Dimensions.get("window").width;
 const windowHeight = Dimensions.get("window").height;
@@ -17,11 +18,9 @@ export default function ListHeaderComponent({
   poster_loaded,
   poster,
   mal,
-  navigation,
-  route,
 }) {
   const { token } = useAuth();
-
+  const { navigation } = useGetManga();
   const getStatus = () => {
     if (mal !== null) {
       if (mal.my_list_status == null) {

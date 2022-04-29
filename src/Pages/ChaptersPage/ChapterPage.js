@@ -5,7 +5,6 @@ import ChapterNav from "./Components/ChapterNav";
 import ReaderAppbar from "./Components/ReaderAppbar";
 import { html, main_color, main_url } from "../../components/variables";
 import { useAuth } from "../../Hooks/useAuth";
-import { getProfile } from "../../Services/MalServices";
 import { gql, useMutation } from "@apollo/client";
 
 export default function ChapterPage({ navigation, route }) {
@@ -21,11 +20,18 @@ export default function ChapterPage({ navigation, route }) {
   const [loaded, setLoaded] = useState(false);
   const scroll_ref = useRef(null);
 
-  const { token } = useAuth();
+  const { token, user } = useAuth();
 
   const CREATE_READ_MANGA = gql`
-    mutation createReadManga($user_id: Int!, $manga_id: String!) {
-      createReadManga(user_id: $user_id, manga_id: $manga_id)
+    mutation createReadManga(
+      $user_id: Float!
+      $manga_id: String!
+      $last_read_chapter: Int!
+    ) {
+      createReadManga(
+        options: { user_id: $user_id, manga_id: $manga_id }
+        last_read_chapter: $last_read_chapter
+      )
     }
   `;
   const [
@@ -35,10 +41,7 @@ export default function ChapterPage({ navigation, route }) {
 
   const CREATE_MANGA = gql`
     mutation createManga($title: String!, $manga_id: String!) {
-      createManga(title: $title, manga_id: $manga_id) {
-        title
-        manga_id
-      }
+      createManga(title: $title, manga_id: $manga_id)
     }
   `;
   const [
@@ -56,9 +59,8 @@ export default function ChapterPage({ navigation, route }) {
 
   const addToHistory = async () => {
     try {
-      const user = await getProfile(token);
       // console.log(user);
-      const { id, name, picture } = user;
+      const { id } = user;
       await createManga({
         variables: {
           manga_id,
@@ -69,6 +71,7 @@ export default function ChapterPage({ navigation, route }) {
         variables: {
           user_id: id,
           manga_id,
+          last_read_chapter: parseInt(chapter.chapter_num),
         },
       });
     } catch (error) {
