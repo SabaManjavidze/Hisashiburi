@@ -1,126 +1,163 @@
-import { View, Text, Dimensions, StyleSheet } from "react-native";
-import React from "react";
-import Animated, {
-  runOnJS,
-  useAnimatedGestureHandler,
-  useAnimatedStyle,
-  useSharedValue,
-  withTiming,
-} from "react-native-reanimated";
-import MangaCard from "../../../components/MangaCard";
-import { IconButton } from "react-native-paper";
-import { light_primary_color } from "../../../components/variables";
-import { PanGestureHandler } from "react-native-gesture-handler";
+import React, { useEffect, useRef, useState } from "react";
+import {
+  View,
+  Text,
+  Image,
+  TouchableOpacity,
+  Dimensions,
+  StyleSheet,
+} from "react-native";
+import { IconButton, TouchableRipple } from "react-native-paper";
+import { domain, img_url, primary_color } from "../../../components/variables";
+import { fetchData } from "../../../utils/fetchData";
 
-const windowWidth = Dimensions.get("window").width;
-const windowHeight = Dimensions.get("window").height;
+const { width, height } = Dimensions.get("window");
 
-export default function HistoryCard({
-  item,
-  simultHandler,
-  route,
-  navigation,
-  onDismiss,
-}) {
-  const custom_item = {
-    ...item.manga_details,
-    chapters: [
-      {
-        upload_date: item.read_date,
-        chap_title: item.last_read_chapter + "",
-      },
-    ],
+export default function HistoryCard({ route, navigation, item }) {
+  //   console.log(item);
+  const {
+    manga_details: { title, manga_id },
+    read_date,
+    last_read_chapter,
+  } = item;
+
+  const goToChapter = async () => {
+    const { chapters } = await fetchData(manga_id);
+    const i = chapters.findIndex((chap) => chap.chap_num == last_read_chapter);
+    navigation.navigate("ChapterPage", {
+      chapters: chapters,
+      manga_id: manga_id,
+      manga_title: title,
+      index: i,
+    });
   };
-  console.log(custom_item);
-  const translateX = useSharedValue(0);
-  const opacity = useSharedValue(1);
-  const itemHeight = useSharedValue(windowHeight * 0.25);
-  const TRANSLATE_X_THRESHOLD = -windowWidth * 0.5;
 
-  const panGesture = useAnimatedGestureHandler({
-    onActive: (event) => {
-      translateX.value = event.translationX;
-    },
-    onEnd: () => {
-      const dissmised = translateX.value < TRANSLATE_X_THRESHOLD;
-      if (dissmised) {
-        translateX.value = withTiming(-windowWidth);
-        itemHeight.value = withTiming(0);
-        runOnJS(onDismiss)(item.manga_id);
-      } else {
-        translateX.value = withTiming(0);
-      }
-    },
-  });
-  const rContainerStyle = useAnimatedStyle(() => {
-    return {
-      height: itemHeight.value,
-      opacity: opacity.value,
-    };
-  });
-  const rStyle = useAnimatedStyle(() => ({
-    transform: [
-      {
-        translateX: translateX.value,
-      },
-    ],
-  }));
-  const rIconContainerStyle = useAnimatedStyle(() => {
-    const opacity = withTiming(translateX.value < -windowWidth * 0.2 ? 1 : 0);
-    return { opacity };
-  });
   return (
-    <Animated.View style={[styles.container, rContainerStyle]}>
-      <Animated.View style={[styles.delete_container, rIconContainerStyle]}>
-        <IconButton
-          icon="delete-outline"
-          color={light_primary_color}
-          size={40}
+    <View style={[{ height: height * 0.25 }, styles.container]} key={manga_id}>
+      <View style={{ flex: 1, flexDirection: "row", alignItems: "center" }}>
+        <TouchableOpacity
+          onPress={() =>
+            navigation.navigate("MangaDetails", {
+              item: { manga_id, title },
+            })
+          }
+        >
+          <Image
+            source={{
+              //   uri: img_url ? img_url : `${domain}${img_url}${manga_id}.jpg`,
+              uri: `${domain}${img_url}${manga_id}.jpg`,
+            }}
+            style={styles.image}
+          />
+        </TouchableOpacity>
+
+        <View
           style={{
-            // height:"100%",
+            flex: 1,
             alignItems: "center",
             justifyContent: "center",
           }}
-        />
-      </Animated.View>
-      <PanGestureHandler
-        simultaneousHandlers={simultHandler}
-        onGestureEvent={panGesture}
-        hitSlop={{ width: 70, right: 0 }}
-      >
-        <Animated.View style={[styles.task, rStyle]}>
-          <MangaCard item={custom_item} route={route} navigation={navigation} />
-        </Animated.View>
-      </PanGestureHandler>
-    </Animated.View>
+        >
+          <View
+            style={{
+              flex: 1,
+              width: "100%",
+              justifyContent: "space-between",
+              height: "40%",
+              flexDirection: "row",
+            }}
+          >
+            <View
+              style={{
+                justifyContent: "center",
+                alignItems: "center",
+                width: "90%",
+              }}
+            >
+              <Text
+                style={{ color: "white", textAlign: "center", maxWidth: "80%" }}
+              >
+                {title.length > 50 ? `${title.substring(0, 45)}...` : title}
+              </Text>
+            </View>
+          </View>
+          {last_read_chapter && (
+            <View
+              style={{
+                flex: 1,
+                width: "100%",
+                height: "60%",
+              }}
+            >
+              <View
+                style={{
+                  flex: 1,
+                  flexDirection: "row",
+                  justifyContent: "space-between",
+                  marginHorizontal: 0,
+                }}
+              >
+                <View style={{ flex: 3, alignItems: "center" }}>
+                  <TouchableRipple
+                    onPress={() => goToChapter()}
+                    style={{
+                      borderColor: primary_color,
+                      borderWidth: 1,
+                      borderRadius: 5,
+                      width: "80%",
+                      alignItems: "center",
+                    }}
+                  >
+                    <Text
+                      style={{
+                        color: primary_color,
+                        textAlign: "center",
+                        fontSize: 18,
+                      }}
+                    >
+                      {last_read_chapter}
+                    </Text>
+                  </TouchableRipple>
+                </View>
+                <View style={{ flex: 1, justifyContent: "center" }}>
+                  <Text
+                    style={{
+                      color: "gray",
+                      fontSize: 10,
+                      textAlign: "center",
+                    }}
+                  >
+                    {read_date}
+                  </Text>
+                </View>
+              </View>
+            </View>
+          )}
+        </View>
+      </View>
+    </View>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
-    width: "100%",
     marginVertical: 10,
-    alignItems: "center",
-  },
-  delete_container: {
-    position: "absolute",
-    height: "90%",
-    right: "5%",
-    width: "15%",
-    justifyContent: "center",
-    alignItems: "center",
-  },
-  task: {
-    backgroundColor: "black",
-    width: "100%",
-    height: "100%",
-    justifyContent: "center",
-    alignItems: "center",
+    width: width - 20,
+    backgroundColor: "#2F2C4B",
+    borderRadius: 10,
+    flexDirection: "row",
+    borderColor: primary_color,
+    borderWidth: 2,
+    padding: 10,
   },
   image: {
     width: 115,
     height: 170,
     borderTopLeftRadius: 10,
     borderBottomLeftRadius: 10,
+  },
+  title: {
+    color: "white",
+    maxWidth: width / 4,
   },
 });

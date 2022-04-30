@@ -70,7 +70,7 @@ export default function FAB({ setModalVisible, modalVisible }) {
             if (!loading && data) {
               const index = chapters.findIndex((chapter, i) => {
                 if (
-                  chapter.chapter_num == data.getReadManga[0].last_read_chapter
+                  chapter.chap_num == data.getReadManga[0].last_read_chapter
                 ) {
                   return chapters.length - 1 - i;
                 }

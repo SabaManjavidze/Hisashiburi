@@ -20,7 +20,6 @@ import { ActivityIndicator, TouchableRipple } from "react-native-paper";
 import ChapterItem from "./Components/ChapterItem";
 import { getMangaOnMAL } from "../../Services/MalServices";
 import {
-  main_url,
   domain,
   main_color,
   primary_color,
@@ -32,13 +31,7 @@ import DetailsAppbar from "./Components/DetailsAppbar";
 import ChapterSearchModal from "./Components/ChapterSearchModal";
 import FAB from "./Components/FAB";
 import ListHeaderComponent from "./Components/ListHeaderComponent";
-
-export const fetchData = async (manga_id) => {
-  const url = `${main_url}/manga/${manga_id}`;
-  const data = await fetch(url);
-  const json = await data.json();
-  return json;
-};
+import { fetchData } from "../../utils/fetchData";
 
 const windowWidth = Dimensions.get("window").width;
 const windowHeight = Dimensions.get("window").height;
@@ -69,6 +62,7 @@ export default function MangaDetails({ navigation, route }) {
   const fetchChapters = async () => {
     // navigation.setOptions({ title: title });
     const json = await fetchData(manga_id);
+    console.log(json);
     // console.log(json.details.img_url);
     const { details, chapters } = json;
     setPoster(details.img_url);

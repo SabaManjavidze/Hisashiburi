@@ -8,9 +8,9 @@ import {
   StyleSheet,
 } from "react-native";
 import { IconButton, TouchableRipple } from "react-native-paper";
-import { fetchData } from "../Pages/MangaDetails/MangaDetails";
 import { logOut } from "../Services/MalServices";
 import { domain, img_url, primary_color } from "../components/variables";
+import { fetchData } from "../utils/fetchData";
 
 const windowWidth = Dimensions.get("window").width;
 const windowHeight = Dimensions.get("window").height;

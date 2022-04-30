@@ -15,7 +15,7 @@ export default function ChapterSearchModal({ setModalVisible, modalVisible }) {
   const { navigation, chapters, manga_id, title } = useGetManga();
 
   const onSubmit = () => {
-    const index = chapters.findIndex((child) => child.chapter_num === input);
+    const index = chapters.findIndex((child) => child.chap_num === input);
     if (index == -1) {
       alert("Chapter Not Found");
       return;
@@ -101,9 +101,7 @@ export default function ChapterSearchModal({ setModalVisible, modalVisible }) {
                   setInput(text);
                   if (text.length > 0) {
                     setFilteredChapters(
-                      chapters.filter((child) =>
-                        child.chapter_num.includes(text)
-                      )
+                      chapters.filter((child) => child.chap_num.includes(text))
                     );
                   } else {
                     setFilteredChapters([]);
@@ -152,7 +150,7 @@ export default function ChapterSearchModal({ setModalVisible, modalVisible }) {
               }}
               renderItem={({ item }) => {
                 const index = chapters.findIndex(
-                  (child) => child.chapter_num === item.chapter_num
+                  (child) => child.chap_num === item.chap_num
                 );
                 return (
                   <ChapterItem

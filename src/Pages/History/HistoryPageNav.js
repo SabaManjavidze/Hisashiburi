@@ -10,8 +10,7 @@ export default function HistoryPageNav({ navigation, route }) {
   const mangaDetailsHeader = {
     headerStyle: {
       backgroundColor: main_color,
-      color: "white",
-      borderBottomWidth: 2,
+      borderBottomWidth: 0.5,
       borderBottomColor: "black",
     },
     headerTitleStyle: {
@@ -19,13 +18,14 @@ export default function HistoryPageNav({ navigation, route }) {
       fontFamily: "notoserif",
     },
     headerTintColor: "white",
+    headerShown: true,
   };
 
   return (
-    <Stack.Navigator>
+    <Stack.Navigator screenOptions={{ headerShown: false }}>
       <Stack.Screen
         name="History"
-        options={{ headerShown: false }}
+        options={mangaDetailsHeader}
         component={History}
         listeners={{
           focus: () => {

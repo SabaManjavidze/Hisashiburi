@@ -6,6 +6,8 @@ import { gql, useMutation, useQuery } from "@apollo/client";
 import HistoryCard from "./components/HistoryCard";
 import { TouchableRipple } from "react-native-paper";
 import { useAuth } from "../../Hooks/useAuth";
+import { formatDate } from "../../utils/formatDate";
+import HistoryCardAnim from "./components/HistoryCardAnim";
 import { useIsFocused } from "@react-navigation/native";
 
 const GET_USERS = gql`
@@ -32,7 +34,7 @@ const REMOVE_READ_MANGA = gql`
 `;
 export default function History({ navigation, route }) {
   const [manga, setManga] = useState([]);
-
+  const isFocused = useIsFocused();
   const [loading, setLoading] = useState(true);
 
   const {
@@ -47,41 +49,21 @@ export default function History({ navigation, route }) {
     refetch,
   } = useQuery(GET_USERS, {
     variables: { user_id: id },
-    pollInterval: 1000,
   });
 
-  // useEffect(() => {
-  //   console.log(isFocused);
-  //   if (isFocused) {
-  //     startPolling(1000);
-  //   } else {
-  //     stopPolling();
-  //   }
-  // }, [isFocused]);
-  const formatDate = (date) => {
-    const split = date.split(",");
-    const mm_dd_yyyy = split[0].split("/");
-    const hh_mm_ss = split[1].split(":");
-    const formated_date = new Date(
-      mm_dd_yyyy[2],
-      mm_dd_yyyy[0] - 1,
-      mm_dd_yyyy[1],
-      hh_mm_ss[0],
-      hh_mm_ss[1],
-      hh_mm_ss[2]
-    );
-    return formated_date;
-  };
+  useEffect(() => {
+    if (isFocused) {
+      refetch();
+    }
+  }, [isFocused]);
+
   useEffect(() => {
     if (!user_loading && data) {
       const manga_list = data.getUsers[0].manga;
       // sort manga_list by read_date
 
       const sorted_manga = [...manga_list].sort((a, b) => {
-        const a_date = formatDate(a.read_date);
-
-        const b_date = formatDate(b.read_date);
-        return b_date - a_date;
+        return new Date(b.read_date) - new Date(a.read_date);
       });
       // sorted_manga.map((item, i) => {
       //   console.log(`${i + 1}.  ${item.manga_details.title}`);
@@ -95,17 +77,17 @@ export default function History({ navigation, route }) {
     { loading: rm_loading, error: rm_error, data: rm_data },
   ] = useMutation(REMOVE_READ_MANGA);
 
-  useEffect(() => {
-    if (!rm_loading) {
-      if (rm_data) {
-        console.log(rm_data);
-        // listRef.current.scrollToOffset({ animated: true, offset: 0 });
-      }
-      if (rm_error) {
-        console.log(rm_error);
-      }
-    }
-  }, [rm_loading]);
+  // useEffect(() => {
+  //   if (!rm_loading) {
+  //     if (rm_data) {
+  //       console.log(rm_data);
+  // listRef.current.scrollToOffset({ animated: true, offset: 0 });
+  //     }
+  //     if (rm_error) {
+  //       console.log(rm_error);
+  //     }
+  //   }
+  // }, [rm_loading]);
 
   const onDismiss = async (manga_id) => {
     // refetch query
@@ -120,6 +102,7 @@ export default function History({ navigation, route }) {
           // },
         },
       });
+      refetch();
     } catch (error) {
       console.log(JSON.stringify(error, null, 2));
     }
@@ -155,9 +138,9 @@ export default function History({ navigation, route }) {
               padding: 4,
               marginTop: 10,
             }}
-            onPress={async () => {
-              await refetch();
+            onPress={() => {
               setLoading(true);
+              refetch();
             }}
           >
             <Text
@@ -187,7 +170,7 @@ export default function History({ navigation, route }) {
         >
           {manga.map((item) => {
             return (
-              <HistoryCard
+              <HistoryCardAnim
                 simultHandler={listRef}
                 navigation={navigation}
                 route={route}

@@ -27,10 +27,12 @@ export default function ChapterPage({ navigation, route }) {
       $user_id: Float!
       $manga_id: String!
       $last_read_chapter: Int!
+      $read_date: String!
     ) {
       createReadManga(
         options: { user_id: $user_id, manga_id: $manga_id }
         last_read_chapter: $last_read_chapter
+        read_date: $read_date
       )
     }
   `;
@@ -50,7 +52,7 @@ export default function ChapterPage({ navigation, route }) {
   ] = useMutation(CREATE_MANGA);
 
   const fetchData = async () => {
-    const url = `${main_url}/manga/${manga_id}/${chapter.chapter_num}`;
+    const url = `${main_url}/manga/${manga_id}/${chapter.chap_num}`;
     const data = await fetch(url);
     const json = await data.json();
     setData(json);
@@ -67,11 +69,14 @@ export default function ChapterPage({ navigation, route }) {
           title: manga_title,
         },
       });
+      const read_date = `${new Date().toLocaleDateString()}, ${new Date().toLocaleTimeString()}`;
+      // console.log(read_date);
       await createReadManga({
         variables: {
           user_id: id,
           manga_id,
-          last_read_chapter: parseInt(chapter.chapter_num),
+          last_read_chapter: parseInt(chapter.chap_num),
+          read_date,
         },
       });
     } catch (error) {
@@ -79,7 +84,7 @@ export default function ChapterPage({ navigation, route }) {
     }
   };
   useEffect(() => {
-    if (chapter != null) {
+    if (chapter && chapter != null) {
       fetchData();
       navigation.setOptions({ title: chapter.chap_title });
 
@@ -120,7 +125,6 @@ export default function ChapterPage({ navigation, route }) {
         idx={idx}
         hide={hide}
       />
-
       {loaded && (
         <View style={{ flex: 1 }}>
           <WebView

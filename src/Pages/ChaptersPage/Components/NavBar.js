@@ -60,7 +60,7 @@ export default function NavBar({ chapters, setChap, setIndex, idx, style }) {
       listItemLabelStyle={{ color: "white" }}
       placeholder={"Berserk " + value}
       setItems={setItems}
-      itemKey={"chapter_num"}
+      itemKey={"chap_num"}
     />
   );
 }

@@ -41,7 +41,6 @@ export default function HomePage({ navigation, route }) {
   const [showInput, setShowInput] = useState(false);
   const fadeAnim = useRef(new Animated.Value(0)).current;
   const inputRef = useRef(null);
-  const initArray = [1, 2, 3, 4];
   const fetchHome = async () => {
     const url = `${main_url}/homepage`;
     try {
@@ -218,17 +217,15 @@ export default function HomePage({ navigation, route }) {
           />
         ) : (
           <View>
-            <FlatList
+            {/* <FlatList
               data={initArray}
               renderItem={({ item, index }) => {
                 return <MangaSkeleton index={index} loaded={loaded} />;
               }}
               keyExtractor={(item) => item.toString()}
               style={{ height: "100%", width: "100%" }}
-            />
-            {/* {[...Array(4)].map((_, i) => (
-              <MangaSkeleton key={i} index={i} loaded={loaded} />
-            ))} */}
+            /> */}
+            <ActivityIndicator size="large" color={primary_color} />
           </View>
         )}
       </>

@@ -20,7 +20,7 @@ import HistoryPageNav from "./Pages/History/HistoryPageNav";
 export default function MainNavigation() {
   const Tab = createBottomTabNavigator();
 
-  const { token, setToken } = useAuth();
+  const { token, setToken, user_loading } = useAuth();
 
   const mangaDetailsHeader = {
     headerStyle: {
@@ -95,17 +95,25 @@ export default function MainNavigation() {
             }}
             component={TopMangaScreenNav}
           />
-
           <Tab.Screen
             name="History Screen"
             component={HistoryPageNav}
+            listeners={({ navigation }) => ({
+              tabPress: (e) => {
+                if (user_loading) {
+                  e.preventDefault();
+                }
+              },
+            })}
             options={{
               headerStyle: {
                 backgroundColor: main_color,
                 borderBottomColor: "black",
                 borderBottomWidth: 0.5,
               },
+
               title: "History",
+              headerShown: false,
               headerTitleStyle: { color: "white" },
               tabBarIcon: ({ focused, color }) =>
                 renderItem(focused, "clock", color),

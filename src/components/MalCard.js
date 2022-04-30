@@ -29,7 +29,6 @@ export default function MalCard({ node, navigation, route }) {
     );
     const json = await data.json();
     json.map((item) => {
-
       const str = removePunctuation(item.title);
       const item_title = str;
 
@@ -37,7 +36,7 @@ export default function MalCard({ node, navigation, route }) {
         navigation.navigate("MangaDetails", {
           item: item,
         });
-	      return;
+        return;
       }
     });
   };
