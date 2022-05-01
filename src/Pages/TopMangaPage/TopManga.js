@@ -46,14 +46,15 @@ export default function TopManga({ navigation, route }) {
   useEffect(() => {
     getData();
   }, [currPage]);
-  useEffect(() => {
-    const backHandler = BackHandler.addEventListener(
-      "hardwareBackPress",
-      getData
-    );
+  // useEffect(() => {
+  //   const unsub = navigation.addListener("state", () => {
+  //     if (loaded) {
+  //       listRef.current.scrollToOffset({ offset: 0, animated: true });
+  //     }
+  //   });
 
-    return () => backHandler.remove();
-  }, []);
+  //   return unsub;
+  // }, [navigation]);
   const loadMoreItems = () => {
     setCurrPage(paging.next);
     // console.log("first");

@@ -87,7 +87,6 @@ export default function MainNavigation() {
           <Tab.Screen
             name="Top Manga Screen"
             options={{
-              headerTitle: "Top Manga",
               title: "Top Manga",
               tabBarIcon: ({ focused, color }) =>
                 renderItem(focused, "format-list-bulleted", color, "square"),

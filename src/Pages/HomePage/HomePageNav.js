@@ -8,19 +8,6 @@ import HomePage from "./HomePage";
 
 export default function HomePageNav({ navigation, route }) {
   const Stack = createNativeStackNavigator();
-  const mangaDetailsHeader = {
-    headerStyle: {
-      backgroundColor: main_color,
-      color: "white",
-      borderBottomWidth: 2,
-      borderBottomColor: "black",
-    },
-    headerTitleStyle: {
-      color: "white",
-      fontFamily: "notoserif",
-    },
-    headerTintColor: "white",
-  };
 
   return (
     <Stack.Navigator>

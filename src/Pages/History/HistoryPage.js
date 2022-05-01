@@ -1,10 +1,10 @@
 import React, { useRef, useEffect, useState } from "react";
 import { View, Text, RefreshControl, StyleSheet } from "react-native";
 import { FlatList, ScrollView } from "react-native-gesture-handler";
-import { main_color } from "../../components/variables";
+import { main_color, primary_color } from "../../components/variables";
 import { gql, useMutation, useQuery } from "@apollo/client";
 import HistoryCard from "./components/HistoryCard";
-import { TouchableRipple } from "react-native-paper";
+import { ActivityIndicator, TouchableRipple } from "react-native-paper";
 import { useAuth } from "../../Hooks/useAuth";
 import { formatDate } from "../../utils/formatDate";
 import HistoryCardAnim from "./components/HistoryCardAnim";
@@ -65,9 +65,6 @@ export default function History({ navigation, route }) {
       const sorted_manga = [...manga_list].sort((a, b) => {
         return new Date(b.read_date) - new Date(a.read_date);
       });
-      // sorted_manga.map((item, i) => {
-      //   console.log(`${i + 1}.  ${item.manga_details.title}`);
-      // });
       setManga(sorted_manga);
       setLoading(false);
     }
@@ -76,18 +73,6 @@ export default function History({ navigation, route }) {
     removeReadManga,
     { loading: rm_loading, error: rm_error, data: rm_data },
   ] = useMutation(REMOVE_READ_MANGA);
-
-  // useEffect(() => {
-  //   if (!rm_loading) {
-  //     if (rm_data) {
-  //       console.log(rm_data);
-  // listRef.current.scrollToOffset({ animated: true, offset: 0 });
-  //     }
-  //     if (rm_error) {
-  //       console.log(rm_error);
-  //     }
-  //   }
-  // }, [rm_loading]);
 
   const onDismiss = async (manga_id) => {
     // refetch query
@@ -118,16 +103,19 @@ export default function History({ navigation, route }) {
         // flex: 1,
       }}
     >
-      {/* {error
-        ? console.log("   " + error.networkError.result.errors[0].message)
-        : loading
-        ? console.log("loading ...")
-        : console.log(JSON.stringify(data.getUsers[0].manga, null, 2))} */}
       {!token ? (
         <Text style={styles.text}>Log in to see your history</Text>
       ) : loading ? (
-        <Text style={styles.text}>loading...</Text>
-      ) : !manga || manga.length == 0 ? (
+        <View
+          style={{
+            height: "100%",
+            justifyContent: "center",
+            alignItems: "center",
+          }}
+        >
+          <ActivityIndicator size="large" color={primary_color} />
+        </View>
+      ) : manga.length == 0 ? (
         <View style={{ alignItems: "center" }}>
           <Text style={[styles.text, { textAlign: "center" }]}>
             No Manga Read You Peasent

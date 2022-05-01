@@ -32,12 +32,10 @@ import ChapterSearchModal from "./Components/ChapterSearchModal";
 import FAB from "./Components/FAB";
 import ListHeaderComponent from "./Components/ListHeaderComponent";
 import { fetchData } from "../../utils/fetchData";
+import { MangaContext } from "./Components/useGetManga";
 
 const windowWidth = Dimensions.get("window").width;
 const windowHeight = Dimensions.get("window").height;
-
-export const MangaContext = createContext(null);
-export const useGetManga = () => useContext(MangaContext);
 
 export default function MangaDetails({ navigation, route }) {
   const { item } = route.params;
@@ -60,10 +58,7 @@ export default function MangaDetails({ navigation, route }) {
   const scrollRef = useRef(null);
 
   const fetchChapters = async () => {
-    // navigation.setOptions({ title: title });
     const json = await fetchData(manga_id);
-    console.log(json);
-    // console.log(json.details.img_url);
     const { details, chapters } = json;
     setPoster(details.img_url);
     setPosterLoaded(true);

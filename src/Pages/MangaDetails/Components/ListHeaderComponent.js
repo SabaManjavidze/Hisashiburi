@@ -9,7 +9,7 @@ import {
 } from "../../../components/variables";
 import { useAuth } from "../../../Hooks/useAuth";
 import React from "react";
-import { useGetManga } from "../MangaDetails";
+import { useGetManga } from "./useGetManga";
 
 const windowWidth = Dimensions.get("window").width;
 const windowHeight = Dimensions.get("window").height;

@@ -10,8 +10,8 @@ import {
 import { Avatar } from "react-native-paper";
 import { main_color, primary_color } from "../../../components/variables";
 import { useAuth } from "../../../Hooks/useAuth";
-import { useGetManga } from "../MangaDetails";
 import SubButton from "./SubButton";
+import { useGetManga } from "./useGetManga";
 
 const GET_READ_MANGA = gql`
   query GetReadManga($manga_id: String!, $user_id: Float!) {

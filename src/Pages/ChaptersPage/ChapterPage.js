@@ -26,7 +26,7 @@ export default function ChapterPage({ navigation, route }) {
     mutation createReadManga(
       $user_id: Float!
       $manga_id: String!
-      $last_read_chapter: Int!
+      $last_read_chapter: String!
       $read_date: String!
     ) {
       createReadManga(
@@ -75,7 +75,7 @@ export default function ChapterPage({ navigation, route }) {
         variables: {
           user_id: id,
           manga_id,
-          last_read_chapter: parseInt(chapter.chap_num),
+          last_read_chapter: chapter.chap_num,
           read_date,
         },
       });

@@ -81,7 +81,7 @@ export default function HistoryCard({ route, navigation, item }) {
               </Text>
             </View>
           </View>
-          {last_read_chapter && (
+          {last_read_chapter ? (
             <View
               style={{
                 flex: 1,
@@ -132,7 +132,7 @@ export default function HistoryCard({ route, navigation, item }) {
                 </View>
               </View>
             </View>
-          )}
+          ) : null}
         </View>
       </View>
     </View>

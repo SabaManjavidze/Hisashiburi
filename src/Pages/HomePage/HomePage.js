@@ -28,7 +28,7 @@ import {
 import MangaCard from "../../components/MangaCard";
 import { useAuth } from "../../Hooks/useAuth";
 import MangaSkeleton from "../../components/MangaSkeleton";
-const AnimatedIcon = Animated.createAnimatedComponent(IconButton);
+import { useScrollToTop } from "@react-navigation/native";
 
 const width = Dimensions.get("window").width;
 const height = Dimensions.get("window").height;
@@ -41,6 +41,8 @@ export default function HomePage({ navigation, route }) {
   const [showInput, setShowInput] = useState(false);
   const fadeAnim = useRef(new Animated.Value(0)).current;
   const inputRef = useRef(null);
+  const list_ref = useRef(null);
+
   const fetchHome = async () => {
     const url = `${main_url}/homepage`;
     try {
@@ -52,7 +54,6 @@ export default function HomePage({ navigation, route }) {
       alert(error);
     }
   };
-
   const fetchSearchResults = async () => {
     setLoaded(false);
     setData([]);
@@ -61,15 +62,7 @@ export default function HomePage({ navigation, route }) {
     setData(json);
     setLoaded(true);
   };
-  // useEffect(() => {
-  // console.log(token || "token is null");
 
-  // const backHandler = BackHandler.addEventListener(
-  //   "hardwareBackPress",
-  //   handleBackButton
-  // );
-  // return () => backHandler.remove();
-  // }, []);
   useEffect(() => {
     fetchHome();
     // console.log(token || "token is null");
@@ -205,6 +198,7 @@ export default function HomePage({ navigation, route }) {
           <FlatList
             data={data}
             renderItem={renderItem}
+            ref={list_ref}
             onRefresh={() => {
               setLoaded(false);
               setData([]);
@@ -216,7 +210,13 @@ export default function HomePage({ navigation, route }) {
             contentContainerStyle={{ alignItems: "center" }}
           />
         ) : (
-          <View>
+          <View
+            style={{
+              height: "100%",
+              justifyContent: "center",
+              alignItems: "center",
+            }}
+          >
             {/* <FlatList
               data={initArray}
               renderItem={({ item, index }) => {
