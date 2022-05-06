@@ -1,78 +1,117 @@
-import { View, Text, StyleSheet } from "react-native";
+import { View, Text, StyleSheet, TouchableOpacity, Image } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import React, { useEffect, useState } from "react";
-import { main_color, STATE_VAR, token_url } from "../components/variables";
+import {
+  main_color,
+  MAL_color,
+  primary_color,
+  STATE_VAR,
+  token_url,
+} from "../components/variables";
 import { WebView } from "react-native-webview";
 import axios from "axios";
 import { gql, useMutation } from "@apollo/client";
 import { getProfile } from "../Services/MalServices";
 import { useAuth } from "../Hooks/useAuth";
+import { CREATE_USER } from "../graphql/Mutations";
+import { Avatar, IconButton } from "react-native-paper";
+import * as WebBrowser from "expo-web-browser";
+import { useFonts } from "expo-font";
 
 export default function Auth({ navigation, route }) {
-  // const [user, setUser] = useState();
-  const { token, setToken } = useAuth();
-  const CREATE_USER = gql`
-    mutation CreateUser(
-      $user_name: String!
-      $user_id: Int!
-      $picture: String!
-    ) {
-      createUser(user_id: $user_id, user_name: $user_name, picture: $picture) {
-        user_name
-      }
-    }
-  `;
+  const { setToken, setUser } = useAuth();
   const [addUser, { loading, error, data }] = useMutation(CREATE_USER);
-  // useEffect(() => {
-  //   loading || console.log(JSON.stringify(data, null, 2));
-  // }, [loading]);
-  const onNavStateChange = async (navigationState) => {
-    const url = navigationState.url;
-    if (url.includes("code=")) {
-      const authorization_code = url.split("code=")[1].split("&")[0];
+
+  const [loaded] = useFonts({
+    Mal: require("../../assets/MalFont.ttf"),
+  });
+
+  const LogIn = async (authorization_code) => {
+    try {
+      const { data } = await axios.post(token_url, {
+        code: authorization_code,
+        state: STATE_VAR,
+      });
+      const { access_token, refresh_token, expires_in } = data;
+
+      await AsyncStorage.setItem("access_token", access_token);
+      await AsyncStorage.setItem("refresh_token", refresh_token);
+      await AsyncStorage.setItem("expires_in", expires_in.toString());
+
+      const user = await getProfile(access_token);
+      const { id, name, picture } = user;
+
       try {
-        const { data } = await axios.post(token_url, {
-          code: authorization_code,
-          state: STATE_VAR,
+        await addUser({
+          variables: {
+            user_id: id,
+            user_name: name,
+            picture: picture,
+          },
         });
-        const { access_token, refresh_token, expires_in } = data;
-
-        await AsyncStorage.setItem("access_token", access_token);
-        await AsyncStorage.setItem("refresh_token", refresh_token);
-        await AsyncStorage.setItem("expires_in", expires_in.toString());
-
-        const { id, name, picture } = await getProfile(access_token);
-        console.log(id);
-        try {
-          await addUser({
-            variables: {
-              user_id: id,
-              user_name: name,
-              picture: picture,
-            },
-          });
-        } catch (error) {
-          // console.log(error.networkError.result.errors[0].message || error);
-          console.log(JSON.stringify(error, null, 2));
-        }
-        setToken(access_token);
-        // alert("Successfully logged in");
       } catch (error) {
-        alert(error);
+        // console.log(error.networkError.result.errors[0].message || error);
+        console.log(JSON.stringify(error, null, 2));
       }
+      setToken(access_token);
+      setUser(user);
+      // alert("Successfully logged in");
+    } catch (error) {
+      console.log(JSON.stringify(error, null, 2));
     }
   };
+  useEffect(() => {
+    if (route.params && route.params.code) {
+      LogIn(route.params.code);
+    }
+  }, [route]);
+
   return (
-    <WebView
-      source={{
-        uri: "https://node-mal-oauth.herokuapp.com/auth",
+    <View
+      style={{
+        height: "100%",
+        justifyContent: "center",
+        alignItems: "center",
+        backgroundColor: main_color,
       }}
-      onNavigationStateChange={(navigationState) =>
-        onNavStateChange(navigationState)
-      }
-      style={{ backgroundColor: main_color }}
-    />
-    // <GraphqlTest />
+    >
+      <TouchableOpacity
+        activeOpacity={0.6}
+        onPress={() => {
+          WebBrowser.openAuthSessionAsync(
+            "https://node-mal-oauth.herokuapp.com/auth"
+            // "http://192.168.0.109:3000/auth"
+            // "exp://192.168.0.109:19000/--/auth"
+          );
+        }}
+        style={{
+          alignItems: "center",
+          justifyContent: "center",
+          flexDirection: "row",
+          backgroundColor: MAL_color,
+          padding: 15,
+          borderRadius: 15,
+        }}
+      >
+        {/* <Image
+          source={{
+            uri: "https://upload.wikimedia.org/wikipedia/commons/7/7a/MyAnimeList_Logo.png",
+          }}
+          style={{ width: 70, height: 70, marginRight: 15 }}
+        /> */}
+        <Text
+          style={{
+            color: "white",
+            fontSize: 20,
+            letterSpacing: 0.2,
+            // fontFamily: "Roboto",
+            fontFamily: loaded ? "Mal" : "Roboto",
+          }}
+        >
+          Sign in with MyAnimeList
+        </Text>
+      </TouchableOpacity>
+    </View>
   );
 }
 const styles = StyleSheet.create({

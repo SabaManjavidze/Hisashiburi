@@ -7,7 +7,7 @@ import {
   TouchableOpacity,
 } from "react-native";
 import { primary_color, secondary_color } from "../../../components/variables";
-import { useGetManga } from "./useGetManga";
+import { useGetManga } from "../../../Hooks/useGetManga";
 
 const windowWidth = Dimensions.get("window").width;
 const windowHeight = Dimensions.get("window").height;

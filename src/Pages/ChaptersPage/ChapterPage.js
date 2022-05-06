@@ -6,7 +6,7 @@ import ReaderAppbar from "./Components/ReaderAppbar";
 import { html, main_color, main_url } from "../../components/variables";
 import { useAuth } from "../../Hooks/useAuth";
 import { gql, useMutation } from "@apollo/client";
-
+import { CREATE_READ_MANGA, CREATE_MANGA } from "../../graphql/Mutations";
 export default function ChapterPage({ navigation, route }) {
   let { manga_title, manga_id, chapters, index } = route.params;
   // let { title, manga_id, chapters } = useGetManga();
@@ -22,30 +22,11 @@ export default function ChapterPage({ navigation, route }) {
 
   const { token, user } = useAuth();
 
-  const CREATE_READ_MANGA = gql`
-    mutation createReadManga(
-      $user_id: Float!
-      $manga_id: String!
-      $last_read_chapter: String!
-      $read_date: String!
-    ) {
-      createReadManga(
-        options: { user_id: $user_id, manga_id: $manga_id }
-        last_read_chapter: $last_read_chapter
-        read_date: $read_date
-      )
-    }
-  `;
   const [
     createReadManga,
     { loading: rm_loading, error: rm_error, data: rm_data },
   ] = useMutation(CREATE_READ_MANGA);
 
-  const CREATE_MANGA = gql`
-    mutation createManga($title: String!, $manga_id: String!) {
-      createManga(title: $title, manga_id: $manga_id)
-    }
-  `;
   const [
     createManga,
     { loading: manga_loading, error: manga_error, data: manga_data },

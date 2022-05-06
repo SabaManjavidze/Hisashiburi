@@ -1,7 +1,7 @@
 import { TouchableWithoutFeedback, Animated } from "react-native";
 import { Avatar } from "react-native-paper";
 import { main_color } from "../../../components/variables";
-import { useGetManga } from "./useGetManga";
+import { useGetManga } from "../../../Hooks/useGetManga";
 import React from "react";
 
 export default function SubButton({

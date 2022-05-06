@@ -1,5 +1,5 @@
 import React from "react";
-import { StyleSheet } from "react-native";
+import { StyleSheet, Text } from "react-native";
 import { NavigationContainer } from "@react-navigation/native";
 import { Avatar } from "react-native-paper";
 import {
@@ -14,10 +14,22 @@ import Auth from "./Pages/Auth";
 import HomePageNav from "./Pages/HomePage/HomePageNav";
 import TopMangaScreenNav from "./Pages/TopMangaPage/TopMangaStack";
 import ProfileScreenNav from "./Pages/ProfilePage/ProfileScreenNav";
-import History from "./Pages/History/HistoryPage";
 import HistoryPageNav from "./Pages/History/HistoryPageNav";
+import * as Linking from "expo-linking";
+
+const prefix = Linking.createURL("/");
 
 export default function MainNavigation() {
+  const linking = {
+    prefixes: [prefix],
+    config: {
+      screens: {
+        "Home Screen": "home",
+        Profile: "ProfilePage",
+        LogIn: "auth",
+      },
+    },
+  };
   const Tab = createBottomTabNavigator();
 
   const { token, setToken, user_loading } = useAuth();
@@ -55,7 +67,10 @@ export default function MainNavigation() {
 
   return (
     <>
-      <NavigationContainer>
+      <NavigationContainer
+        linking={linking}
+        fallback={<Text>Loading....</Text>}
+      >
         <StatusBar
           animated={false}
           backgroundColor={main_color}

@@ -9,29 +9,9 @@ import { useAuth } from "../../Hooks/useAuth";
 import { formatDate } from "../../utils/formatDate";
 import HistoryCardAnim from "./components/HistoryCardAnim";
 import { useIsFocused } from "@react-navigation/native";
+import { REMOVE_READ_MANGA } from "../../graphql/Mutations";
+import { GET_USERS } from "../../graphql/Queries";
 
-const GET_USERS = gql`
-  query GetUsers($user_id: Int!) {
-    getUsers(user_id: $user_id) {
-      user_id
-      user_name
-      manga {
-        manga_details {
-          title
-          manga_id
-        }
-        read_date
-        last_read_chapter
-      }
-    }
-  }
-`;
-
-const REMOVE_READ_MANGA = gql`
-  mutation RemoveReadManga($user_id: Float!, $manga_id: String!) {
-    removeReadManga(options: { user_id: $user_id, manga_id: $manga_id })
-  }
-`;
 export default function History({ navigation, route }) {
   const [manga, setManga] = useState([]);
   const isFocused = useIsFocused();

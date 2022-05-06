@@ -11,18 +11,8 @@ import { Avatar } from "react-native-paper";
 import { main_color, primary_color } from "../../../components/variables";
 import { useAuth } from "../../../Hooks/useAuth";
 import SubButton from "./SubButton";
-import { useGetManga } from "./useGetManga";
-
-const GET_READ_MANGA = gql`
-  query GetReadManga($manga_id: String!, $user_id: Float!) {
-    getReadManga(options: { user_id: $user_id, manga_id: $manga_id }) {
-      manga_id
-      user_id
-      read_date
-      last_read_chapter
-    }
-  }
-`;
+import { useGetManga } from "../../../Hooks/useGetManga";
+import { GET_READ_MANGA } from "../../../graphql/Queries";
 
 export default function FAB({ setModalVisible, modalVisible }) {
   const { navigation, chapters, manga_id, title } = useGetManga();
@@ -45,6 +35,11 @@ export default function FAB({ setModalVisible, modalVisible }) {
     }).start();
     setIsOpen(!isOpen);
   };
+  useEffect(() => {
+    if (!loading) {
+      console.log(data.getReadManga.length);
+    }
+  }, [loading]);
 
   return (
     <View
@@ -57,7 +52,7 @@ export default function FAB({ setModalVisible, modalVisible }) {
         right: 25,
       }}
     >
-      {token && (
+      {token && !loading && data.getReadManga.length > 0 ? (
         <SubButton
           IconSize={50}
           index={0}
@@ -67,7 +62,7 @@ export default function FAB({ setModalVisible, modalVisible }) {
           startAnimation={startAnimation}
           setIsOpen={setIsOpen}
           onPress={() => {
-            if (!loading && data) {
+            if (!loading && data.getReadManga) {
               const index = chapters.findIndex((chapter, i) => {
                 if (
                   chapter.chap_num == data.getReadManga[0].last_read_chapter
@@ -75,8 +70,8 @@ export default function FAB({ setModalVisible, modalVisible }) {
                   return chapters.length - 1 - i;
                 }
               });
-              console.log(index);
-              console.log(data.getReadManga[0].last_read_chapter);
+              // console.log(index);
+              // console.log(data.getReadManga[0].last_read_chapter);
               navigation.navigate("ChapterPage", {
                 chapters: chapters,
                 manga_id: manga_id,
@@ -86,7 +81,7 @@ export default function FAB({ setModalVisible, modalVisible }) {
             }
           }}
         />
-      )}
+      ) : null}
       <SubButton
         IconSize={50}
         index={0}

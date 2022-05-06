@@ -32,7 +32,7 @@ import ChapterSearchModal from "./Components/ChapterSearchModal";
 import FAB from "./Components/FAB";
 import ListHeaderComponent from "./Components/ListHeaderComponent";
 import { fetchData } from "../../utils/fetchData";
-import { MangaContext } from "./Components/useGetManga";
+import { MangaContext } from "../../Hooks/useGetManga";
 
 const windowWidth = Dimensions.get("window").width;
 const windowHeight = Dimensions.get("window").height;

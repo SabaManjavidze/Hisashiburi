@@ -7,7 +7,7 @@ import {
 } from "../../../components/variables";
 import { Avatar, TextInput } from "react-native-paper";
 import ChapterItem from "./ChapterItem";
-import { useGetManga } from "./useGetManga";
+import { useGetManga } from "../../../Hooks/useGetManga";
 export default function ChapterSearchModal({ setModalVisible, modalVisible }) {
   const [filtered_chapters, setFilteredChapters] = useState([]);
   const [input, setInput] = useState("");

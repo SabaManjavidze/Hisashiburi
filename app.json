@@ -4,6 +4,7 @@
     "slug": "hisashiburi",
     "version": "2.1.0",
     "privacy": "public",
+    "scheme": "saba",
     "description": "App for reading manga with MyAnimeList integration",
     "orientation": "portrait",
     "icon": "./assets/takezo.png",

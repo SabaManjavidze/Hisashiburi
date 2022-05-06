@@ -2,7 +2,7 @@ import { View, Text } from "react-native";
 import React from "react";
 import { Appbar } from "react-native-paper";
 import { main_color } from "../../../components/variables";
-import { useGetManga } from "./useGetManga";
+import { useGetManga } from "../../../Hooks/useGetManga";
 
 export default function DetailsAppbar() {
   const { title, navigation } = useGetManga();
