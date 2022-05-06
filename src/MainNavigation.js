@@ -137,6 +137,13 @@ export default function MainNavigation() {
             <Tab.Screen
               name="LogIn"
               component={Auth}
+              listeners={({ navigation }) => ({
+                tabPress: (e) => {
+                  if (user_loading) {
+                    e.preventDefault();
+                  }
+                },
+              })}
               options={{
                 headerStyle: {
                   backgroundColor: main_color,

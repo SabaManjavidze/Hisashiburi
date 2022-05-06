@@ -44,7 +44,7 @@ export default function HomePage({ navigation, route }) {
   const list_ref = useRef(null);
 
   const fetchHome = async () => {
-    const url = `${main_url}/homepage`;
+    const url = `${main_url}/homepage?limit=20`;
     try {
       const res = await fetch(url);
       const json = await res.json();

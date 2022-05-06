@@ -4,6 +4,7 @@ import React, { useEffect, useState } from "react";
 import {
   main_color,
   MAL_color,
+  NOT_FOUND_IMAGE,
   primary_color,
   STATE_VAR,
   token_url,
@@ -14,13 +15,14 @@ import { gql, useMutation } from "@apollo/client";
 import { getProfile } from "../Services/MalServices";
 import { useAuth } from "../Hooks/useAuth";
 import { CREATE_USER } from "../graphql/Mutations";
-import { Avatar, IconButton } from "react-native-paper";
+import { ActivityIndicator, Avatar, IconButton } from "react-native-paper";
 import * as WebBrowser from "expo-web-browser";
 import { useFonts } from "expo-font";
 
 export default function Auth({ navigation, route }) {
   const { setToken, setUser } = useAuth();
-  const [addUser, { loading, error, data }] = useMutation(CREATE_USER);
+  const [addUser, { error, data }] = useMutation(CREATE_USER);
+  const [loading, setLoading] = useState(false);
 
   const [loaded] = useFonts({
     Mal: require("../../assets/MalFont.ttf"),
@@ -54,7 +56,12 @@ export default function Auth({ navigation, route }) {
         console.log(JSON.stringify(error, null, 2));
       }
       setToken(access_token);
-      setUser(user);
+      const user_data = {
+        id,
+        name,
+        picture: picture && picture !== "" ? picture : NOT_FOUND_IMAGE,
+      };
+      setUser(user_data);
       // alert("Successfully logged in");
     } catch (error) {
       console.log(JSON.stringify(error, null, 2));
@@ -62,6 +69,7 @@ export default function Auth({ navigation, route }) {
   };
   useEffect(() => {
     if (route.params && route.params.code) {
+      setLoading(true);
       LogIn(route.params.code);
     }
   }, [route]);
@@ -75,42 +83,46 @@ export default function Auth({ navigation, route }) {
         backgroundColor: main_color,
       }}
     >
-      <TouchableOpacity
-        activeOpacity={0.6}
-        onPress={() => {
-          WebBrowser.openAuthSessionAsync(
-            "https://node-mal-oauth.herokuapp.com/auth"
-            // "http://192.168.0.109:3000/auth"
-            // "exp://192.168.0.109:19000/--/auth"
-          );
-        }}
-        style={{
-          alignItems: "center",
-          justifyContent: "center",
-          flexDirection: "row",
-          backgroundColor: MAL_color,
-          padding: 15,
-          borderRadius: 15,
-        }}
-      >
-        {/* <Image
+      {loading ? (
+        <ActivityIndicator size="large" color={primary_color} />
+      ) : (
+        <TouchableOpacity
+          activeOpacity={0.6}
+          onPress={() => {
+            WebBrowser.openAuthSessionAsync(
+              "https://node-mal-oauth.herokuapp.com/auth"
+              // "http://192.168.0.109:3000/auth"
+              // "exp://192.168.0.109:19000/--/auth"
+            );
+          }}
+          style={{
+            alignItems: "center",
+            justifyContent: "center",
+            flexDirection: "row",
+            backgroundColor: MAL_color,
+            padding: 15,
+            borderRadius: 15,
+          }}
+        >
+          {/* <Image
           source={{
             uri: "https://upload.wikimedia.org/wikipedia/commons/7/7a/MyAnimeList_Logo.png",
           }}
           style={{ width: 70, height: 70, marginRight: 15 }}
         /> */}
-        <Text
-          style={{
-            color: "white",
-            fontSize: 20,
-            letterSpacing: 0.2,
-            // fontFamily: "Roboto",
-            fontFamily: loaded ? "Mal" : "Roboto",
-          }}
-        >
-          Sign in with MyAnimeList
-        </Text>
-      </TouchableOpacity>
+          <Text
+            style={{
+              color: "white",
+              fontSize: 20,
+              letterSpacing: 0.2,
+              // fontFamily: "Roboto",
+              fontFamily: loaded ? "Mal" : "Roboto",
+            }}
+          >
+            Sign in with MyAnimeList
+          </Text>
+        </TouchableOpacity>
+      )}
     </View>
   );
 }

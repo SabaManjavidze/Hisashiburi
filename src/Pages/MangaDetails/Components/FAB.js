@@ -16,12 +16,9 @@ import { GET_READ_MANGA } from "../../../graphql/Queries";
 
 export default function FAB({ setModalVisible, modalVisible }) {
   const { navigation, chapters, manga_id, title } = useGetManga();
-  const {
-    user: { id },
-    token,
-  } = useAuth();
+  const { user, token } = useAuth();
   const { data, loading, error } = useQuery(GET_READ_MANGA, {
-    variables: { user_id: id, manga_id: manga_id },
+    variables: { user_id: user ? user.id : null, manga_id: manga_id },
   });
   const [isOpen, setIsOpen] = useState(false);
   const toggleAnimation = useRef(new Animated.Value(0)).current;
@@ -35,17 +32,17 @@ export default function FAB({ setModalVisible, modalVisible }) {
     }).start();
     setIsOpen(!isOpen);
   };
-  useEffect(() => {
-    if (!loading) {
-      console.log(data.getReadManga.length);
-    }
-  }, [loading]);
+  // useEffect(() => {
+  //   if (!loading) {
+  //     console.log(data.getReadManga.length);
+  //   }
+  // }, [loading]);
 
   return (
     <View
       style={{
         position: "absolute",
-        zIndex: 9999,
+        zIndex: 1,
         alignItems: "center",
         justifyContent: "center",
         bottom: 20,

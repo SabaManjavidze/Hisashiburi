@@ -41,7 +41,11 @@ export default function History({ navigation, route }) {
     if (!user_loading && data) {
       const manga_list = data.getUsers[0].manga;
       // sort manga_list by read_date
-
+      if (!manga_list) {
+        setManga([]);
+        setLoading(false);
+        return;
+      }
       const sorted_manga = [...manga_list].sort((a, b) => {
         return new Date(b.read_date) - new Date(a.read_date);
       });
@@ -95,7 +99,7 @@ export default function History({ navigation, route }) {
         >
           <ActivityIndicator size="large" color={primary_color} />
         </View>
-      ) : manga.length == 0 ? (
+      ) : manga && manga.length <= 0 ? (
         <View style={{ alignItems: "center" }}>
           <Text style={[styles.text, { textAlign: "center" }]}>
             No Manga Read You Peasent

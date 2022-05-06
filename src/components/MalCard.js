@@ -25,7 +25,7 @@ export default function MalCard({ node, navigation, route }) {
         ? removePunctuation(alt_titles.synonyms[0])
         : "";
     const data = await fetch(
-      `${main_url}/search/${node.title || alt_titles.en}`
+      `${main_url}/search/${node.title || alt_titles.en}?limit=5`
     );
     const json = await data.json();
     json.map((item) => {

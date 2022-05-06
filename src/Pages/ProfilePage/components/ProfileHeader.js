@@ -16,7 +16,7 @@ import { logOut } from "../../../Services/MalServices";
 const windowWidth = Dimensions.get("window").width;
 const windowHeight = Dimensions.get("window").height;
 export default function ProfileHeader({ navigation, route }) {
-  const { setToken, user: profile } = useAuth();
+  const { setUser, setToken, user: profile } = useAuth();
   return (
     <>
       <View
@@ -66,6 +66,7 @@ export default function ProfileHeader({ navigation, route }) {
             onPress={async () => {
               await logOut();
               setToken(null);
+              setUser(null);
             }}
           >
             <Text style={{ color: "white", fontSize: 20 }}>Log out</Text>
