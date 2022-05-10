@@ -43,12 +43,15 @@ export default function Auth({ navigation, route }) {
       const user = await getProfile(access_token);
       const { id, name, picture } = user;
 
+      const user_data = {
+        id,
+        name,
+        picture: picture && picture !== "" ? picture : NOT_FOUND_IMAGE,
+      };
       try {
         await addUser({
           variables: {
-            user_id: id,
-            user_name: name,
-            picture: picture,
+            ...user_data,
           },
         });
       } catch (error) {
@@ -56,11 +59,6 @@ export default function Auth({ navigation, route }) {
         console.log(JSON.stringify(error, null, 2));
       }
       setToken(access_token);
-      const user_data = {
-        id,
-        name,
-        picture: picture && picture !== "" ? picture : NOT_FOUND_IMAGE,
-      };
       setUser(user_data);
       // alert("Successfully logged in");
     } catch (error) {

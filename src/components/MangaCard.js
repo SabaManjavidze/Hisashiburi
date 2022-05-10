@@ -9,7 +9,12 @@ import {
 } from "react-native";
 import { IconButton, TouchableRipple } from "react-native-paper";
 import { logOut } from "../Services/MalServices";
-import { domain, img_url, primary_color } from "../components/variables";
+import {
+  domain,
+  img_url,
+  light_primary_color,
+  primary_color,
+} from "../components/variables";
 import { fetchData } from "../utils/fetchData";
 
 const windowWidth = Dimensions.get("window").width;
@@ -108,6 +113,7 @@ export default function MangaCard({ route, navigation, item }) {
                     <View style={{ flex: 3, alignItems: "center" }}>
                       <TouchableRipple
                         onPress={() => goToChapter(i)}
+                        rippleColor={light_primary_color}
                         style={{
                           borderColor: primary_color,
                           borderWidth: 0.4,
