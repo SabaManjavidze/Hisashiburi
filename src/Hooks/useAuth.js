@@ -14,7 +14,12 @@ export const AuthProvider = ({ children }) => {
     const token = await AsyncStorage.getItem("access_token");
     setToken(token);
     const user = await getProfile(token);
-    setUser(user);
+    const user_data = {
+      user_id: user.id,
+      user_name: user.name,
+      picture: user.picture,
+    };
+    setUser(user_data);
     setUserLoading(false);
   };
   useEffect(() => {

@@ -8,7 +8,7 @@ import {
   Vibration,
 } from "react-native";
 import { Avatar } from "react-native-paper";
-import { main_color, primary_color } from "../../../components/variables";
+import { clg, main_color, primary_color } from "../../../components/variables";
 import { useAuth } from "../../../Hooks/useAuth";
 import SubButton from "./SubButton";
 import { useGetManga } from "../../../Hooks/useGetManga";
@@ -17,8 +17,8 @@ import { GET_READ_MANGA } from "../../../graphql/Queries";
 export default function FAB({ setModalVisible, modalVisible }) {
   const { navigation, chapters, manga_id, title } = useGetManga();
   const { user, token } = useAuth();
-  const { data, loading, error } = useQuery(GET_READ_MANGA, {
-    variables: { user_id: user ? user.id : null, manga_id: manga_id },
+  const { data, loading, error, refetch } = useQuery(GET_READ_MANGA, {
+    variables: { user_id: user ? user.user_id : null, manga_id: manga_id },
   });
   const [isOpen, setIsOpen] = useState(false);
   const toggleAnimation = useRef(new Animated.Value(0)).current;
@@ -32,11 +32,6 @@ export default function FAB({ setModalVisible, modalVisible }) {
     }).start();
     setIsOpen(!isOpen);
   };
-  // useEffect(() => {
-  //   if (!loading) {
-  //     console.log(data.getReadManga.length);
-  //   }
-  // }, [loading]);
 
   return (
     <View
@@ -49,7 +44,7 @@ export default function FAB({ setModalVisible, modalVisible }) {
         right: 25,
       }}
     >
-      {token && !loading && data.getReadManga.length > 0 ? (
+      {token && !loading && data && data.getReadManga.length > 0 ? (
         <SubButton
           IconSize={50}
           index={0}

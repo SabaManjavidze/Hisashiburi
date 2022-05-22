@@ -12,9 +12,9 @@ import { useAuth } from "../../../Hooks/useAuth";
 import React from "react";
 import SkeletonContent from "react-native-skeleton-content";
 import { logOut } from "../../../Services/MalServices";
+import { NOT_FOUND_IMAGE } from "../../../components/variables";
 
-const windowWidth = Dimensions.get("window").width;
-const windowHeight = Dimensions.get("window").height;
+const { width, height } = Dimensions.get("window");
 export default function ProfileHeader({ navigation, route }) {
   const { setUser, setToken, user: profile } = useAuth();
   return (
@@ -43,7 +43,7 @@ export default function ProfileHeader({ navigation, route }) {
               left: 50,
             }}
           >
-            {profile.name}
+            {profile.user_name}
           </Text>
         </View>
         <View
@@ -83,8 +83,11 @@ export default function ProfileHeader({ navigation, route }) {
           boneColor={"hsla(257, 27%, 50%, 0.6)"}
           animationDirection="diagonalDownRight"
         >
+          {/* {console.log(NOT_FOUND_IMAGE)} */}
           <Image
-            source={{ uri: profile.picture }}
+            source={{
+              uri: profile.picture || NOT_FOUND_IMAGE,
+            }}
             style={{ width: 200, height: 200 }}
           />
         </SkeletonContent>

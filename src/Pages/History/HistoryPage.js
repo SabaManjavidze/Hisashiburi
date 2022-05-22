@@ -19,7 +19,7 @@ export default function History({ navigation, route }) {
 
   const {
     token,
-    user: { id },
+    user: { user_id },
   } = useAuth();
 
   const listRef = useRef(null);
@@ -28,7 +28,7 @@ export default function History({ navigation, route }) {
     data,
     refetch,
   } = useQuery(GET_USERS, {
-    variables: { user_id: id },
+    variables: { user_id: user_id },
   });
 
   useEffect(() => {
@@ -66,7 +66,7 @@ export default function History({ navigation, route }) {
       await removeReadManga({
         variables: {
           // options: {
-          user_id: id,
+          user_id: user_id,
           manga_id,
           // },
         },

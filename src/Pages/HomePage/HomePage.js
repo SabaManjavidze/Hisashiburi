@@ -18,6 +18,7 @@ import {
   main_color,
   primary_color,
   secondary_color,
+  clg,
 } from "../../components/variables";
 import {
   ActivityIndicator,

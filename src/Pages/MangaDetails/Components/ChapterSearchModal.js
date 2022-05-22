@@ -5,7 +5,7 @@ import {
   secondary_color,
   transp_main_color,
 } from "../../../components/variables";
-import { Avatar, TextInput } from "react-native-paper";
+import { Avatar, Searchbar, TextInput } from "react-native-paper";
 import ChapterItem from "./ChapterItem";
 import { useGetManga } from "../../../Hooks/useGetManga";
 export default function ChapterSearchModal({ setModalVisible, modalVisible }) {
@@ -80,13 +80,27 @@ export default function ChapterSearchModal({ setModalVisible, modalVisible }) {
                 width: "80%",
               }}
             >
-              <TextInput
+              <Searchbar
                 placeholder="Enter Chapter Number/Title"
                 style={{
                   borderRadius: 20,
                   width: "90%",
+                  backgroundColor: secondary_color,
+                  height: 50,
                 }}
-                mode="outlined"
+                inputStyle={{ width: "100%" }}
+                importantForAutofill="yes"
+                icon={
+                  <Avatar.Icon
+                    icon={"magnify"}
+                    size={40}
+                    color={"white"}
+                    style={{
+                      backgroundColor: "transparent",
+                    }}
+                  />
+                }
+                // inputStyle={{ backgroundColor: secondary_color }}
                 theme={{
                   colors: {
                     background: secondary_color,
@@ -95,7 +109,6 @@ export default function ChapterSearchModal({ setModalVisible, modalVisible }) {
                     primary: light_primary_color,
                   },
                 }}
-                outlineColor={"#283175"}
                 onChangeText={(text) => {
                   setInput(text);
                   if (text.length > 0) {
@@ -112,26 +125,6 @@ export default function ChapterSearchModal({ setModalVisible, modalVisible }) {
                 }}
                 autoFocus
               />
-              <TouchableOpacity
-                onPress={() => onSubmit()}
-                style={{
-                  position: "absolute",
-                  height: 40,
-                  right: 45,
-                  bottom: 0,
-                  top: -5,
-                  zIndex: 1,
-                }}
-              >
-                <Avatar.Icon
-                  icon={"magnify"}
-                  size={40}
-                  color={"white"}
-                  style={{
-                    backgroundColor: "transparent",
-                  }}
-                />
-              </TouchableOpacity>
             </View>
           </View>
           <View

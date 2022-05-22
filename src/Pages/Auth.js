@@ -2,6 +2,8 @@ import { View, Text, StyleSheet, TouchableOpacity, Image } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import React, { useEffect, useState } from "react";
 import {
+  auth_url,
+  clg,
   main_color,
   MAL_color,
   NOT_FOUND_IMAGE,
@@ -9,7 +11,6 @@ import {
   STATE_VAR,
   token_url,
 } from "../components/variables";
-import { WebView } from "react-native-webview";
 import axios from "axios";
 import { gql, useMutation } from "@apollo/client";
 import { getProfile } from "../Services/MalServices";
@@ -42,11 +43,10 @@ export default function Auth({ navigation, route }) {
 
       const user = await getProfile(access_token);
       const { id, name, picture } = user;
-
       const user_data = {
-        id,
-        name,
-        picture: picture && picture !== "" ? picture : NOT_FOUND_IMAGE,
+        user_id: id,
+        user_name: name,
+        picture: picture,
       };
       try {
         await addUser({
@@ -55,12 +55,12 @@ export default function Auth({ navigation, route }) {
           },
         });
       } catch (error) {
-        // console.log(error.networkError.result.errors[0].message || error);
-        console.log(JSON.stringify(error, null, 2));
+        const graphql_error = error.networkError.result.errors[0].message;
+        console.log(graphql_error ? `graphql error ${graphql_error}` : error);
+        // console.log(JSON.stringify(error, null, 2));
       }
       setToken(access_token);
       setUser(user_data);
-      // alert("Successfully logged in");
     } catch (error) {
       console.log(JSON.stringify(error, null, 2));
     }
@@ -88,7 +88,7 @@ export default function Auth({ navigation, route }) {
           activeOpacity={0.6}
           onPress={() => {
             WebBrowser.openAuthSessionAsync(
-              "https://node-mal-oauth.herokuapp.com/auth"
+              auth_url
               // "http://192.168.0.109:3000/auth"
               // "exp://192.168.0.109:19000/--/auth"
             );
@@ -102,12 +102,6 @@ export default function Auth({ navigation, route }) {
             borderRadius: 15,
           }}
         >
-          {/* <Image
-          source={{
-            uri: "https://upload.wikimedia.org/wikipedia/commons/7/7a/MyAnimeList_Logo.png",
-          }}
-          style={{ width: 70, height: 70, marginRight: 15 }}
-        /> */}
           <Text
             style={{
               color: "white",
