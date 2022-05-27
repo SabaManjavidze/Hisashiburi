@@ -1,5 +1,11 @@
 import React, { useRef, useEffect, useState } from "react";
-import { View, Text, RefreshControl, StyleSheet } from "react-native";
+import {
+  View,
+  Text,
+  RefreshControl,
+  StyleSheet,
+  StatusBar,
+} from "react-native";
 import { FlatList, ScrollView } from "react-native-gesture-handler";
 import { main_color, primary_color } from "../../components/variables";
 import { gql, useMutation, useQuery } from "@apollo/client";
@@ -26,6 +32,7 @@ export default function History({ navigation, route }) {
   const {
     loading: user_loading,
     data,
+    error,
     refetch,
   } = useQuery(GET_USERS, {
     variables: { user_id: user_id },
@@ -38,7 +45,7 @@ export default function History({ navigation, route }) {
   }, [isFocused]);
 
   useEffect(() => {
-    if (!user_loading && data) {
+    if (!user_loading) {
       const manga_list = data.getUsers[0].manga;
       // sort manga_list by read_date
       if (!manga_list) {
@@ -52,7 +59,8 @@ export default function History({ navigation, route }) {
       setManga(sorted_manga);
       setLoading(false);
     }
-  }, [user_loading, loading, data]);
+  }, [user_loading, data, loading]);
+
   const [
     removeReadManga,
     { loading: rm_loading, error: rm_error, data: rm_data },
@@ -65,10 +73,8 @@ export default function History({ navigation, route }) {
     try {
       await removeReadManga({
         variables: {
-          // options: {
-          user_id: user_id,
+          user_id,
           manga_id,
-          // },
         },
       });
       refetch();
@@ -87,6 +93,12 @@ export default function History({ navigation, route }) {
         // flex: 1,
       }}
     >
+      <StatusBar
+        animated={false}
+        backgroundColor={main_color}
+        hidden={false}
+        style={"light"}
+      />
       {!token ? (
         <Text style={styles.text}>Log in to see your history</Text>
       ) : loading ? (

@@ -23,7 +23,7 @@ export default function ProfileScreenNav({ navigation, route }) {
   };
 
   return (
-    <Stack.Navigator>
+    <Stack.Navigator screenOptions={{ headerShown: false }}>
       <Stack.Screen
         name="Profile"
         options={{ headerShown: false }}
@@ -36,7 +36,7 @@ export default function ProfileScreenNav({ navigation, route }) {
                 backgroundColor: main_color,
                 borderTopColor: "black",
               },
-              headerShown: true,
+              headerShown: false,
             });
           },
         }}

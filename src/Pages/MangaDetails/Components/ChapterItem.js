@@ -17,12 +17,18 @@ export default function ChapterItem({
   // manga_id,
   // manga_title,
   // chapters,
-  child,
   index,
+  borderColor,
 }) {
   const { manga_id, title, chapters, navigation } = useGetManga();
+  const child = chapters[index];
   return (
-    <View style={styles.chapter_container}>
+    <View
+      style={[
+        styles.chapter_container,
+        { borderColor: borderColor || primary_color },
+      ]}
+    >
       <TouchableOpacity
         style={{ width: "100%" }}
         activeOpacity={0.7}
@@ -71,7 +77,7 @@ const styles = StyleSheet.create({
     borderRadius: 20,
     marginBottom: 15,
     padding: 10,
-    borderColor: primary_color,
+    // borderColor: primary_color,
     borderWidth: 1,
     width: windowWidth * 0.9,
   },

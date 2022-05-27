@@ -25,6 +25,8 @@ import {
   primary_color,
   secondary_color,
   mal_dict,
+  clg,
+  boneColor,
 } from "../../components/variables";
 import { useAuth } from "../../Hooks/useAuth";
 import DetailsAppbar from "./Components/DetailsAppbar";
@@ -34,13 +36,14 @@ import ListHeaderComponent from "./Components/ListHeaderComponent";
 import { fetchData } from "../../utils/fetchData";
 import { MangaContext } from "../../Hooks/useGetManga";
 
-const windowWidth = Dimensions.get("window").width;
-const windowHeight = Dimensions.get("window").height;
+import { GET_READ_MANGA } from "../../graphql/Queries";
+import { useQuery } from "@apollo/client";
+const { width, height } = Dimensions.get("window");
 
 export default function MangaDetails({ navigation, route }) {
   const { item } = route.params;
   const { manga_id, title } = item;
-  const { token } = useAuth();
+  const { token, user } = useAuth();
 
   const [mal, setMAL] = useState();
   const [mal_loaded, setMALLoaded] = useState();
@@ -49,26 +52,27 @@ export default function MangaDetails({ navigation, route }) {
   const [loaded, setLoaded] = useState(false);
 
   const [poster, setPoster] = useState("");
-  const [poster_loaded, setPosterLoaded] = useState(false);
 
   const [modalVisible, setModalVisible] = useState(false);
 
-  const [fab_open, setFabOpen] = useState(false);
+  const [lastChapIdx, setLastChapIdx] = useState(0);
 
   const scrollRef = useRef(null);
+
+  const { data, loading, error, refetch } = useQuery(GET_READ_MANGA, {
+    variables: { user_id: user.user_id, manga_id: manga_id },
+  });
 
   const fetchChapters = async () => {
     const json = await fetchData(manga_id);
     const { details, chapters } = json;
     setPoster(details.img_url);
-    setPosterLoaded(true);
     setChapters(chapters);
     setLoaded(true);
   };
 
   const fetchMAL = async () => {
     const data = await getMangaOnMAL(title, token);
-    // console.log(data ? JSON.stringify(data, null, 2) : "nope");
     setMAL(data);
     setMALLoaded(true);
   };
@@ -76,30 +80,36 @@ export default function MangaDetails({ navigation, route }) {
     fetchChapters();
     token && fetchMAL();
   }, []);
+  useEffect(() => {
+    if (!loading) {
+      chapters.findIndex((chapter, i) => {
+        if (chapter.chap_num == data.getReadManga[0].last_read_chapter) {
+          setLastChapIdx(chapters.length - 1 - i);
+        }
+      });
+    }
+  }, [loading]);
 
   return (
     <MangaContext.Provider
       value={{ navigation, route, chapters, manga_id, title }}
     >
       <View style={styles.container}>
-        <StatusBar
-          backgroundColor={fab_open ? "#151623" : main_color}
-          translucent
-        />
+        <StatusBar backgroundColor={main_color} translucent />
         <ChapterSearchModal
           modalVisible={modalVisible}
           setModalVisible={setModalVisible}
-          // chapters={chapters}
-          // manga_id={manga_id}
-          // manga_title={title}
         />
+
         <DetailsAppbar />
+
         <FAB
-          // chapters={chapters}
-          // manga_id={manga_id}
           setModalVisible={setModalVisible}
           modalVisible={modalVisible}
+          loading={loading}
+          data={data}
         />
+
         <View
           style={{
             alignItems: "baseline",
@@ -108,7 +118,6 @@ export default function MangaDetails({ navigation, route }) {
             backgroundColor: main_color,
           }}
         >
-          {/* {loaded ? ( */}
           <FlatList
             data={chapters}
             style={{ width: "100%" }}
@@ -118,29 +127,55 @@ export default function MangaDetails({ navigation, route }) {
               alignItems: "center",
             }}
             ListHeaderComponent={
-              <ListHeaderComponent
-                poster={poster}
-                poster_loaded={poster_loaded}
-                mal={mal}
-                mal_loaded={mal_loaded}
-                loaded={loaded}
-              />
+              <View>
+                <ListHeaderComponent
+                  poster={poster}
+                  mal={mal}
+                  mal_loaded={mal_loaded}
+                  loaded={loaded}
+                />
+                {loading ? null : mal.my_list_status ? (
+                  <View
+                    style={{
+                      width: "100%",
+                      alignItems: "center",
+                      marginVertical: 40,
+                    }}
+                  >
+                    <Text
+                      style={{
+                        color: "white",
+                        opacity: 0.75,
+                        marginLeft: 65,
+                        marginBottom: 25,
+                        fontWeight: "bold",
+                        fontSize: 20,
+                        width: "100%",
+                        textAlign: "left",
+                      }}
+                    >
+                      Last Read
+                    </Text>
+                    {lastChapIdx ? (
+                      <ChapterItem
+                        // child={{
+                        //   ...chapters[lastChapIdx],
+                        //   upload_date: data.getReadManga[0].read_date,
+                        // }}
+                        borderColor={boneColor}
+                        index={lastChapIdx}
+                      />
+                    ) : null}
+                  </View>
+                ) : null}
+              </View>
             }
             ref={scrollRef}
             keyExtractor={(item) => item.chap_title}
             renderItem={({ item, index }) => (
-              <ChapterItem
-                child={item}
-                // navigation={navigation}
-                // chapters={chapters}
-                // manga_id={manga_id}
-                // manga_title={title}
-                index={index}
-                key={index}
-              />
+              <ChapterItem child={item} index={index} key={index} />
             )}
           />
-          {/* ) : ( */}
           <View
             style={{
               width: "100%",
@@ -155,7 +190,6 @@ export default function MangaDetails({ navigation, route }) {
               color={primary_color}
             />
           </View>
-          {/* )} */}
         </View>
       </View>
     </MangaContext.Provider>

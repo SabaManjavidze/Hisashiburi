@@ -15,7 +15,7 @@ const windowWidth = Dimensions.get("window").width;
 const windowHeight = Dimensions.get("window").height;
 export default function ListHeaderComponent({
   mal_loaded,
-  poster_loaded,
+  loaded,
   poster,
   mal,
 }) {
@@ -53,7 +53,7 @@ export default function ListHeaderComponent({
           height: 300,
         }}
       >
-        {poster_loaded ? (
+        {loaded ? (
           <Image
             source={{
               uri: `${domain}${poster}`,

@@ -1,14 +1,19 @@
-import { View, Text, Dimensions, StyleSheet, Image } from "react-native";
+import {
+  View,
+  Text,
+  Dimensions,
+  StyleSheet,
+  Image,
+  TouchableOpacity,
+} from "react-native";
 import React, { useState } from "react";
 import { TouchableRipple } from "react-native-paper";
-import { mal_dict, light_primary_color, main_url } from "./variables";
+import { mal_dict, main_url } from "./variables";
 
 const windowWidth = Dimensions.get("window").width;
 const windowHeight = Dimensions.get("window").height;
 
 export default function MalCard({ node, navigation, route }) {
-  const [show_score, setShowScore] = useState(false);
-
   const { text, color } = node.my_list_status
     ? mal_dict[node.my_list_status.status]
     : { text: "", color: "gray" };
@@ -42,7 +47,7 @@ export default function MalCard({ node, navigation, route }) {
   };
 
   return (
-    <TouchableRipple
+    <TouchableOpacity
       style={{
         width: "45%",
         marginHorizontal: 10,
@@ -53,9 +58,8 @@ export default function MalCard({ node, navigation, route }) {
         borderBottomLeftRadius: 10,
         borderBottomRightRadius: 10,
       }}
+      activeOpacity={0.8}
       onPress={() => handlePress(node)}
-      onPressIn={() => setShowScore(true)}
-      onPressOut={() => setShowScore(false)}
     >
       <View
         style={{
@@ -79,7 +83,7 @@ export default function MalCard({ node, navigation, route }) {
           </Text>
         </View>
       </View>
-    </TouchableRipple>
+    </TouchableOpacity>
   );
 }
 

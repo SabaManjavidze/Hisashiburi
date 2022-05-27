@@ -30,9 +30,9 @@ import MangaCard from "../../components/MangaCard";
 import { useAuth } from "../../Hooks/useAuth";
 import MangaSkeleton from "../../components/MangaSkeleton";
 import { useScrollToTop } from "@react-navigation/native";
+import debounce from "lodash.debounce";
 
-const width = Dimensions.get("window").width;
-const height = Dimensions.get("window").height;
+const { width, height } = Dimensions.get("window");
 
 export default function HomePage({ navigation, route }) {
   const [data, setData] = useState([]);
@@ -109,10 +109,11 @@ export default function HomePage({ navigation, route }) {
     }).start();
     // return true;
   };
-  const onSubmit = () => {
+
+  const fetchData = (input) => {
     if (input == null || input == "") {
-      setData([]);
-      setLoaded(false);
+      // setData([]);
+      // setLoaded(false);
       fetchHome();
     } else {
       fetchSearchResults();
@@ -175,6 +176,7 @@ export default function HomePage({ navigation, route }) {
             placeholderTextColor={"white"}
             onChangeText={(input) => {
               setInput(input), input == "" && inputRef.current.focus();
+              debounce(fetchData(input), 500);
             }}
             onSubmitEditing={(e) => {
               onSubmit(e);

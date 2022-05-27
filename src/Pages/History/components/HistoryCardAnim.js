@@ -24,7 +24,7 @@ export default function HistoryCardAnim({
 }) {
   const translateX = useSharedValue(0);
   const opacity = useSharedValue(1);
-  const itemHeight = useSharedValue(windowHeight * 0.25);
+  const itemHeight = useSharedValue(windowHeight * 0.2);
   const TRANSLATE_X_THRESHOLD = -windowWidth * 0.2;
   const panGesture = useAnimatedGestureHandler({
     onActive: (event) => {
@@ -91,6 +91,7 @@ const styles = StyleSheet.create({
     width: "100%",
     marginVertical: 10,
     alignItems: "center",
+    // backgroundColor: "black",
   },
   delete_container: {
     position: "absolute",

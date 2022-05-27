@@ -36,12 +36,12 @@ export default function ChapterPage({ navigation, route }) {
 
   const [
     createReadManga,
-    // { loading: rm_loading, error: rm_error, data: rm_data },
+    { loading: rm_loading, error: rm_error, data: rm_data },
   ] = useMutation(CREATE_READ_MANGA);
 
   const [
     createManga,
-    // { loading: manga_loading, error: manga_error, data: manga_data },
+    { loading: manga_loading, error: manga_error, data: manga_data },
   ] = useMutation(CREATE_MANGA);
 
   // const fetchData = async () => {
@@ -51,10 +51,18 @@ export default function ChapterPage({ navigation, route }) {
   //   setData(json);
   //   setLoaded(true);
   // };
+  useEffect(() => {
+    if (!rm_loading) {
+      clg({ rm_error });
+    }
+    if (!manga_loading) {
+      clg({ manga_error });
+    }
+  }, [rm_loading, manga_loading]);
+
   const addToHistory = async () => {
     try {
-      // console.log(user);
-      const { id } = user;
+      const { user_id } = user;
       await createManga({
         variables: {
           manga_id,
@@ -65,18 +73,29 @@ export default function ChapterPage({ navigation, route }) {
       // console.log(read_date);
       await createReadManga({
         variables: {
-          user_id: id,
+          user_id: user_id,
           manga_id,
           last_read_chapter: chapter.chap_num,
           read_date,
         },
       });
+      // console.log({
+      //   user_id,
+      //   manga_title,
+      //   manga_id,
+      //   chap_num: chapter.chap_num,
+      //   read_date,
+      // });
     } catch (error) {
-      console.log(JSON.stringify(error, null, 2));
+      clg(JSON.stringify(error, null, 2));
+      // console.log({
+      //   readMangaError: JSON.stringify(rm_error, null, 2),
+      //   mangaError: JSON.stringify(manga_error, null, 2),
+      // });
     }
   };
   useEffect(() => {
-    if (chapter && chapter != null) {
+    if (chapter != null) {
       // fetchData();
       setLoaded(true);
       navigation.setOptions({ title: chapter.chap_title });
@@ -88,39 +107,14 @@ export default function ChapterPage({ navigation, route }) {
       }
     }
   }, [chapter]);
-  // const calback = () => {
-  //   if (webViewRef.current != null) {
-  //     console.log(webViewRef.current);
-  //     const image = `document.getElementsByTagName("img")[${page - 1}]`;
-  //     webViewRef.current.injectJavaScript(
-  //       `
-  //       ${post_web_message}
-  //       ("scroll"+" "+${image}.width);
-  //       // ("scroll"+" "+window.scrollY+" "+ ${image}.offsetHeight+" "+${image}.offsetTop);
-  //     `
-  //     );
-  //   }
-  // };
+
   const onMessage = (e) => {
     const { data } = e.nativeEvent;
     clg(data);
     if (data === "hide") {
       sethide(!hide);
     }
-    // if (data.includes("scroll")) {
-    //   console.log(data);
-    //   const split = data.split(" ");
-    //   const scroll_y = parseInt(split[1] + "");
-    //   const img_offset = parseInt(split[3] + "");
-    //   if (scroll_y > img_offset) {
-    //     setPage(page + 1);
-    //   }
-    // }
   };
-  // const updatePages = throttle(calback, 1000, {
-  //   leading: true,
-  //   trailing: true,
-  // });
   return (
     <View style={{ backgroundColor: main_color, flex: 1 }}>
       <StatusBar

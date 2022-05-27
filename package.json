@@ -11,6 +11,7 @@
     "@apollo/client": "^3.3.21",
     "@react-native-async-storage/async-storage": "~1.15.0",
     "@react-navigation/bottom-tabs": "^6.2.0",
+    "@react-navigation/material-top-tabs": "^6.2.1",
     "@react-navigation/native": "^6.0.6",
     "@react-navigation/native-stack": "^6.2.5",
     "@shaman123/react-native-scroll-view": "^1.4.72",
@@ -27,6 +28,7 @@
     "expo-web-browser": "~10.0.3",
     "graphql": "^15.0.0",
     "jsdom-jscore-rn": "^0.1.8",
+    "lodash": "^4.17.21",
     "prop-types": "^15.8.1",
     "react": "^17.0.1",
     "react-dom": "^17.0.2",
@@ -40,11 +42,14 @@
     "react-native-safe-area-context": "3.3.2",
     "react-native-screens": "~3.8.0",
     "react-native-skeleton-content": "^1.0.24",
+    "react-native-swiper": "^1.6.0",
+    "react-native-tab-view": "^3.1.1",
     "react-native-vector-icons": "^9.1.0",
     "react-native-web": "~0.13.12",
     "react-native-webview": "11.13.0",
     "run": "^1.4.0",
-    "typescript": "^4.6.3"
+    "typescript": "^4.6.3",
+    "react-native-pager-view": "5.4.6"
   },
   "devDependencies": {
     "@babel/core": "^7.17.8",

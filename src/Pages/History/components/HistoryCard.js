@@ -33,7 +33,7 @@ export default function HistoryCard({ route, navigation, item }) {
   };
 
   return (
-    <View style={[{ height: height * 0.25 }, styles.container]} key={manga_id}>
+    <View style={[{ height: height * 0.2 }, styles.container]} key={manga_id}>
       <View style={{ flex: 1, flexDirection: "row", alignItems: "center" }}>
         <TouchableOpacity
           onPress={() =>
@@ -141,18 +141,18 @@ export default function HistoryCard({ route, navigation, item }) {
 
 const styles = StyleSheet.create({
   container: {
-    marginVertical: 10,
+    // marginVertical: 5,
     width: width - 20,
     backgroundColor: "#2F2C4B",
     borderRadius: 10,
     flexDirection: "row",
     borderColor: primary_color,
     borderWidth: 2,
-    padding: 10,
   },
   image: {
-    width: 115,
-    height: 170,
+    width: 110,
+    height: 150,
+    marginLeft: 10,
     borderTopLeftRadius: 10,
     borderBottomLeftRadius: 10,
   },

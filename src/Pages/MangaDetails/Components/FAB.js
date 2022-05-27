@@ -12,14 +12,10 @@ import { clg, main_color, primary_color } from "../../../components/variables";
 import { useAuth } from "../../../Hooks/useAuth";
 import SubButton from "./SubButton";
 import { useGetManga } from "../../../Hooks/useGetManga";
-import { GET_READ_MANGA } from "../../../graphql/Queries";
 
-export default function FAB({ setModalVisible, modalVisible }) {
+export default function FAB({ loading, data, setModalVisible, modalVisible }) {
   const { navigation, chapters, manga_id, title } = useGetManga();
   const { user, token } = useAuth();
-  const { data, loading, error, refetch } = useQuery(GET_READ_MANGA, {
-    variables: { user_id: user ? user.user_id : null, manga_id: manga_id },
-  });
   const [isOpen, setIsOpen] = useState(false);
   const toggleAnimation = useRef(new Animated.Value(0)).current;
 

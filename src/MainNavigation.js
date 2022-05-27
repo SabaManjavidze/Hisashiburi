@@ -137,13 +137,6 @@ export default function MainNavigation() {
             <Tab.Screen
               name="LogIn"
               component={Auth}
-              listeners={({ navigation }) => ({
-                tabPress: (e) => {
-                  if (user_loading) {
-                    e.preventDefault();
-                  }
-                },
-              })}
               options={{
                 headerStyle: {
                   backgroundColor: main_color,
@@ -158,16 +151,23 @@ export default function MainNavigation() {
           ) : (
             <Tab.Screen
               name="Profile Screen"
-              options={{
-                // headerShown: false,
-                headerTitle: "Profile",
-                title: "Profile",
-                headerStyle: {
-                  backgroundColor: main_color,
-                  borderBottomColor: "#262840",
-                  borderBottomWidth: 1.5,
+              listeners={({ navigation }) => ({
+                tabPress: (e) => {
+                  if (user_loading) {
+                    e.preventDefault();
+                  }
                 },
-                headerTitleStyle: { color: "white" },
+              })}
+              options={{
+                headerShown: false,
+                // headerTitle: "Profile",
+                title: "Profile",
+                // headerStyle: {
+                //   backgroundColor: main_color,
+                //   borderBottomColor: "#262840",
+                //   borderBottomWidth: 1.5,
+                // },
+                // headerTitleStyle: { color: "white" },
                 tabBarIcon: ({ focused, color }) =>
                   renderItem(focused, "account", color),
               }}
