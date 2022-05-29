@@ -9,8 +9,7 @@ import {
 import { primary_color, secondary_color } from "../../../components/variables";
 import { useGetManga } from "../../../Hooks/useGetManga";
 
-const windowWidth = Dimensions.get("window").width;
-const windowHeight = Dimensions.get("window").height;
+const { width, height } = Dimensions.get("window");
 
 export default function ChapterItem({
   // navigation,
@@ -22,6 +21,7 @@ export default function ChapterItem({
 }) {
   const { manga_id, title, chapters, navigation } = useGetManga();
   const child = chapters[index];
+  // console.log({ chapter_child: child, index });
   return (
     <View
       style={[
@@ -79,6 +79,6 @@ const styles = StyleSheet.create({
     padding: 10,
     // borderColor: primary_color,
     borderWidth: 1,
-    width: windowWidth * 0.9,
+    width: width * 0.9,
   },
 });

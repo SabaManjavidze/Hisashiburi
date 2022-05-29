@@ -22,7 +22,7 @@ export default function ListHeaderComponent({
   const { token } = useAuth();
   const { navigation } = useGetManga();
   const getStatus = () => {
-    if (mal !== null) {
+    if (mal !== null && mal) {
       if (mal.my_list_status == null) {
         return "Add To My List";
       } else {

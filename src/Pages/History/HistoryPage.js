@@ -7,7 +7,11 @@ import {
   StatusBar,
 } from "react-native";
 import { FlatList, ScrollView } from "react-native-gesture-handler";
-import { main_color, primary_color } from "../../components/variables";
+import {
+  main_color,
+  primary_color,
+  secondary_color,
+} from "../../components/variables";
 import { gql, useMutation, useQuery } from "@apollo/client";
 import HistoryCard from "./components/HistoryCard";
 import { ActivityIndicator, TouchableRipple } from "react-native-paper";
@@ -45,7 +49,7 @@ export default function History({ navigation, route }) {
   }, [isFocused]);
 
   useEffect(() => {
-    if (!user_loading) {
+    if (token && !user_loading) {
       const manga_list = data.getUsers[0].manga;
       // sort manga_list by read_date
       if (!manga_list) {
@@ -95,7 +99,7 @@ export default function History({ navigation, route }) {
     >
       <StatusBar
         animated={false}
-        backgroundColor={main_color}
+        backgroundColor={secondary_color}
         hidden={false}
         style={"light"}
       />

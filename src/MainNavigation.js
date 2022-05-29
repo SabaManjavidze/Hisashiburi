@@ -6,6 +6,7 @@ import {
   main_color,
   paper_primary_color,
   primary_color,
+  secondary_color,
 } from "./components/variables";
 import { StatusBar } from "expo-status-bar";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
@@ -36,7 +37,7 @@ export default function MainNavigation() {
 
   const mangaDetailsHeader = {
     headerStyle: {
-      backgroundColor: main_color,
+      backgroundColor: secondary_color,
       borderBottomWidth: 0.5,
       borderBottomColor: "black",
     },
@@ -73,7 +74,7 @@ export default function MainNavigation() {
       >
         <StatusBar
           animated={false}
-          backgroundColor={main_color}
+          backgroundColor={secondary_color}
           hidden={false}
           style={"light"}
         />
@@ -121,7 +122,6 @@ export default function MainNavigation() {
             })}
             options={{
               headerStyle: {
-                backgroundColor: main_color,
                 borderBottomColor: "black",
                 borderBottomWidth: 0.5,
               },
@@ -139,7 +139,6 @@ export default function MainNavigation() {
               component={Auth}
               options={{
                 headerStyle: {
-                  backgroundColor: main_color,
                   borderBottomColor: "black",
                   borderBottomWidth: 0.5,
                 },

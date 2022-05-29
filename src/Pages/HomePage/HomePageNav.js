@@ -3,14 +3,18 @@ import React, { useEffect } from "react";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import MangaDetails from "../MangaDetails/MangaDetails";
 import ChapterPage from "../ChaptersPage/ChapterPage";
-import { main_color } from "../../components/variables";
+import { main_color, secondary_color } from "../../components/variables";
 import HomePage from "./HomePage";
 
 export default function HomePageNav({ navigation, route }) {
   const Stack = createNativeStackNavigator();
 
   return (
-    <Stack.Navigator>
+    <Stack.Navigator
+      screenOptions={{
+        headerStyle: { backgroundColor: secondary_color },
+      }}
+    >
       <Stack.Screen
         name="Home"
         options={{ headerShown: false }}

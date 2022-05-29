@@ -1,16 +1,18 @@
 # Hisashiburi
+
 React Native App for reading manga. tracking with Myanimelist
 
 # Current Features
-* Reading Chapters
-* Searching Manga
-* Image Zoom when reading chpater
-* Authentication with MAL
-* User History (only when user is logged in and has read a chapter)
-* Using MAL API to get Top Manga
 
+- Reading Chapters
+- Searching Manga
+- Image Zoom when reading a chapter
+- Authentication with MAL
+- User History (only when user is logged in and has read a chapter)
+- Using MAL API to get Top Manga
 
 # Screenshots
+
 <div>
   <img src="https://i.ibb.co/fksjZYr/Homepage.jpg" width="250px"/> 
   <img src="https://i.ibb.co/GvMzZvq/Top-Manga-Page.jpg" width="250px"/> 
@@ -21,4 +23,3 @@ React Native App for reading manga. tracking with Myanimelist
   <img src="https://i.ibb.co/BCzM0fT/Screenshot-20220507-023900-Hisashiburi.jpg" width="250px"/> 
   </div>
 <br/>
-

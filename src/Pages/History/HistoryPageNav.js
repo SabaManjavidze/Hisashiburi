@@ -1,15 +1,15 @@
-import { View, Text } from "react-native";
+import { View, Text, StatusBar } from "react-native";
 import React, { useEffect } from "react";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import MangaDetails from "../MangaDetails/MangaDetails";
 import ChapterPage from "../ChaptersPage/ChapterPage";
-import { main_color } from "../../components/variables";
+import { main_color, secondary_color } from "../../components/variables";
 import History from "./HistoryPage";
 export default function HistoryPageNav({ navigation, route }) {
   const Stack = createNativeStackNavigator();
   const mangaDetailsHeader = {
     headerStyle: {
-      backgroundColor: main_color,
+      backgroundColor: secondary_color,
       borderBottomWidth: 0.5,
       borderBottomColor: "black",
     },
@@ -22,7 +22,12 @@ export default function HistoryPageNav({ navigation, route }) {
   };
 
   return (
-    <Stack.Navigator screenOptions={{ headerShown: false }}>
+    <Stack.Navigator
+      screenOptions={{
+        headerShown: false,
+        headerStyle: { backgroundColor: secondary_color },
+      }}
+    >
       <Stack.Screen
         name="History"
         options={mangaDetailsHeader}

@@ -7,6 +7,7 @@ import {
   Dimensions,
   StyleSheet,
   StatusBar,
+  SafeAreaView,
 } from "react-native";
 import React, { useEffect, useState } from "react";
 import { getMangaList, logOut } from "../../Services/MalServices";
@@ -50,8 +51,9 @@ export default function ProfilePage({ route, navigation }) {
   }, []);
   const header_arr = ["reading", "completed", "plan_to_read", "dropped", "all"];
   return (
-    <View
+    <SafeAreaView
       style={{
+        flex: 1,
         width: "100%",
         height: "100%",
         alignContent: "center",
@@ -59,12 +61,6 @@ export default function ProfilePage({ route, navigation }) {
         marginTop: 30,
       }}
     >
-      <StatusBar
-        animated={false}
-        backgroundColor={secondary_color}
-        hidden={false}
-        style={"light"}
-      />
       <Tab.Navigator
         screenOptions={{
           tabBarLabelStyle: {
@@ -119,7 +115,7 @@ export default function ProfilePage({ route, navigation }) {
           <ActivityIndicator animating={true} color={primary_color} />
         </View>
       )}
-    </View>
+    </SafeAreaView>
   );
 }
 

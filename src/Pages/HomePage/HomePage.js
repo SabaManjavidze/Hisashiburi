@@ -10,6 +10,7 @@ import {
   Animated,
   Alert,
   BackHandler,
+  StatusBar,
 } from "react-native";
 import {
   main_url,
@@ -153,7 +154,7 @@ export default function HomePage({ navigation, route }) {
       <Appbar.Header
         style={{
           width: "100%",
-          backgroundColor: main_color,
+          backgroundColor: secondary_color,
           alignItems: "center",
         }}
       >
