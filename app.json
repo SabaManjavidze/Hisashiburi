@@ -2,7 +2,7 @@
   "expo": {
     "name": "Hisashiburi",
     "slug": "hisashiburi",
-    "version": "2.1.0",
+    "version": "2.2.0",
     "privacy": "public",
     "scheme": "saba",
     "description": "App for reading manga with MyAnimeList integration",

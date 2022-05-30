@@ -153,7 +153,8 @@ export default function MangaDetails({ navigation, route }) {
                         style={{
                           width: "100%",
                           alignItems: "center",
-                          marginVertical: 40,
+                          marginTop: 5,
+                          marginBottom: 30,
                         }}
                       >
                         <Text style={styles.lastReadLabel}>Last Read</Text>

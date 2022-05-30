@@ -10,6 +10,7 @@ const client = new ApolloClient({
   // uri: "http://10.0.2.2:3000/graphql",
   uri: graphql_url,
   cache: new InMemoryCache(),
+  connectToDevTools: true,
 });
 
 export default function App() {

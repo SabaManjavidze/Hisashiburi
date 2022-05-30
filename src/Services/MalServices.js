@@ -47,7 +47,9 @@ export const getTopManga = async (access_token, url) => {
   return data;
 };
 export const getMangaOnMAL = async (title, access_token) => {
-  const url = `https://api.myanimelist.net/v2/manga?q=${title}&limit=5&fields=my_list_status,alternative_titles`;
+  const fields = `fields=my_list_status,alternative_titles,mean,
+  status,authors,genres,synopsis,popularity,rank,num_list_users`;
+  const url = `https://api.myanimelist.net/v2/manga?q=${title}&limit=5&${fields}`;
   const headers = {
     Authorization: `Bearer ${access_token}`,
   };

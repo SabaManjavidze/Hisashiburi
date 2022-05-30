@@ -1,4 +1,11 @@
-import { Dimensions, Image, Text, View } from "react-native";
+import {
+  Dimensions,
+  Image,
+  ScrollView,
+  StyleSheet,
+  Text,
+  View,
+} from "react-native";
 import { ActivityIndicator, TouchableRipple } from "react-native-paper";
 import {
   domain,
@@ -49,21 +56,108 @@ export default function ListHeaderComponent({
     >
       <View
         style={{
-          width: 200,
+          width: "100%",
           height: 300,
         }}
       >
         {loaded ? (
-          <Image
-            source={{
-              uri: `${domain}${poster}`,
-            }}
+          <View
             style={{
+              flexDirection: "row",
               width: "100%",
-              height: 300,
-              resizeMode: "cover",
+              flex: 1,
+              alignItems: "center",
+              // marginHorizontal: 20,
             }}
-          />
+          >
+            <View
+              style={
+                mal
+                  ? {
+                      width: "50%",
+                      // backgroundColor: "yellow",
+                      alignItems: "flex-end",
+                    }
+                  : { width: "100%", alignItems: "center" }
+              }
+            >
+              <Image
+                source={{
+                  uri: `${domain}${poster}`,
+                }}
+                style={
+                  mal
+                    ? {
+                        width: "85%",
+                        height: "100%",
+                        resizeMode: "cover",
+                      }
+                    : {
+                        width: 170,
+                        height: "100%",
+                      }
+                }
+              />
+            </View>
+            <View
+              style={{
+                width: "50%",
+                alignItems: "center",
+                justifyContent: "center",
+                // backgroundColor: "red",
+              }}
+            >
+              {mal ? (
+                <ScrollView
+                  nestedScrollEnabled
+                  contentContainerStyle={{
+                    width: "95%",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    marginTop: 30,
+                    paddingBottom: 60,
+                  }}
+                >
+                  <Text style={styles.descText}>Score : {mal.mean}</Text>
+                  {mal.my_list_status && mal.my_list_status.score ? (
+                    <Text style={styles.descText}>
+                      My Score : {mal.my_list_status.score}
+                    </Text>
+                  ) : null}
+                  <Text style={styles.descText}>
+                    Status :
+                    <Text style={{ color: mal_dict[mal.status].color }}>
+                      {mal_dict[mal.status].text}
+                    </Text>
+                  </Text>
+                  <Text style={styles.descText}>
+                    Popularity : #{mal.popularity}
+                  </Text>
+                  <Text style={styles.descText}>
+                    Members : {mal.num_list_users}
+                  </Text>
+                  <Text style={styles.descText}>
+                    Author(s) :{" "}
+                    {mal.authors.map((item) => {
+                      return item.node.id;
+                    })}
+                    {/* {JSON.stringify(mal.authors, null, 2)} */}
+                  </Text>
+                  <Text
+                    style={{
+                      color: "white",
+                      textAlign: "center",
+                      marginTop: 20,
+                      // overflow: "scroll",
+                    }}
+                  >
+                    Synopsis : {"\n"}
+                    {mal.synopsis}
+                  </Text>
+                </ScrollView>
+              ) : null}
+            </View>
+          </View>
         ) : (
           <ActivityIndicator
             size="large"
@@ -127,3 +221,10 @@ export default function ListHeaderComponent({
     </View>
   );
 }
+
+const styles = StyleSheet.create({
+  descText: {
+    color: "white",
+    textAlign: "center",
+  },
+});
