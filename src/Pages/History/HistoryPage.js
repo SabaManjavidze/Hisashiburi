@@ -146,6 +146,7 @@ export default function History({ navigation, route }) {
       ) : (
         <ScrollView
           ref={listRef}
+          showsVerticalScrollIndicator={false}
           refreshControl={
             <RefreshControl
               refreshing={loading}

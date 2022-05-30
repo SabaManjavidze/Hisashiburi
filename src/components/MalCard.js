@@ -10,8 +10,7 @@ import React, { useState } from "react";
 import { TouchableRipple } from "react-native-paper";
 import { mal_dict, main_url } from "./variables";
 
-const windowWidth = Dimensions.get("window").width;
-const windowHeight = Dimensions.get("window").height;
+const { height, width } = Dimensions.get("window");
 
 export default function MalCard({ node, navigation, route }) {
   const { text, color } = node.my_list_status
@@ -50,6 +49,7 @@ export default function MalCard({ node, navigation, route }) {
     <TouchableOpacity
       style={{
         width: "45%",
+        // height: height * 0.35,
         marginHorizontal: 10,
         alignItems: "center",
         marginTop: 25,
@@ -64,7 +64,7 @@ export default function MalCard({ node, navigation, route }) {
       <View
         style={{
           width: "100%",
-          height: windowHeight * 0.4,
+          height: height * 0.4,
           flexDirection: "column",
         }}
       >
@@ -92,7 +92,7 @@ const styles = StyleSheet.create({
     width: "100%",
     borderBottomLeftRadius: 10,
     borderBottomRightRadius: 10,
-    height: windowHeight * 0.4,
+    height: height * 0.4,
     resizeMode: "cover",
   },
   titleContainer: {

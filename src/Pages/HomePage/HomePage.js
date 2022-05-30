@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useCallback, useEffect, useRef, useState } from "react";
 import {
   View,
   Text,
@@ -31,7 +31,7 @@ import MangaCard from "../../components/MangaCard";
 import { useAuth } from "../../Hooks/useAuth";
 import MangaSkeleton from "../../components/MangaSkeleton";
 import { useScrollToTop } from "@react-navigation/native";
-import debounce from "lodash.debounce";
+import { debounce } from "lodash";
 
 const { width, height } = Dimensions.get("window");
 
@@ -44,7 +44,7 @@ export default function HomePage({ navigation, route }) {
   const fadeAnim = useRef(new Animated.Value(0)).current;
   const inputRef = useRef(null);
   const list_ref = useRef(null);
-
+  const DE_DELAY = 200;
   const fetchHome = async () => {
     const url = `${main_url}/homepage?limit=20`;
     try {
@@ -56,17 +56,23 @@ export default function HomePage({ navigation, route }) {
       alert(error);
     }
   };
-  const fetchSearchResults = async () => {
-    setLoaded(false);
-    setData([]);
-    const data = await fetch(`${main_url}/search/${input}`);
-    const json = await data.json();
-    setData(json);
-    setLoaded(true);
-  };
+  async function fetchSearchResults(input) {
+    try {
+      const data = await fetch(`${main_url}/search/${input}?limit=15`);
+      const json = await data.json();
+      setData(json);
+      setLoaded(true);
+    } catch (error) {
+      clg(JSON.stringify(error, null, 2));
+    }
+  }
 
   useEffect(() => {
-    fetchHome();
+    if (input.length > 0) {
+      fetchSearchResults(input);
+    } else {
+      fetchHome();
+    }
     // console.log(token || "token is null");
   }, []);
   const show_alert = () => {
@@ -84,42 +90,7 @@ export default function HomePage({ navigation, route }) {
       },
     ]);
   };
-  const handleBackButton = () => {
-    if (showInput) {
-      LoadHome();
-      return true;
-    }
-    show_alert();
-    return true;
-  };
 
-  const LoadHome = () => {
-    // console.log(showInput, "from load home");
-    setShowInput(false);
-
-    inputRef.current.clear();
-    setInput("");
-    setData([]);
-    setLoaded(false);
-    fetchHome();
-
-    Animated.timing(fadeAnim, {
-      toValue: 0,
-      duration: 500,
-      useNativeDriver: false,
-    }).start();
-    // return true;
-  };
-
-  const fetchData = (input) => {
-    if (input == null || input == "") {
-      // setData([]);
-      // setLoaded(false);
-      fetchHome();
-    } else {
-      fetchSearchResults();
-    }
-  };
   const renderItem = (child) => {
     return (
       <MangaCard route={route} navigation={navigation} item={child.item} />
@@ -147,6 +118,11 @@ export default function HomePage({ navigation, route }) {
       }}
     />
   );
+  const debounceFn = useCallback(debounce(fetchSearchResults, DE_DELAY), []);
+  const onChangeText = (text) => {
+    setInput(text);
+    text == "" ? fetchHome() : debounceFn(text);
+  };
   return (
     <SafeAreaView
       style={{ alignItems: "center", flex: 1, backgroundColor: main_color }}
@@ -175,10 +151,7 @@ export default function HomePage({ navigation, route }) {
           <Searchbar
             placeholder="Search Manga"
             placeholderTextColor={"white"}
-            onChangeText={(input) => {
-              setInput(input), input == "" && inputRef.current.focus();
-              debounce(fetchData(input), 500);
-            }}
+            onChangeText={onChangeText}
             onSubmitEditing={(e) => {
               onSubmit(e);
             }}
@@ -186,6 +159,9 @@ export default function HomePage({ navigation, route }) {
             ref={inputRef}
             selectionColor={primary_color}
             iconColor="white"
+            onIconPress={() => {
+              setInput("");
+            }}
             inputStyle={{ color: "white" }}
             style={{
               backgroundColor: secondary_color,

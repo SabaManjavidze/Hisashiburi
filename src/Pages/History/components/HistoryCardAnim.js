@@ -76,7 +76,7 @@ export default function HistoryCardAnim({
       <PanGestureHandler
         simultaneousHandlers={simultHandler}
         onGestureEvent={panGesture}
-        hitSlop={{ width: 70, right: 0 }}
+        hitSlop={{ width: 20, right: 0 }}
       >
         <Animated.View style={[styles.task, rStyle]}>
           <HistoryCard item={item} route={route} navigation={navigation} />
