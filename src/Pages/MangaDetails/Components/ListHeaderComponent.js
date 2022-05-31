@@ -19,7 +19,6 @@ import { useAuth } from "../../../Hooks/useAuth";
 import React, { useState } from "react";
 import { useGetManga } from "../../../Hooks/useGetManga";
 import DescriptionView from "./DescriptionView";
-import MalModal from "../../../components/MalModal";
 
 const windowWidth = Dimensions.get("window").width;
 const windowHeight = Dimensions.get("window").height;

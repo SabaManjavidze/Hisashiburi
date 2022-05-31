@@ -16,6 +16,7 @@
     "@react-navigation/native-stack": "^6.2.5",
     "@types/react": "^16.8.0",
     "@types/react-native": "^0.67.3",
+    "@vseslav/react-native-horizontal-picker": "^0.1.1",
     "android": "0.0.8",
     "axios": "^0.25.0",
     "expo": "^43.0.5",

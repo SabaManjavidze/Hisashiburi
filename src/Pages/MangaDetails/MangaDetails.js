@@ -118,11 +118,17 @@ export default function MangaDetails({ navigation, route }) {
           setModalVisible={setModalVisible}
         />
 
-        <MalModal
-          modalVisible={malModalVisible}
-          setModalVisible={setMalModalVisible}
-          mal={mal}
-        />
+        {lastChapLoaded ? (
+          mal_loaded ? (
+            <MalModal
+              modalVisible={malModalVisible}
+              setModalVisible={setMalModalVisible}
+              mal={mal}
+              userData={rm_data.getReadManga[0]}
+              lastChapIdx={lastChapIdx}
+            />
+          ) : null
+        ) : null}
         <DetailsAppbar />
 
         <FAB
