@@ -11,12 +11,15 @@ import {
   domain,
   main_color,
   mal_dict,
+  mal_dict_manga,
   primary_color,
   secondary_color,
 } from "../../../components/variables";
 import { useAuth } from "../../../Hooks/useAuth";
-import React from "react";
+import React, { useState } from "react";
 import { useGetManga } from "../../../Hooks/useGetManga";
+import DescriptionView from "./DescriptionView";
+import MalModal from "../../../components/MalModal";
 
 const windowWidth = Dimensions.get("window").width;
 const windowHeight = Dimensions.get("window").height;
@@ -25,6 +28,8 @@ export default function ListHeaderComponent({
   loaded,
   poster,
   mal,
+  setModalVisible,
+  modalVisible,
 }) {
   const { token } = useAuth();
   const { navigation } = useGetManga();
@@ -41,7 +46,8 @@ export default function ListHeaderComponent({
 
   const onPress = async () => {
     if (token) {
-      // add to MAL
+      setModalVisible(!modalVisible);
+      // console.log(!modalVisible);
     } else {
       navigation.navigate("LogIn");
     }
@@ -107,55 +113,7 @@ export default function ListHeaderComponent({
                 // backgroundColor: "red",
               }}
             >
-              {mal ? (
-                <ScrollView
-                  nestedScrollEnabled
-                  contentContainerStyle={{
-                    width: "95%",
-                    alignItems: "center",
-                    justifyContent: "center",
-                    marginTop: 30,
-                    paddingBottom: 60,
-                  }}
-                >
-                  <Text style={styles.descText}>Score : {mal.mean}</Text>
-                  {mal.my_list_status && mal.my_list_status.score ? (
-                    <Text style={styles.descText}>
-                      My Score : {mal.my_list_status.score}
-                    </Text>
-                  ) : null}
-                  <Text style={styles.descText}>
-                    Status :
-                    <Text style={{ color: mal_dict[mal.status].color }}>
-                      {mal_dict[mal.status].text}
-                    </Text>
-                  </Text>
-                  <Text style={styles.descText}>
-                    Popularity : #{mal.popularity}
-                  </Text>
-                  <Text style={styles.descText}>
-                    Members : {mal.num_list_users}
-                  </Text>
-                  <Text style={styles.descText}>
-                    Author(s) :{" "}
-                    {mal.authors.map((item) => {
-                      return item.node.id;
-                    })}
-                    {/* {JSON.stringify(mal.authors, null, 2)} */}
-                  </Text>
-                  <Text
-                    style={{
-                      color: "white",
-                      textAlign: "center",
-                      marginTop: 20,
-                      // overflow: "scroll",
-                    }}
-                  >
-                    Synopsis : {"\n"}
-                    {mal.synopsis}
-                  </Text>
-                </ScrollView>
-              ) : null}
+              {mal ? <DescriptionView mal={mal} /> : null}
             </View>
           </View>
         ) : (
@@ -182,7 +140,7 @@ export default function ListHeaderComponent({
           justifyContent: "center",
           marginTop: 20,
         }}
-        onPress={() => onPress()}
+        onPress={onPress}
       >
         {token ? (
           mal_loaded ? (
@@ -222,9 +180,4 @@ export default function ListHeaderComponent({
   );
 }
 
-const styles = StyleSheet.create({
-  descText: {
-    color: "white",
-    textAlign: "center",
-  },
-});
+const styles = StyleSheet.create({});

@@ -27,6 +27,7 @@ import {
   mal_dict,
   clg,
   boneColor,
+  transp_main_color,
 } from "../../components/variables";
 import { useAuth } from "../../Hooks/useAuth";
 import DetailsAppbar from "./Components/DetailsAppbar";
@@ -38,6 +39,7 @@ import { MangaContext } from "../../Hooks/useGetManga";
 
 import { GET_READ_MANGA } from "../../graphql/Queries";
 import { useQuery } from "@apollo/client";
+import MalModal from "../../components/MalModal";
 const { width, height } = Dimensions.get("window");
 
 export default function MangaDetails({ navigation, route }) {
@@ -54,6 +56,7 @@ export default function MangaDetails({ navigation, route }) {
   const [poster, setPoster] = useState("");
 
   const [modalVisible, setModalVisible] = useState(false);
+  const [malModalVisible, setMalModalVisible] = useState(false);
 
   const [lastChapIdx, setLastChapIdx] = useState(null);
   const [lastChapLoaded, setLastChapLoaded] = useState(false);
@@ -106,12 +109,20 @@ export default function MangaDetails({ navigation, route }) {
       value={{ navigation, route, chapters, manga_id, title }}
     >
       <View style={styles.container}>
-        <StatusBar backgroundColor={main_color} translucent />
+        <StatusBar
+          backgroundColor={malModalVisible ? "rgba(0,0,0,0.7)" : main_color}
+          translucent
+        />
         <ChapterSearchModal
           modalVisible={modalVisible}
           setModalVisible={setModalVisible}
         />
 
+        <MalModal
+          modalVisible={malModalVisible}
+          setModalVisible={setMalModalVisible}
+          mal={mal}
+        />
         <DetailsAppbar />
 
         <FAB
@@ -144,6 +155,8 @@ export default function MangaDetails({ navigation, route }) {
                   mal={mal}
                   mal_loaded={mal_loaded}
                   loaded={loaded}
+                  setModalVisible={setMalModalVisible}
+                  modalVisible={malModalVisible}
                 />
 
                 {loaded && !rm_loading ? (

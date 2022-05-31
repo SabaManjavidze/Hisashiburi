@@ -14,7 +14,6 @@
     "@react-navigation/material-top-tabs": "^6.2.1",
     "@react-navigation/native": "^6.0.6",
     "@react-navigation/native-stack": "^6.2.5",
-    "@shaman123/react-native-scroll-view": "^1.4.72",
     "@types/react": "^16.8.0",
     "@types/react-native": "^0.67.3",
     "android": "0.0.8",
