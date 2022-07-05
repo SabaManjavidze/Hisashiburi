@@ -75,26 +75,24 @@ export default function HomePage({ navigation, route }) {
     }
     // console.log(token || "token is null");
   }, []);
-  const show_alert = () => {
-    Alert.alert("Hold On!", "Are you sure you want to exit", [
-      {
-        text: "Cancel",
-        onPress: () => null,
-        style: "cancel",
-      },
-      {
-        text: "Yes",
-        onPress: () => {
-          BackHandler.exitApp();
-        },
-      },
-    ]);
-  };
+  // const show_alert = () => {
+  //   Alert.alert("Hold On!", "Are you sure you want to exit", [
+  //     {
+  //       text: "Cancel",
+  //       onPress: () => null,
+  //       style: "cancel",
+  //     },
+  //     {
+  //       text: "Yes",
+  //       onPress: () => {
+  //         BackHandler.exitApp();
+  //       },
+  //     },
+  //   ]);
+  // };
 
-  const renderItem = (child) => {
-    return (
-      <MangaCard route={route} navigation={navigation} item={child.item} />
-    );
+  const renderItem = ({ item }) => {
+    return <MangaCard route={route} navigation={navigation} item={item} />;
   };
   const backArrow = () => (
     <Appbar.Action
@@ -152,9 +150,9 @@ export default function HomePage({ navigation, route }) {
             placeholder="Search Manga"
             placeholderTextColor={"white"}
             onChangeText={onChangeText}
-            onSubmitEditing={(e) => {
-              onSubmit(e);
-            }}
+            // onSubmitEditing={(e) => {
+            //   onSubmit(e);
+            // }}
             value={input}
             ref={inputRef}
             selectionColor={primary_color}
@@ -175,20 +173,28 @@ export default function HomePage({ navigation, route }) {
       </Appbar.Header>
       <>
         {loaded ? (
-          <FlatList
-            data={data}
-            renderItem={renderItem}
-            ref={list_ref}
-            onRefresh={() => {
-              setLoaded(false);
-              setData([]);
-              fetchHome();
-            }}
-            refreshing={false}
-            keyExtractor={(item) => item.manga_id}
-            style={{ height: "100%", width: "100%" }}
-            contentContainerStyle={{ alignItems: "center" }}
-          />
+          data.length > 0 ? (
+            <FlatList
+              data={data}
+              renderItem={renderItem}
+              ref={list_ref}
+              onRefresh={() => {
+                setLoaded(false);
+                setData([]);
+                fetchHome();
+              }}
+              refreshing={false}
+              keyExtractor={(item) => item.manga_id}
+              style={{ height: "100%", width: "100%" }}
+              contentContainerStyle={{ alignItems: "center" }}
+            />
+          ) : (
+            <View style={{ marginTop: 30 }}>
+              <Text style={{ color: "white", fontSize: 20 }}>
+                No results for "{input}"
+              </Text>
+            </View>
+          )
         ) : (
           <View
             style={{

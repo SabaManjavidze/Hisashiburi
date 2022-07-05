@@ -11,7 +11,7 @@ import {
   domain,
   main_color,
   mal_dict,
-  mal_dict_manga,
+  // mal_dict_manga,
   primary_color,
   secondary_color,
 } from "../../../components/variables";
@@ -45,7 +45,7 @@ export default function ListHeaderComponent({
 
   const onPress = async () => {
     if (token) {
-      setModalVisible(!modalVisible);
+      mal && setModalVisible(!modalVisible);
       // console.log(!modalVisible);
     } else {
       navigation.navigate("LogIn");

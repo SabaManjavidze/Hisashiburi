@@ -1,4 +1,11 @@
-import { View, Text, StyleSheet, TouchableOpacity, Image } from "react-native";
+import {
+  View,
+  Text,
+  StyleSheet,
+  TouchableOpacity,
+  Image,
+  StatusBar,
+} from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import React, { useEffect, useState } from "react";
 import {
@@ -28,20 +35,24 @@ export default function Auth({ navigation, route }) {
   const [loaded] = useFonts({
     Mal: require("../../assets/MalFont.ttf"),
   });
-
+  const saveDatainAsyncStorage = async (data) => {
+    const { access_token, refresh_token, expires_in } = data;
+    try {
+      await AsyncStorage.setItem("access_token", access_token);
+      await AsyncStorage.setItem("refresh_token", refresh_token);
+      await AsyncStorage.setItem("expires_in", expires_in.toString());
+    } catch (error) {
+      alert(JSON.stringify(error, null, 2));
+    }
+  };
   const LogIn = async (authorization_code) => {
     try {
       const { data } = await axios.post(token_url, {
         code: authorization_code,
         state: STATE_VAR,
       });
-      const { access_token, refresh_token, expires_in } = data;
-
-      await AsyncStorage.setItem("access_token", access_token);
-      await AsyncStorage.setItem("refresh_token", refresh_token);
-      await AsyncStorage.setItem("expires_in", expires_in.toString());
-
-      const user = await getProfile(access_token);
+      saveDatainAsyncStorage(data);
+      const user = await getProfile(data.access_token);
       const { id, name, picture } = user;
       const user_data = {
         user_id: id,

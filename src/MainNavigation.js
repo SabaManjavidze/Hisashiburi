@@ -16,6 +16,7 @@ import HomePageNav from "./Pages/HomePage/HomePageNav";
 import TopMangaScreenNav from "./Pages/TopMangaPage/TopMangaStack";
 import ProfileScreenNav from "./Pages/ProfilePage/ProfileScreenNav";
 import HistoryPageNav from "./Pages/History/HistoryPageNav";
+import NetworkLogger from "react-native-network-logger";
 import * as Linking from "expo-linking";
 
 const prefix = Linking.createURL("/");
@@ -100,6 +101,17 @@ export default function MainNavigation() {
             }}
             component={HomePageNav}
           />
+          {/* <Tab.Screen
+            name="Network Screen"
+            options={{
+              headerShown: false,
+              tabBarIcon: ({ focused, color }) =>
+                renderItem(focused, "network", color),
+              tabBarLabel: "Network",
+              tabBarStyle: { borderTopColor: "black" },
+            }}
+            children={() => <NetworkLogger theme="dark" />}
+          /> */}
           <Tab.Screen
             name="Top Manga Screen"
             options={{
@@ -138,6 +150,7 @@ export default function MainNavigation() {
               name="LogIn"
               component={Auth}
               options={{
+                headerShown: false,
                 headerStyle: {
                   borderBottomColor: "black",
                   borderBottomWidth: 0.5,

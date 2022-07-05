@@ -13,6 +13,7 @@ import {
   domain,
   img_url,
   light_primary_color,
+  NOT_FOUND_IMAGE,
   primary_color,
 } from "../components/variables";
 import { fetchData } from "../utils/fetchData";
@@ -30,9 +31,17 @@ export default function MangaCard({ route, navigation, item }) {
       index: i,
     });
   };
-
+  // const imageRef = useRef(null);
   const atHome = route.name == "Home";
+  const mangaImage = item.img_url
+    ? item.img_url
+    : `${domain}${img_url}${item.manga_id}.jpg`;
+  const [image, setImage] = useState(mangaImage);
   // const atHome = true;
+  // useEffect(() => {
+  //               setImage(mangaImage)
+  // }, [])
+
   return (
     <View
       style={[
@@ -51,9 +60,14 @@ export default function MangaCard({ route, navigation, item }) {
         >
           <Image
             source={{
-              uri: item.img_url
-                ? item.img_url
-                : `${domain}${img_url}${item.manga_id}.jpg`,
+              uri: image,
+              // "https://previews.123rf.com/images/kaymosk/kaymosk1804/kaymosk180400005/99776312-error-404-page-not-found-error-with-glitch-effect-on-screen-vector-illustration-for-your-design.jpg",
+            }}
+            // resizeMethod={"auto"}
+            onError={() => {
+              // console.log(imageRef);
+              setImage(NOT_FOUND_IMAGE);
+              // console.log(item.title);
             }}
             style={styles.image}
           />

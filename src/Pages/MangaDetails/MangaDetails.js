@@ -39,7 +39,7 @@ import { MangaContext } from "../../Hooks/useGetManga";
 
 import { GET_READ_MANGA } from "../../graphql/Queries";
 import { useQuery } from "@apollo/client";
-import MalModal from "../../components/MalModal";
+import MalModal from "../../components/MalModal/MalModal";
 const { width, height } = Dimensions.get("window");
 
 export default function MangaDetails({ navigation, route }) {
@@ -48,12 +48,12 @@ export default function MangaDetails({ navigation, route }) {
   const { token, user } = useAuth();
 
   const [mal, setMAL] = useState(null);
-  const [mal_loaded, setMALLoaded] = useState();
+  const [mal_loaded, setMALLoaded] = useState(false);
 
   const [chapters, setChapters] = useState([]);
   const [loaded, setLoaded] = useState(false);
 
-  const [poster, setPoster] = useState("");
+  const [details, setDetails] = useState({});
 
   const [modalVisible, setModalVisible] = useState(false);
   const [malModalVisible, setMalModalVisible] = useState(false);
@@ -72,29 +72,32 @@ export default function MangaDetails({ navigation, route }) {
     variables: { user_id: user.user_id, manga_id: manga_id },
   });
 
-  const fetchChapters = async () => {
+  const fetchMangaDetails = async () => {
     const json = await fetchData(manga_id);
     const { details, chapters } = json;
-    setPoster(details.img_url);
+    console.log(`from details page :${details.alternative_titles}`);
+    setDetails(details);
     setChapters(chapters);
     setLoaded(true);
   };
 
   const fetchMAL = async () => {
-    const data = await getMangaOnMAL(title, token);
+    // console.log("called mal");
+    const data = await getMangaOnMAL(details, token);
+    console.log("FROM DETAILS PAGE", data);
     setMAL(data);
     setMALLoaded(true);
   };
   useEffect(() => {
-    fetchChapters();
-    if (token) fetchMAL();
-  }, []);
+    fetchMangaDetails();
+    if (token && loaded) fetchMAL();
+  }, [loaded]);
   useEffect(() => {
     if (!rm_loading && rm_data.getReadManga.length > 0 && loaded) {
       chapters.findIndex((chapter, i) => {
         if (chapter.chap_num == rm_data.getReadManga[0].last_read_chapter) {
           // const index = chapters.length - 1 - i;
-          clg({ index: i });
+          // clg({ index: i });
           setLastChapIdx(i);
           setLastChapLoaded(true);
 
@@ -118,16 +121,16 @@ export default function MangaDetails({ navigation, route }) {
           setModalVisible={setModalVisible}
         />
 
-        {lastChapLoaded ? (
-          mal_loaded ? (
-            <MalModal
-              modalVisible={malModalVisible}
-              setModalVisible={setMalModalVisible}
-              mal={mal}
-              userData={rm_data.getReadManga[0]}
-              lastChapIdx={lastChapIdx}
-            />
-          ) : null
+        {loaded && mal_loaded ? (
+          <MalModal
+            modalVisible={malModalVisible}
+            setModalVisible={setMalModalVisible}
+            mal={mal}
+            userData={
+              rm_data.getReadManga.length > 0 ? rm_data.getReadManga[0] : null
+            }
+            lastChapIdx={lastChapIdx}
+          />
         ) : null}
         <DetailsAppbar />
 
@@ -157,7 +160,7 @@ export default function MangaDetails({ navigation, route }) {
             ListHeaderComponent={
               <View>
                 <ListHeaderComponent
-                  poster={poster}
+                  poster={details.img_url}
                   mal={mal}
                   mal_loaded={mal_loaded}
                   loaded={loaded}
@@ -191,9 +194,10 @@ export default function MangaDetails({ navigation, route }) {
               </View>
             }
             ref={scrollRef}
-            keyExtractor={(item) => item.chap_title}
+            keyExtractor={(item) => item.chap_num}
             renderItem={({ item, index }) => (
-              <ChapterItem child={item} index={index} key={index} />
+              // console.log(item),
+              <ChapterItem child={item} index={index} />
             )}
           />
           <View

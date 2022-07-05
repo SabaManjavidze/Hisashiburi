@@ -13,6 +13,7 @@ export const AuthProvider = ({ children }) => {
   const get_token = async () => {
     const token = await AsyncStorage.getItem("access_token");
     setToken(token);
+    // console.log(token);
     const user = await getProfile(token);
     const user_data = {
       user_id: user.id,
