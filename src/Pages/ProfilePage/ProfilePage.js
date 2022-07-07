@@ -40,7 +40,7 @@ export default function ProfilePage({ route, navigation }) {
       // setProfileLoaded(true);
       const mangaList = await getMangaList(token);
       setMangaList(mangaList.data);
-      console.log(mangaList.data);
+      // console.log(mangaList.data);
       setMangaLoaded(true);
     } else {
       alert("You are not logged in");

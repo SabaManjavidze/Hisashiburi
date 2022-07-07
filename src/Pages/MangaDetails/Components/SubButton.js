@@ -14,15 +14,14 @@ export default function SubButton({
   startAnimation,
   onPress,
 }) {
-  const { manga_id, chapters, title, navigation } = useGetManga();
+  const { chapters, manga, navigation } = useGetManga();
   const child_size = 55;
   const def_press = () => {
     setIsOpen(false);
     startAnimation();
     navigation.navigate("ChapterPage", {
       chapters: chapters,
-      manga_id: manga_id,
-      manga_title: title,
+      manga: item,
       //   index: chapters.length - 1,
       index: index,
     });

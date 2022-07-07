@@ -16,10 +16,12 @@ export default function ChapterItem({
   // manga_id,
   // manga_title,
   // chapters,
+  uploadDateLabel = "upload date",
   index,
   borderColor,
+  date,
 }) {
-  const { manga_id, title, chapters, navigation } = useGetManga();
+  const { manga, chapters, navigation } = useGetManga();
   const child = chapters[index];
   // console.log({ chapter_child: child, index });
   return (
@@ -35,8 +37,7 @@ export default function ChapterItem({
         onPress={() =>
           navigation.navigate("ChapterPage", {
             index: index,
-            manga_id: manga_id,
-            manga_title: title,
+            manga: manga,
             chapters: chapters,
           })
         }
@@ -47,6 +48,17 @@ export default function ChapterItem({
           </Text>
         </View>
         <View style={{ flexDirection: "row", justifyContent: "space-between" }}>
+          {child.view_count ? (
+            <Text
+              style={{
+                fontSize: 13,
+                color: "rgba(255, 255, 255, 0.5)",
+                textAlign: "center",
+              }}
+            >
+              {`views : ${child.view_count}`}
+            </Text>
+          ) : null}
           <Text
             style={{
               fontSize: 13,
@@ -54,16 +66,7 @@ export default function ChapterItem({
               textAlign: "center",
             }}
           >
-            {`views : ${child.view_count}`}
-          </Text>
-          <Text
-            style={{
-              fontSize: 13,
-              color: "rgba(255, 255, 255, 0.5)",
-              textAlign: "center",
-            }}
-          >
-            {`upload date : ${child.upload_date}`}
+            {`${uploadDateLabel} : ${date || child.upload_date}`}
           </Text>
         </View>
       </TouchableOpacity>

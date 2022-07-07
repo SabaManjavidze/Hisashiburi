@@ -26,8 +26,7 @@ export default function MangaCard({ route, navigation, item }) {
     const { chapters } = await fetchData(item.manga_id);
     navigation.navigate("ChapterPage", {
       chapters: chapters,
-      manga_id: item.manga_id,
-      manga_title: item.title,
+      manga: item,
       index: i,
     });
   };
@@ -125,28 +124,50 @@ export default function MangaCard({ route, navigation, item }) {
                     }}
                   >
                     <View style={{ flex: 3, alignItems: "center" }}>
-                      <TouchableRipple
-                        onPress={() => goToChapter(i)}
-                        rippleColor={light_primary_color}
-                        style={{
-                          borderColor: primary_color,
-                          borderWidth: 0.4,
-                          width: "80%",
-                          alignItems: "center",
-                        }}
-                      >
-                        <Text
+                      {child.chap_title ? (
+                        <TouchableRipple
+                          onPress={() => goToChapter(i)}
+                          rippleColor={light_primary_color}
                           style={{
-                            color: primary_color,
-                            textAlign: "center",
-                            fontSize: 13,
+                            borderColor: primary_color,
+                            borderWidth: 0.4,
+                            width: "80%",
+                            alignItems: "center",
                           }}
                         >
-                          {child.chap_title.length > 18
-                            ? `${child.chap_title.substring(0, 18)}...`
-                            : child.chap_title}
-                        </Text>
-                      </TouchableRipple>
+                          <Text
+                            style={{
+                              color: primary_color,
+                              textAlign: "center",
+                              fontSize: 13,
+                            }}
+                          >
+                            {child.chap_title.length > 18
+                              ? `${child.chap_title.substring(0, 18)}...`
+                              : child.chap_title}
+                          </Text>
+                        </TouchableRipple>
+                      ) : (
+                        <View
+                          style={{
+                            display: "flex",
+                            justifyContent: "center",
+                            alignItems: "center",
+                            // backgroundColor: "black",
+                            width: "100%",
+                            marginLeft: 50,
+                          }}
+                        >
+                          <Text
+                            style={{
+                              color: "white",
+                              textAlign: "center",
+                            }}
+                          >
+                            There are no chapters
+                          </Text>
+                        </View>
+                      )}
                     </View>
                     <View style={{ flex: 1, justifyContent: "center" }}>
                       <Text

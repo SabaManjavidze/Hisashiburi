@@ -44,7 +44,7 @@ const { width, height } = Dimensions.get("window");
 
 export default function MangaDetails({ navigation, route }) {
   const { item } = route.params;
-  const { manga_id, title } = item;
+  const { manga_id, title, href } = item;
   const { token, user } = useAuth();
 
   const [mal, setMAL] = useState(null);
@@ -75,7 +75,7 @@ export default function MangaDetails({ navigation, route }) {
   const fetchMangaDetails = async () => {
     const json = await fetchData(manga_id);
     const { details, chapters } = json;
-    console.log(`from details page :${details.alternative_titles}`);
+    // console.log(`from details page :${details.alternative_titles}`);
     setDetails(details);
     setChapters(chapters);
     setLoaded(true);
@@ -84,32 +84,34 @@ export default function MangaDetails({ navigation, route }) {
   const fetchMAL = async () => {
     // console.log("called mal");
     const data = await getMangaOnMAL(details, token);
-    console.log("FROM DETAILS PAGE", data);
+    // console.log("FROM DETAILS PAGE", data);
     setMAL(data);
     setMALLoaded(true);
   };
   useEffect(() => {
     fetchMangaDetails();
-    if (token && loaded) fetchMAL();
+    if (token && loaded) {
+      fetchMAL();
+    }
   }, [loaded]);
   useEffect(() => {
-    if (!rm_loading && rm_data.getReadManga.length > 0 && loaded) {
-      chapters.findIndex((chapter, i) => {
-        if (chapter.chap_num == rm_data.getReadManga[0].last_read_chapter) {
-          // const index = chapters.length - 1 - i;
-          // clg({ index: i });
-          setLastChapIdx(i);
-          setLastChapLoaded(true);
-
-          // return i;
-        }
-      });
+    // console.log({ rm_loading, loaded, rm_data, error });
+    if (!rm_loading && loaded && !error && rm_data.getReadManga.length > 0) {
+      const index = chapters.findIndex(
+        (chapter, i) =>
+          chapter.chap_num == rm_data.getReadManga[0].last_read_chapter
+      );
+      // console.log({ last_read_chapter: chapters[index], index });
+      if (chapters[index]) {
+        setLastChapIdx(index);
+        setLastChapLoaded(true);
+      }
     }
   }, [rm_loading, loaded]);
 
   return (
     <MangaContext.Provider
-      value={{ navigation, route, chapters, manga_id, title }}
+      value={{ navigation, route, chapters, manga: details }}
     >
       <View style={styles.container}>
         <StatusBar
@@ -121,16 +123,20 @@ export default function MangaDetails({ navigation, route }) {
           setModalVisible={setModalVisible}
         />
 
-        {loaded && mal_loaded ? (
-          <MalModal
-            modalVisible={malModalVisible}
-            setModalVisible={setMalModalVisible}
-            mal={mal}
-            userData={
-              rm_data.getReadManga.length > 0 ? rm_data.getReadManga[0] : null
-            }
-            lastChapIdx={lastChapIdx}
-          />
+        {loaded && mal_loaded && !error ? (
+          error ? (
+            <Text>There was an error</Text>
+          ) : (
+            <MalModal
+              modalVisible={malModalVisible}
+              setModalVisible={setMalModalVisible}
+              mal={mal}
+              userData={
+                rm_data.getReadManga.length > 0 ? rm_data.getReadManga[0] : null
+              }
+              lastChapIdx={lastChapIdx}
+            />
+          )
         ) : null}
         <DetailsAppbar />
 
@@ -169,23 +175,30 @@ export default function MangaDetails({ navigation, route }) {
                 />
 
                 {loaded && !rm_loading ? (
-                  rm_data.getReadManga.length > 0 ? (
+                  error ? (
+                    <Text style={{ color: "white", fontSize: 20 }}>
+                      There was an error
+                    </Text>
+                  ) : rm_data.getReadManga ? (
                     lastChapLoaded ? (
                       <View
                         style={{
                           width: "100%",
+                          display: "flex",
+                          flexDirection: "column",
                           alignItems: "center",
                           marginTop: 5,
                           marginBottom: 30,
                         }}
                       >
-                        <Text style={styles.lastReadLabel}>Last Read</Text>
-                        {/* <Text style={{ color: "white", fontSize: 20 }}>
-                          {chapters[lastChapIdx].chap_num}
-                        </Text> */}
+                        <Text style={styles.lastReadLabel}>
+                          Last Read Chapter
+                        </Text>
                         <ChapterItem
                           borderColor={boneColor}
                           index={lastChapIdx}
+                          uploadDateLabel={"Read date"}
+                          date={rm_data.getReadManga[0].read_date}
                         />
                       </View>
                     ) : null
@@ -230,11 +243,11 @@ const styles = StyleSheet.create({
   lastReadLabel: {
     color: "white",
     opacity: 0.75,
-    marginLeft: 65,
+    // marginLeft: 65,
     marginBottom: 25,
     fontWeight: "bold",
     fontSize: 20,
-    width: "100%",
+    // width: "inherit",
     textAlign: "left",
   },
 });

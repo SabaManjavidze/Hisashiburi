@@ -16,7 +16,7 @@ import {
   secondary_color,
 } from "../../../components/variables";
 import { useAuth } from "../../../Hooks/useAuth";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useGetManga } from "../../../Hooks/useGetManga";
 import DescriptionView from "./DescriptionView";
 
@@ -31,7 +31,11 @@ export default function ListHeaderComponent({
   modalVisible,
 }) {
   const { token } = useAuth();
-  const { navigation } = useGetManga();
+  const { navigation, manga } = useGetManga();
+  // useEffect(() => {
+  //   console.log(poster);
+  // }, [poster]);
+
   const getStatus = () => {
     if (mal !== null && mal) {
       if (mal.my_list_status == null) {
@@ -88,7 +92,7 @@ export default function ListHeaderComponent({
             >
               <Image
                 source={{
-                  uri: `${domain}${poster}`,
+                  uri: poster,
                 }}
                 style={
                   mal
@@ -112,7 +116,7 @@ export default function ListHeaderComponent({
                 // backgroundColor: "red",
               }}
             >
-              {mal ? <DescriptionView mal={mal} /> : null}
+              {mal ? <DescriptionView mal={mal} manga={manga} /> : null}
             </View>
           </View>
         ) : (

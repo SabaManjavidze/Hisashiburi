@@ -53,7 +53,7 @@ export const getTopManga = async (access_token, url) => {
 };
 export const getMangaOnMAL = async (details, access_token) => {
   const fields = `fields=my_list_status,alternative_titles,mean,
-  status,authors,genres,synopsis,popularity,rank,num_list_users`;
+  status,authors{first_name,last_name},genres,synopsis,popularity,rank,num_list_users`;
   const url = `${MAL_API_URL}/manga?q=${details.title}&limit=5&${fields}`;
   const headers = {
     Authorization: `Bearer ${access_token}`,
@@ -72,7 +72,7 @@ export const getMangaOnMAL = async (details, access_token) => {
     } = child.node;
     const mal_title = removePunctuation(title);
     if (mal_title === title_lower) {
-      console.log({ mal_title, title_lower, synonyms, en, ja, alt_titles });
+      // console.log({ mal_title, title_lower, synonyms, en, ja, alt_titles });
       // console.log("isequal");
       return child.node;
     }

@@ -7,7 +7,11 @@ import {
   Dimensions,
   StyleSheet,
 } from "react-native";
-import { IconButton, TouchableRipple } from "react-native-paper";
+import {
+  ActivityIndicator,
+  IconButton,
+  TouchableRipple,
+} from "react-native-paper";
 import { domain, img_url, primary_color } from "../../../components/variables";
 import { fetchData } from "../../../utils/fetchData";
 
@@ -15,20 +19,33 @@ const { width, height } = Dimensions.get("window");
 
 export default function HistoryCard({ route, navigation, item }) {
   //   console.log(item);
+  const [chapIdx, setChapIdx] = useState();
+  const [chapters, setChapters] = useState([]);
+  const [loaded, setLoaded] = useState(false);
+  const MAX_CHAP_TITLE_LENGTH = 27;
   const {
-    manga_details: { title, manga_id },
+    manga_details: { title, manga_id, img_url },
     read_date,
     last_read_chapter,
   } = item;
+  const fetchChapters = async () => {
+    const { chapters } = await fetchData(manga_id);
+    const idx = chapters.findIndex(
+      (chap) => chap.chap_num == last_read_chapter
+    );
+    setChapters(chapters);
+    setChapIdx(idx);
+    setLoaded(true);
+  };
+  useEffect(() => {
+    fetchChapters();
+  }, []);
 
   const goToChapter = async () => {
-    const { chapters } = await fetchData(manga_id);
-    const i = chapters.findIndex((chap) => chap.chap_num == last_read_chapter);
     navigation.navigate("ChapterPage", {
       chapters: chapters,
-      manga_id: manga_id,
-      manga_title: title,
-      index: i,
+      manga: item,
+      index: chapIdx,
     });
   };
 
@@ -44,8 +61,8 @@ export default function HistoryCard({ route, navigation, item }) {
         >
           <Image
             source={{
-              //   uri: img_url ? img_url : `${domain}${img_url}${manga_id}.jpg`,
-              uri: `${domain}${img_url}${manga_id}.jpg`,
+              uri: img_url ? img_url : `${domain}${img_url}${manga_id}.jpg`,
+              // uri: `${domain}${img_url}${manga_id}.jpg`,
             }}
             style={styles.image}
           />
@@ -81,14 +98,14 @@ export default function HistoryCard({ route, navigation, item }) {
               </Text>
             </View>
           </View>
-          {last_read_chapter ? (
-            <View
-              style={{
-                flex: 1,
-                width: "100%",
-                height: "60%",
-              }}
-            >
+          <View
+            style={{
+              flex: 1,
+              width: "100%",
+              height: "60%",
+            }}
+          >
+            {loaded ? (
               <View
                 style={{
                   flex: 1,
@@ -115,7 +132,13 @@ export default function HistoryCard({ route, navigation, item }) {
                         fontSize: 18,
                       }}
                     >
-                      {last_read_chapter}
+                      {chapters[chapIdx].chap_title.length >
+                      MAX_CHAP_TITLE_LENGTH
+                        ? `${chapters[chapIdx].chap_title.slice(
+                            0,
+                            MAX_CHAP_TITLE_LENGTH
+                          )}...`
+                        : chapters[chapIdx].chap_title}
                     </Text>
                   </TouchableRipple>
                 </View>
@@ -127,12 +150,26 @@ export default function HistoryCard({ route, navigation, item }) {
                       textAlign: "center",
                     }}
                   >
-                    {read_date}
+                    {new Date(read_date).toLocaleDateString()}
                   </Text>
                 </View>
               </View>
-            </View>
-          ) : null}
+            ) : (
+              // <View
+              //   style={{
+              //     // backgroundColor: "black",
+              //     display: "flex",
+              //     justifyContent: "center",
+              //     alignItems: "center",
+              //     flex: 1,
+              //     width: "100%",
+              //     marginBottom: 10,
+              //   }}
+              // >
+              <ActivityIndicator size="small" />
+              // </View>
+            )}
+          </View>
         </View>
       </View>
     </View>

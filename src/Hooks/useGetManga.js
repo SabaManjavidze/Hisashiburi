@@ -7,16 +7,15 @@ export default function useGetMangaHook({ children }) {
   const [navigation, setNav] = useState(null);
   const [route, setRoute] = useState(null);
   const [chapters, setChapters] = useState(null);
-  const [{ manga_id, title }, setItem] = useState(null);
+  const [manga, setManga] = useState(null);
   return (
     <MangaContext.Provider
       value={{
         navigation,
         route,
         chapters,
-        manga_id,
-        title,
-        setItem,
+        manga,
+        setManga,
         setChapters,
         setNav,
         setRoute,

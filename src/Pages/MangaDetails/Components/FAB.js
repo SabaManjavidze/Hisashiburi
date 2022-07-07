@@ -62,8 +62,7 @@ export default function FAB({ loading, data, setModalVisible, modalVisible }) {
               // console.log(data.getReadManga[0].last_read_chapter);
               navigation.navigate("ChapterPage", {
                 chapters: chapters,
-                manga_id: manga_id,
-                manga_title: title,
+                manga: item,
                 index: index,
               });
             }

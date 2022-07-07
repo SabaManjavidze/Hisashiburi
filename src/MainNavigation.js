@@ -120,6 +120,13 @@ export default function MainNavigation() {
                 renderItem(focused, "format-list-bulleted", color, "square"),
               ...mangaDetailsHeader,
             }}
+            listeners={({ navigation }) => ({
+              tabPress: (e) => {
+                if (user_loading) {
+                  e.preventDefault();
+                }
+              },
+            })}
             component={TopMangaScreenNav}
           />
           <Tab.Screen

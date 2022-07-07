@@ -1,8 +1,14 @@
 import { ScrollView, StyleSheet, Text, View } from "react-native";
-import React from "react";
+import React, { useEffect } from "react";
 import { mal_dict, mal_dict_manga } from "../../../components/variables";
+import { useGetManga } from "../../../Hooks/useGetManga";
 
 export default function DescriptionView({ mal }) {
+  const { manga } = useGetManga();
+  useEffect(() => {
+    console.log({ manga });
+  }, [manga]);
+
   return (
     <ScrollView
       nestedScrollEnabled
@@ -45,9 +51,9 @@ export default function DescriptionView({ mal }) {
       <Text style={styles.descText}>Members : {mal.num_list_users}</Text>
       <Text style={styles.descText}>
         Author(s) :{" "}
-        {mal.authors
-          ? mal.authors.map((item) => {
-              return item.node.id;
+        {manga.authors
+          ? manga.authors.map((item) => {
+              return item.name;
             })
           : "No authors"}
         {/* {JSON.stringify(mal.authors, null, 2)} */}

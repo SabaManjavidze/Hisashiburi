@@ -28,7 +28,7 @@ export const CREATE_READ_MANGA = gql`
   }
 `;
 export const CREATE_MANGA = gql`
-  mutation createManga($title: String!, $manga_id: String!) {
-    createManga(title: $title, manga_id: $manga_id)
+  mutation createManga($title: String!, $manga_id: String!, $img_url: String!) {
+    createManga(title: $title, manga_id: $manga_id, img_url: $img_url)
   }
 `;

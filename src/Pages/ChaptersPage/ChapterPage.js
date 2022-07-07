@@ -1,5 +1,5 @@
 import React, { useRef, useEffect, useState, useContext } from "react";
-import { StyleSheet, View, StatusBar, Text } from "react-native";
+import { StyleSheet, View, StatusBar, Text, Image } from "react-native";
 import WebView from "react-native-webview";
 import ChapterNav from "./Components/ChapterNav";
 import ReaderAppbar from "./Components/ReaderAppbar";
@@ -15,12 +15,12 @@ import { useAuth } from "../../Hooks/useAuth";
 import { gql, useMutation } from "@apollo/client";
 import { CREATE_READ_MANGA, CREATE_MANGA } from "../../graphql/Mutations";
 import throttle from "lodash.throttle";
+import { FlatList } from "react-native";
 
 export default function ChapterPage({ navigation, route }) {
-  let { manga_title, manga_id, chapters, index } = route.params;
-  // let { title, manga_id, chapters } = useGetManga();
+  let { manga, chapters, index } = route.params;
 
-  // const [data, setData] = useState([]);
+  const [data, setData] = useState([]);
 
   const [chapter, setChapter] = useState(chapters[index]);
   const [idx, setIndex] = useState(index);
@@ -44,29 +44,31 @@ export default function ChapterPage({ navigation, route }) {
     { loading: manga_loading, error: manga_error, data: manga_data },
   ] = useMutation(CREATE_MANGA);
 
-  // const fetchData = async () => {
-  //   const url = `${main_url}/manga/${manga_id}/${chapter.chap_num}`;
-  //   const data = await fetch(url);
-  //   const json = await data.json();
-  //   setData(json);
-  //   setLoaded(true);
-  // };
+  const fetchData = async () => {
+    const url = `${main_url}/manga/${manga.manga_id}/${chapter.chap_num}`;
+    const data = await fetch(url);
+    const json = await data.json();
+    setData(json);
+    setLoaded(true);
+  };
   useEffect(() => {
     if (!rm_loading) {
-      clg({ rm_error });
+      clg({ rm_error, rm_data });
     }
     if (!manga_loading) {
-      clg({ manga_error });
+      clg({ manga_error, manga_data });
     }
   }, [rm_loading, manga_loading]);
 
   const addToHistory = async () => {
     try {
       const { user_id } = user;
+      console.log(manga);
       await createManga({
         variables: {
-          manga_id,
-          title: manga_title,
+          manga_id: manga.manga_id,
+          title: manga.title,
+          img_url: manga.img_url,
         },
       });
       const read_date = `${new Date().toLocaleDateString()}, ${new Date().toLocaleTimeString()}`;
@@ -74,7 +76,7 @@ export default function ChapterPage({ navigation, route }) {
       await createReadManga({
         variables: {
           user_id: user_id,
-          manga_id,
+          manga_id: manga.manga_id,
           last_read_chapter: chapter.chap_num,
           read_date,
         },
@@ -96,7 +98,7 @@ export default function ChapterPage({ navigation, route }) {
   };
   useEffect(() => {
     if (chapter != null) {
-      // fetchData();
+      fetchData();
       setLoaded(true);
       navigation.setOptions({ title: chapter.chap_title });
       // if (loaded && scroll_ref != null && scroll_ref.current != null) {
@@ -130,7 +132,12 @@ export default function ChapterPage({ navigation, route }) {
         idx={idx}
         hide={hide}
       />
-
+      {/* <Image
+        source={{
+          uri: "https://v10.mkklcdnv6tempv4.com/img/tab_10/00/12/00/ma952557/chapter_366/1-o.jpg",
+        }}
+        style={{ height: 700, width: 400 }}
+      /> */}
       {loaded && (
         <View style={{ flex: 1 }}>
           <WebView
@@ -149,29 +156,25 @@ export default function ChapterPage({ navigation, route }) {
             // onScroll={(e) => {
             //   updatePages();
             // }}
+            // <img src="https://img.mangahasu.se/1img/rNmN-HGdYNkPh/rNymyBZ-fY9pWMGO/001.jpg" onerror={alert("hello")}/>
             onMessage={onMessage}
             source={{
-              uri:
-                chapter &&
-                `${curr_host}/chapter/${manga_id}/${chapter.chap_num}`,
-            }}
-          />
-        </View>
-      )}
-      {/* {
+              //   uri:
+              //     chapter &&
+              //     `${curr_host}/chapter/${manga_id}/${chapter.chap_num}`,
+              // }}
               html: `
                   ${html}
                   ${data
-                    .map(
-                      (item) =>
-                        `<img src="${item.src}" id="${item.src}" 
-                        onClick={${post_web_message}("hide")}>`
-                    )
+                    .map((item) => `<img src="${item.src}" id="${item.src}"/>`)
                     .join("")}
                   </body>
                   </html>
                   `,
-            } */}
+            }}
+          />
+        </View>
+      )}
       {/* <View
         style={{
           width: "100%",

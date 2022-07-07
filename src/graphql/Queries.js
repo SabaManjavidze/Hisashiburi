@@ -9,6 +9,7 @@ export const GET_USERS = gql`
         manga_details {
           title
           manga_id
+          img_url
         }
         read_date
         last_read_chapter

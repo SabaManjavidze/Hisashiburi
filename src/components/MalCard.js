@@ -23,18 +23,21 @@ export default function MalCard({ node, navigation, route }) {
   const handlePress = async (node) => {
     const alt_titles = node.alternative_titles;
     const title = removePunctuation(node.title);
+    // console.log(title);
     const en = removePunctuation(alt_titles.en);
     const synonym =
       alt_titles.synonyms.length > 0
         ? removePunctuation(alt_titles.synonyms[0])
         : "";
-    const data = await fetch(
-      `${main_url}/search/${node.title || alt_titles.en}?limit=5`
-    );
+    const url = `${main_url}/search/${node.title || alt_titles.en}?limit=15`;
+    // console.log(url);
+    const data = await fetch(url);
     const json = await data.json();
-    json.map((item) => {
-      const str = removePunctuation(item.title);
-      const item_title = str;
+    console.log(url);
+    for (var i = 0; i < json.length; i++) {
+      const item = json[i];
+      const item_title = removePunctuation(item.title);
+      console.log(item.title);
 
       if (item_title === title || item_title === en || item_title === synonym) {
         navigation.navigate("MangaDetails", {
@@ -42,7 +45,7 @@ export default function MalCard({ node, navigation, route }) {
         });
         return;
       }
-    });
+    }
   };
 
   return (

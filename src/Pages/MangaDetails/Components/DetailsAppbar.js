@@ -5,7 +5,7 @@ import { main_color } from "../../../components/variables";
 import { useGetManga } from "../../../Hooks/useGetManga";
 
 export default function DetailsAppbar() {
-  const { title, navigation } = useGetManga();
+  const { manga, navigation } = useGetManga();
   return (
     <Appbar.Header
       style={{
@@ -21,7 +21,7 @@ export default function DetailsAppbar() {
           navigation.goBack();
         }}
       />
-      <Appbar.Content title={title} />
+      <Appbar.Content title={manga.title} />
     </Appbar.Header>
   );
 }

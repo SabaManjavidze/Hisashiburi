@@ -117,7 +117,7 @@ export default function MalModal({
             progress={progress}
             score={score}
             status={status}
-            setOpen={setModalVisible}
+            setModalVisible={setModalVisible}
           />
         </View>
       </View>

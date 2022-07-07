@@ -13,10 +13,8 @@ import {
   secondary_color,
 } from "../../components/variables";
 import { gql, useMutation, useQuery } from "@apollo/client";
-import HistoryCard from "./components/HistoryCard";
 import { ActivityIndicator, TouchableRipple } from "react-native-paper";
 import { useAuth } from "../../Hooks/useAuth";
-import { formatDate } from "../../utils/formatDate";
 import HistoryCardAnim from "./components/HistoryCardAnim";
 import { useIsFocused } from "@react-navigation/native";
 import { REMOVE_READ_MANGA } from "../../graphql/Mutations";
@@ -50,17 +48,23 @@ export default function History({ navigation, route }) {
 
   useEffect(() => {
     if (token && !user_loading) {
-      const manga_list = data.getUsers[0].manga;
-      // sort manga_list by read_date
-      if (!manga_list) {
-        setManga([]);
-        setLoading(false);
-        return;
+      if (!error) {
+        const manga_list = data.getUsers[0].manga;
+        // sort manga_list by read_date
+        if (!manga_list) {
+          setManga([]);
+          setLoading(false);
+          return;
+        }
+        if (manga_list.length > 1) {
+          const sorted_manga = [...manga_list].sort((a, b) => {
+            return new Date(b.read_date) - new Date(a.read_date);
+          });
+          setManga(sorted_manga);
+        } else {
+          setManga(manga_list);
+        }
       }
-      const sorted_manga = [...manga_list].sort((a, b) => {
-        return new Date(b.read_date) - new Date(a.read_date);
-      });
-      setManga(sorted_manga);
       setLoading(false);
     }
   }, [user_loading, data, loading]);

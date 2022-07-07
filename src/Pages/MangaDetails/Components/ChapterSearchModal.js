@@ -11,7 +11,7 @@ import { useGetManga } from "../../../Hooks/useGetManga";
 export default function ChapterSearchModal({ setModalVisible, modalVisible }) {
   const [filtered_chapters, setFilteredChapters] = useState([]);
   const [input, setInput] = useState("");
-  const { navigation, chapters, manga_id, title } = useGetManga();
+  const { navigation, chapters, manga } = useGetManga();
 
   const onSubmit = () => {
     const index = chapters.findIndex((child) => child.chap_num === input);
@@ -22,8 +22,7 @@ export default function ChapterSearchModal({ setModalVisible, modalVisible }) {
     if (input.length > 0) {
       navigation.navigate("ChapterPage", {
         chapters: chapters,
-        manga_id: manga_id,
-        manga_title: title,
+        manga: manga,
         index: index,
       });
     }
@@ -113,7 +112,9 @@ export default function ChapterSearchModal({ setModalVisible, modalVisible }) {
                   setInput(text);
                   if (text.length > 0) {
                     setFilteredChapters(
-                      chapters.filter((child) => child.chap_num.includes(text))
+                      chapters.filter((child) =>
+                        child.chap_title.includes(text)
+                      )
                     );
                   } else {
                     setFilteredChapters([]);

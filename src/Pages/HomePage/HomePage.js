@@ -44,7 +44,7 @@ export default function HomePage({ navigation, route }) {
   const fadeAnim = useRef(new Animated.Value(0)).current;
   const inputRef = useRef(null);
   const list_ref = useRef(null);
-  const DE_DELAY = 200;
+  const DE_DELAY = 500;
   const fetchHome = async () => {
     const url = `${main_url}/homepage?limit=20`;
     try {
