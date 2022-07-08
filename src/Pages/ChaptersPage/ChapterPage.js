@@ -51,19 +51,19 @@ export default function ChapterPage({ navigation, route }) {
     setData(json);
     setLoaded(true);
   };
-  useEffect(() => {
-    if (!rm_loading) {
-      clg({ rm_error, rm_data });
-    }
-    if (!manga_loading) {
-      clg({ manga_error, manga_data });
-    }
-  }, [rm_loading, manga_loading]);
+  // useEffect(() => {
+  //   if (!rm_loading) {
+  //     clg({ rm_error, rm_data });
+  //   }
+  //   if (!manga_loading) {
+  //     clg({ manga_error, manga_data });
+  //   }
+  // }, [rm_loading, manga_loading]);
 
   const addToHistory = async () => {
     try {
       const { user_id } = user;
-      console.log(manga);
+      // console.log(manga);
       await createManga({
         variables: {
           manga_id: manga.manga_id,
@@ -89,7 +89,7 @@ export default function ChapterPage({ navigation, route }) {
       //   read_date,
       // });
     } catch (error) {
-      clg(JSON.stringify(error, null, 2));
+      throw new Error(JSON.stringify(error, null, 2));
       // console.log({
       //   readMangaError: JSON.stringify(rm_error, null, 2),
       //   mangaError: JSON.stringify(manga_error, null, 2),
@@ -111,9 +111,7 @@ export default function ChapterPage({ navigation, route }) {
   }, [chapter]);
 
   const onMessage = (e) => {
-    const { data } = e.nativeEvent;
-    clg(data);
-    if (data === "hide") {
+    if (e.nativeEvent.data === "hide") {
       sethide(!hide);
     }
   };

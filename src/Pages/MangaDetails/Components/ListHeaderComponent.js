@@ -20,8 +20,7 @@ import React, { useEffect, useState } from "react";
 import { useGetManga } from "../../../Hooks/useGetManga";
 import DescriptionView from "./DescriptionView";
 
-const windowWidth = Dimensions.get("window").width;
-const windowHeight = Dimensions.get("window").height;
+const { width, height } = Dimensions.get("window");
 export default function ListHeaderComponent({
   mal_loaded,
   loaded,
@@ -116,7 +115,9 @@ export default function ListHeaderComponent({
                 // backgroundColor: "red",
               }}
             >
-              {mal ? <DescriptionView mal={mal} manga={manga} /> : null}
+              {mal_loaded && mal ? (
+                <DescriptionView mal={mal} manga={manga} />
+              ) : null}
             </View>
           </View>
         ) : (
@@ -137,7 +138,7 @@ export default function ListHeaderComponent({
           borderColor: primary_color,
           borderWidth: 1,
           backgroundColor: secondary_color,
-          width: windowWidth * 0.97,
+          width: width * 0.97,
           borderRadius: 15,
           height: 50,
           justifyContent: "center",

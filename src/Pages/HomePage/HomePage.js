@@ -63,7 +63,7 @@ export default function HomePage({ navigation, route }) {
       setData(json);
       setLoaded(true);
     } catch (error) {
-      clg(JSON.stringify(error, null, 2));
+      throw new Error(JSON.stringify(error, null, 2));
     }
   }
 

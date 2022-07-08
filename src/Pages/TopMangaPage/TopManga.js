@@ -26,8 +26,8 @@ export default function TopManga({ navigation, route }) {
   const [paging, setPaging] = useState();
   const [loaded, setLoaded] = useState(false);
   const { token } = useAuth();
-  const fields = `alternative_titles,mean,my_list_status{status,score}&limit=15`;
-  const [currPage, setCurrPage] = useState(`${top_manga_url}${fields}`);
+  // const fields = `alternative_titles,mean,my_list_status{status,score},authors{first_name,last_name},status,synopsis&limit=15`;
+  const [currPage, setCurrPage] = useState(top_manga_url);
   const listRef = useRef(null);
 
   const getData = async () => {
@@ -71,7 +71,7 @@ export default function TopManga({ navigation, route }) {
             renderItem={renderItem}
             onRefresh={() => {
               setLoaded(false);
-              setCurrPage(top_manga_url + fields);
+              setCurrPage(top_manga_url);
               setData([]);
               getData();
             }}

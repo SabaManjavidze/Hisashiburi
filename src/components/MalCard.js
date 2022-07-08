@@ -33,15 +33,15 @@ export default function MalCard({ node, navigation, route }) {
     // console.log(url);
     const data = await fetch(url);
     const json = await data.json();
-    console.log(url);
     for (var i = 0; i < json.length; i++) {
       const item = json[i];
       const item_title = removePunctuation(item.title);
-      console.log(item.title);
+      // console.log(item.title);
 
       if (item_title === title || item_title === en || item_title === synonym) {
         navigation.navigate("MangaDetails", {
           item: item,
+          malItem: node,
         });
         return;
       }

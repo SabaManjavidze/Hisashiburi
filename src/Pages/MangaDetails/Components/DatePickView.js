@@ -61,7 +61,7 @@ export default function DatePickView({
         onPress={() => {
           if (enabled) {
             const currDate = new Date().toLocaleDateString();
-            console.log(currDate, date);
+            // console.log(currDate, date);
             setDate(currDate === date ? null : new Date().toLocaleDateString());
           }
         }}

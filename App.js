@@ -4,7 +4,11 @@ import { AuthProvider } from "./src/Hooks/useAuth";
 import MainNavigation from "./src/MainNavigation";
 import { Provider } from "react-native-paper";
 import { ApolloClient, ApolloProvider, InMemoryCache } from "@apollo/client";
-import { graphql_url } from "./src/components/variables";
+import {
+  graphql_url,
+  main_color,
+  primary_color,
+} from "./src/components/variables";
 // import { startNetworkLogging } from "react-native-network-logger";
 
 const client = new ApolloClient({

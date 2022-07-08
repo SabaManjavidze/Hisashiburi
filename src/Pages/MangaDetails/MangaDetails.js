@@ -20,14 +20,10 @@ import { ActivityIndicator, TouchableRipple } from "react-native-paper";
 import ChapterItem from "./Components/ChapterItem";
 import { getMangaOnMAL } from "../../Services/MalServices";
 import {
-  domain,
   main_color,
   primary_color,
-  secondary_color,
-  mal_dict,
-  clg,
   boneColor,
-  transp_main_color,
+  secondary_color,
 } from "../../components/variables";
 import { useAuth } from "../../Hooks/useAuth";
 import DetailsAppbar from "./Components/DetailsAppbar";
@@ -40,15 +36,15 @@ import { MangaContext } from "../../Hooks/useGetManga";
 import { GET_READ_MANGA } from "../../graphql/Queries";
 import { useQuery } from "@apollo/client";
 import MalModal from "../../components/MalModal/MalModal";
-const { width, height } = Dimensions.get("window");
+// const { width, height } = Dimensions.get("window");
 
 export default function MangaDetails({ navigation, route }) {
-  const { item } = route.params;
+  const { item, malItem } = route.params;
   const { manga_id, title, href } = item;
   const { token, user } = useAuth();
 
-  const [mal, setMAL] = useState(null);
-  const [mal_loaded, setMALLoaded] = useState(false);
+  const [mal, setMAL] = useState(malItem);
+  const [mal_loaded, setMALLoaded] = useState(!!malItem);
 
   const [chapters, setChapters] = useState([]);
   const [loaded, setLoaded] = useState(false);
@@ -71,6 +67,9 @@ export default function MangaDetails({ navigation, route }) {
   } = useQuery(GET_READ_MANGA, {
     variables: { user_id: user.user_id, manga_id: manga_id },
   });
+  // useEffect(() => {
+  //   console.log(malItem);
+  // }, [malItem]);
 
   const fetchMangaDetails = async () => {
     const json = await fetchData(manga_id);
@@ -83,20 +82,23 @@ export default function MangaDetails({ navigation, route }) {
 
   const fetchMAL = async () => {
     // console.log("called mal");
+    // if(!malItem){
+
     const data = await getMangaOnMAL(details, token);
-    // console.log("FROM DETAILS PAGE", data);
     setMAL(data);
     setMALLoaded(true);
+    // }
+    // setMAL(malItem)
   };
   useEffect(() => {
     fetchMangaDetails();
-    if (token && loaded) {
+    if (token && loaded && !mal_loaded) {
       fetchMAL();
     }
   }, [loaded]);
   useEffect(() => {
     // console.log({ rm_loading, loaded, rm_data, error });
-    if (!rm_loading && loaded && !error && rm_data.getReadManga.length > 0) {
+    if (!rm_loading && loaded && !error && rm_data?.getReadManga.length > 0) {
       const index = chapters.findIndex(
         (chapter, i) =>
           chapter.chap_num == rm_data.getReadManga[0].last_read_chapter
@@ -123,20 +125,17 @@ export default function MangaDetails({ navigation, route }) {
           setModalVisible={setModalVisible}
         />
 
-        {loaded && mal_loaded && !error ? (
+        {loaded && mal_loaded ? (
           error ? (
-            <Text>There was an error</Text>
-          ) : (
+            alert("There was an error : ", error)
+          ) : mal ? (
             <MalModal
               modalVisible={malModalVisible}
               setModalVisible={setMalModalVisible}
               mal={mal}
-              userData={
-                rm_data.getReadManga.length > 0 ? rm_data.getReadManga[0] : null
-              }
               lastChapIdx={lastChapIdx}
             />
-          )
+          ) : null
         ) : null}
         <DetailsAppbar />
 
@@ -205,6 +204,13 @@ export default function MangaDetails({ navigation, route }) {
                   ) : null
                 ) : null}
               </View>
+            }
+            ListEmptyComponent={
+              <ActivityIndicator
+                color={secondary_color}
+                size="large"
+                style={{ marginTop: 15 }}
+              />
             }
             ref={scrollRef}
             keyExtractor={(item) => item.chap_num}

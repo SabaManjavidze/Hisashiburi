@@ -17,6 +17,8 @@ export default function SubmitBtn({
   score,
   progress,
   setModalVisible,
+  startDate,
+  finishDate,
 }) {
   const { token } = useAuth();
   return (
@@ -45,8 +47,8 @@ export default function SubmitBtn({
               ),
               score: parseInt(score),
               num_chapters_read: parseInt(progress),
-              // start_date: startDate,
-              // finish_date: finishDate,
+              // start_date: new Date(startDate).toLocaleDateString(),
+              // finish_date: finishDate || undefined,
             }),
             headers,
           });
@@ -55,6 +57,7 @@ export default function SubmitBtn({
           // console.log(JSON.stringify(res, null, 2));
         } catch (error) {
           console.log(error);
+          throw new Error(error);
         }
       }}
     >

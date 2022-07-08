@@ -6,7 +6,7 @@ export const styles = StyleSheet.create({
     // marginHorizontal: 20,
     justifyContent: "center",
     alignItems: "center",
-    backgroundColor: "rgba(0,0,0,.7)",
+    backgroundColor: "rgba(0,0,0,.8)",
   },
   StatusView: { flex: 1, justifyContent: "center", alignItems: "center" },
   StatusItem: {
@@ -28,6 +28,6 @@ export const styles = StyleSheet.create({
     justifyContent: "space-between",
     width: "100%",
     marginBottom: 20,
-    // marginHorizontal: 10,
+    paddingHorizontal: 10,
   },
 });

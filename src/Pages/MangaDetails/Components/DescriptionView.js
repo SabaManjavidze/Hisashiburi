@@ -5,9 +5,9 @@ import { useGetManga } from "../../../Hooks/useGetManga";
 
 export default function DescriptionView({ mal }) {
   const { manga } = useGetManga();
-  useEffect(() => {
-    console.log({ manga });
-  }, [manga]);
+  // useEffect(() => {
+  //   console.log(manga.title, mal.title);
+  // }, []);
 
   return (
     <ScrollView
@@ -20,6 +20,9 @@ export default function DescriptionView({ mal }) {
         paddingBottom: 60,
       }}
     >
+      <Text style={styles.descText}>
+        Title : {mal.alternative_titles.en || mal.title}
+      </Text>
       <Text style={styles.descText}>Score : {mal.mean}</Text>
       {mal.my_list_status && mal.my_list_status.score ? (
         <Text style={styles.descText}>
@@ -34,19 +37,24 @@ export default function DescriptionView({ mal }) {
           </Text>
         </Text>
       ) : null}
-      {mal.my_list_status && mal.my_list_status.num_chapters_read ? (
+      {mal.my_list_status ? (
         <Text style={{ color: "white" }}>
           Chapters Read : {mal.my_list_status.num_chapters_read}
         </Text>
       ) : null}
-      <Text style={styles.descText}>
-        Status :
-        <Text
-          style={[styles.descText, { color: mal_dict_manga[mal.status].color }]}
-        >
-          {mal_dict_manga[mal.status].text}
+      {mal.status ? (
+        <Text style={styles.descText}>
+          Status :
+          <Text
+            style={[
+              styles.descText,
+              { color: mal_dict_manga[mal.status].color },
+            ]}
+          >
+            {mal_dict_manga[mal.status].text}
+          </Text>
         </Text>
-      </Text>
+      ) : null}
       <Text style={styles.descText}>Popularity : #{mal.popularity}</Text>
       <Text style={styles.descText}>Members : {mal.num_list_users}</Text>
       <Text style={styles.descText}>

@@ -12,10 +12,11 @@ export const AuthProvider = ({ children }) => {
 
   const get_token = async () => {
     const token = await AsyncStorage.getItem("access_token");
+    console.log(token ? "there is token" : "there is no token");
     if (token) {
       setToken(token);
-      alert("zdarova dedaaaa");
       const user = await getProfile(token);
+      console.log(user ? `there is user ${user.name}` : "there is no user");
       const user_data = {
         user_id: user.id,
         user_name: user.name,

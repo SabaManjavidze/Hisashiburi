@@ -16,10 +16,7 @@ export default function Header({ mal, setModalVisible }) {
     <View
       style={{
         marginTop: 15,
-        borderBottomWidth: 1,
-        borderColor: primary_color,
         height: 65,
-        // paddingBottom: 15,
         marginBottom: 15,
         flexDirection: "row",
         justifyContent: "space-between",
@@ -47,17 +44,18 @@ export default function Header({ mal, setModalVisible }) {
                 url: `${MAL_API_URL}/manga/${mal.id}/my_list_status`,
                 headers,
               });
-              clg(JSON.stringify(res, null, 2));
+              // clg(JSON.stringify(res, null, 2));
             } catch (error) {
-              clg(JSON.stringify(error, null, 2));
+              throw new Error(JSON.stringify(error, null, 2));
               return;
             }
             alert("Manga removed from your list");
           }}
           style={{
-            backgroundColor: "rgba(250, 80, 80, 0.45)",
+            borderColor: "rgba(250, 80, 80, 0.45)",
+            borderWidth: 1,
             width: 220,
-            borderRadius: 20,
+            borderRadius: 15,
             height: "80%",
             justifyContent: "center",
           }}
@@ -85,7 +83,8 @@ export default function Header({ mal, setModalVisible }) {
       >
         <TouchableRipple
           style={{
-            backgroundColor: primary_color,
+            borderColor: primary_color,
+            borderWidth: 1,
             width: 60,
             height: "80%",
             borderRadius: 10,
@@ -97,7 +96,7 @@ export default function Header({ mal, setModalVisible }) {
         >
           <Text
             style={{
-              color: "white",
+              color: primary_color,
               fontSize: 15,
               textAlign: "center",
             }}

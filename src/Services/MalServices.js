@@ -7,6 +7,8 @@ import {
   top_manga_url,
 } from "../components/variables";
 
+const fields = `fields=my_list_status,alternative_titles,mean,
+  status,authors{first_name,last_name},genres,synopsis,popularity,rank,num_list_users`;
 export const getProfile = async (access_token) => {
   const headers = {
     Authorization: `Bearer ${access_token}`,
@@ -24,7 +26,7 @@ export const logOut = async () => {
     await AsyncStorage.removeItem("refresh_token");
     await AsyncStorage.removeItem("expires_in");
   } catch (error) {
-    console.log(error);
+    throw new Error(error);
   }
 };
 export const getMangaList = async (access_token) => {
@@ -32,7 +34,7 @@ export const getMangaList = async (access_token) => {
     Authorization: `Bearer ${access_token}`,
   };
   const { data } = await axios.get(
-    `${profile_url}/mangalist?fields=alternative_titles,my_list_status{score,status}&limit=50`,
+    `${profile_url}/mangalist?${fields}&limit=50`,
     { headers }
   );
   return data;
@@ -48,13 +50,16 @@ export const getTopManga = async (access_token, url) => {
       "X-MAL-Client-ID": CLIENT_ID,
     };
   }
-  const { data } = await axios.get(url, { headers });
+  const { data } = await axios.get(
+    `${url}&${fields},num_chapters,num_volumes&limit=10&`,
+    {
+      headers,
+    }
+  );
   return data;
 };
 export const getMangaOnMAL = async (details, access_token) => {
-  const fields = `fields=my_list_status,alternative_titles,mean,
-  status,authors{first_name,last_name},genres,synopsis,popularity,rank,num_list_users`;
-  const url = `${MAL_API_URL}/manga?q=${details.title}&limit=5&${fields}`;
+  const url = `${MAL_API_URL}/manga?q=${details.title}&limit=10&${fields}`;
   const headers = {
     Authorization: `Bearer ${access_token}`,
   };
@@ -71,26 +76,26 @@ export const getMangaOnMAL = async (details, access_token) => {
       alternative_titles: { synonyms, en, ja },
     } = child.node;
     const mal_title = removePunctuation(title);
-    if (mal_title === title_lower) {
+    if (mal_title === title_lower || title_lower === en) {
       // console.log({ mal_title, title_lower, synonyms, en, ja, alt_titles });
       // console.log("isequal");
       return child.node;
     }
-    for (var i = 0; i < alt_titles.length; i++) {
-      const lower_alt_title = removePunctuation(alt_titles[i]);
-      const isEqual =
-        synonyms.map((item) => removePunctuation(item) === lower_alt_title) ||
-        lower_alt_title === en ||
-        lower_alt_title === ja;
-      if (isEqual) return child.node;
-    }
+    const isEqual = alt_titles.find((alt_title) => {
+      const lower_alt_title = removePunctuation(alt_title);
+      return (
+        synonyms.find((item) => removePunctuation(item) === lower_alt_title) ||
+        lower_alt_title === removePunctuation(en)
+      );
+    });
+    if (isEqual) return child.node;
     // console.log({ mal_title, title_lower, isEqual: mal_title === title_lower });
   }
 
   // if (obj && obj.node) {
   //   console.log(obj.node.title, "TITLE");
   // }
-  console.log("NOT FOUND");
+  // console.log("NOT FOUND");
   return null;
   // return obj ? obj.node : null;
 };

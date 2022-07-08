@@ -7,22 +7,15 @@ import {
   FlatList,
   ImageBackground,
   DatePickerAndroid,
+  TextInput,
 } from "react-native";
 import React, { useEffect, useState } from "react";
-import {
-  light_primary_color,
-  MAL_API_URL,
-  mal_dict,
-  paper_primary_color,
-  primary_color,
-  secondary_color,
-  transp_main_color,
-} from "../variables";
-import { TouchableRipple } from "react-native-paper";
+import { mal_dict, primary_color } from "../variables";
+// import { TextInput, TouchableRipple } from "react-native-paper";
 import { useGetManga } from "../../Hooks/useGetManga";
 import StatusView from "./components/StatusView";
 import Header from "./components/Header";
-import ProgressView from "./components/ProgressView";
+// import ProgressView from "./components/ProgressView";
 import ScoreView from "./components/ScoreView";
 import DateView from "./components/DateView";
 import SubmitBtn from "./components/SubmitBtn";
@@ -34,7 +27,6 @@ export default function MalModal({
   setModalVisible,
   modalVisible,
   mal,
-  userData,
   lastChapIdx,
 }) {
   const [status, setStatus] = useState(
@@ -43,20 +35,38 @@ export default function MalModal({
       : "Plan to read"
   );
   const { chapters } = useGetManga();
-  let prog = chapters[chapters.length - 1].chap_num;
+  let prog = chapters[0].chap_num;
   let user_score = "-";
   let start_date = "";
   let finish_date = "";
   if (mal && mal.my_list_status) {
     if (lastChapIdx !== null) {
       prog = chapters[lastChapIdx].chap_num;
+    } else {
+      const last_read = chapters.find(
+        (item) =>
+          item.chap_title.replace("Chapter", "") ==
+          mal.my_list_status.num_chapters_read
+      );
+      if (last_read) prog = last_read;
+      // console.log({
+      //   last_read,
+      //   last_read_chap: mal.my_list_status.num_chapters_read,
+      //   chap_length: chapters.length,
+      // });
     }
     user_score = "" + mal.my_list_status.score;
     start_date = new Date(mal.my_list_status.start_date).toLocaleDateString();
     finish_date = new Date(mal.my_list_status.finish_date).toLocaleDateString();
   }
 
-  const [progress, setProgress] = useState(prog);
+  const [progress, setProgress] = useState(
+    mal?.my_list_status?.num_chapters_read.toString() || 0
+  );
+  useEffect(() => {
+    console.log(progress);
+  }, [progress]);
+
   const [score, setScore] = useState(user_score);
   const [startDate, setStartDate] = useState(start_date);
   const [finishDate, setFinishDate] = useState(finish_date);
@@ -82,11 +92,39 @@ export default function MalModal({
         >
           <Header mal={mal} setModalVisible={setModalVisible} />
           <StatusView status={status} setStatus={setStatus} />
-          <ProgressView
+
+          <View
+            style={{
+              display: "flex",
+              flexDirection: "row",
+              width: "100%",
+              justifyContent: "center",
+              // marginVertical: 5,
+            }}
+          >
+            {/* <TextInput label={"Chapters"} style={{ backgroundColor: "gray" }} /> */}
+            <TextInput
+              placeholder="Chapters"
+              placeholderTextColor={"#ffffff94"}
+              textAlign={"right"}
+              style={{ color: "white", fontSize: 20 }}
+              keyboardType="number-pad"
+              value={progress}
+              onChangeText={(text) => {
+                setProgress(text);
+              }}
+              // onChange=
+            />
+            <Text style={{ color: "white", fontSize: 20 }}>
+              /{mal.num_chapters || "?"}
+            </Text>
+          </View>
+          {/* <ProgressView
             lastChapIdx={lastChapIdx}
             setProgress={setProgress}
             progress={progress}
-          />
+            numChapters={mal.num_chapters}
+          /> */}
           <ScoreView score={score} setScore={setScore} />
           <DateView
             setShowDatePicker={setShowDatePicker}
@@ -117,6 +155,8 @@ export default function MalModal({
             progress={progress}
             score={score}
             status={status}
+            startDate={startDate}
+            finishDate={finishDate}
             setModalVisible={setModalVisible}
           />
         </View>
