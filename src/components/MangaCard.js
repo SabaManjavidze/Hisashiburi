@@ -24,6 +24,7 @@ const windowHeight = Dimensions.get("window").height;
 export default function MangaCard({ route, navigation, item }) {
   const goToChapter = async (i) => {
     const { chapters } = await fetchData(item.manga_id);
+    // console.log("FROM MANGA CARD ", item);
     navigation.navigate("ChapterPage", {
       chapters: chapters,
       manga: item,
@@ -38,8 +39,8 @@ export default function MangaCard({ route, navigation, item }) {
   const [image, setImage] = useState(mangaImage);
   // const atHome = true;
   // useEffect(() => {
-  //               setImage(mangaImage)
-  // }, [])
+  //   if (item.manga_id) console.log(item.manga_id);
+  // }, []);
 
   return (
     <View

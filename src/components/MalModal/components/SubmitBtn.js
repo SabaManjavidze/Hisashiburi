@@ -47,8 +47,6 @@ export default function SubmitBtn({
               ),
               score: parseInt(score),
               num_chapters_read: parseInt(progress),
-              // start_date: new Date(startDate).toLocaleDateString(),
-              // finish_date: finishDate || undefined,
             }),
             headers,
           });

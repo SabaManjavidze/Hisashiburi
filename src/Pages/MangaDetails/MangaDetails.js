@@ -113,7 +113,7 @@ export default function MangaDetails({ navigation, route }) {
 
   return (
     <MangaContext.Provider
-      value={{ navigation, route, chapters, manga: details }}
+      value={{ navigation, route, chapters, manga: { ...details, manga_id } }}
     >
       <View style={styles.container}>
         <StatusBar

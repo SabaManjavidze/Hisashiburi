@@ -34,13 +34,14 @@ export default function ChapterItem({
       <TouchableOpacity
         style={{ width: "100%" }}
         activeOpacity={0.7}
-        onPress={() =>
+        onPress={() => {
+          // console.log("FROM CHAPTER ITEM ", manga);
           navigation.navigate("ChapterPage", {
             index: index,
             manga: manga,
             chapters: chapters,
-          })
-        }
+          });
+        }}
       >
         <View style={{ maxWidth: "75%", marginBottom: 15 }}>
           <Text style={{ fontSize: 18, color: "white", textAlign: "center" }}>

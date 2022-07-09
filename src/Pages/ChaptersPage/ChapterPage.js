@@ -27,7 +27,7 @@ export default function ChapterPage({ navigation, route }) {
   // const [page, setPage] = useState(1);
   const [hide, sethide] = useState(false);
 
-  // const post_web_message = "window.ReactNativeWebView.postMessage";
+  const post_web_message = "window.ReactNativeWebView.postMessage";
 
   const [loaded, setLoaded] = useState(false);
   const webViewRef = useRef(null);
@@ -44,7 +44,7 @@ export default function ChapterPage({ navigation, route }) {
     { loading: manga_loading, error: manga_error, data: manga_data },
   ] = useMutation(CREATE_MANGA);
 
-  const fetchData = async () => {
+  const fetchChapter = async () => {
     const url = `${main_url}/manga/${manga.manga_id}/${chapter.chap_num}`;
     const data = await fetch(url);
     const json = await data.json();
@@ -63,7 +63,6 @@ export default function ChapterPage({ navigation, route }) {
   const addToHistory = async () => {
     try {
       const { user_id } = user;
-      // console.log(manga);
       await createManga({
         variables: {
           manga_id: manga.manga_id,
@@ -81,30 +80,20 @@ export default function ChapterPage({ navigation, route }) {
           read_date,
         },
       });
-      // console.log({
-      //   user_id,
-      //   manga_title,
-      //   manga_id,
-      //   chap_num: chapter.chap_num,
-      //   read_date,
-      // });
     } catch (error) {
-      throw new Error(JSON.stringify(error, null, 2));
       // console.log({
       //   readMangaError: JSON.stringify(rm_error, null, 2),
       //   mangaError: JSON.stringify(manga_error, null, 2),
       // });
+      throw new Error(JSON.stringify(error, null, 2));
     }
   };
   useEffect(() => {
     if (chapter != null) {
-      fetchData();
+      fetchChapter();
       setLoaded(true);
       navigation.setOptions({ title: chapter.chap_title });
-      // if (loaded && scroll_ref != null && scroll_ref.current != null) {
-      //   scroll_ref.current.scrollToOffset({ animated: true, offset: 0 });
-      // }
-      if (token) {
+      if (token && manga.manga_id) {
         addToHistory();
       }
     }
@@ -130,12 +119,6 @@ export default function ChapterPage({ navigation, route }) {
         idx={idx}
         hide={hide}
       />
-      {/* <Image
-        source={{
-          uri: "https://v10.mkklcdnv6tempv4.com/img/tab_10/00/12/00/ma952557/chapter_366/1-o.jpg",
-        }}
-        style={{ height: 700, width: 400 }}
-      /> */}
       {loaded && (
         <View style={{ flex: 1 }}>
           <WebView
@@ -151,20 +134,15 @@ export default function ChapterPage({ navigation, route }) {
             nestedScrollEnabled={true}
             scalesPageToFit={true}
             showsVerticalScrollIndicator={false}
-            // onScroll={(e) => {
-            //   updatePages();
-            // }}
-            // <img src="https://img.mangahasu.se/1img/rNmN-HGdYNkPh/rNymyBZ-fY9pWMGO/001.jpg" onerror={alert("hello")}/>
             onMessage={onMessage}
             source={{
-              //   uri:
-              //     chapter &&
-              //     `${curr_host}/chapter/${manga_id}/${chapter.chap_num}`,
-              // }}
               html: `
                   ${html}
                   ${data
-                    .map((item) => `<img src="${item.src}" id="${item.src}"/>`)
+                    .map(
+                      (item) =>
+                        `<img src="${item.src}" id="${item.src}" onClick={${post_web_message}("hide")} />`
+                    )
                     .join("")}
                   </body>
                   </html>
