@@ -14,7 +14,7 @@ import SubButton from "./SubButton";
 import { useGetManga } from "../../../Hooks/useGetManga";
 
 export default function FAB({ loading, data, setModalVisible, modalVisible }) {
-  const { navigation, chapters, manga_id, title } = useGetManga();
+  const { navigation, chapters, manga } = useGetManga();
   const { user, token } = useAuth();
   const [isOpen, setIsOpen] = useState(false);
   const toggleAnimation = useRef(new Animated.Value(0)).current;
@@ -58,11 +58,9 @@ export default function FAB({ loading, data, setModalVisible, modalVisible }) {
                   return chapters.length - 1 - i;
                 }
               });
-              // console.log(index);
-              // console.log(data.getReadManga[0].last_read_chapter);
               navigation.navigate("ChapterPage", {
                 chapters: chapters,
-                manga: item,
+                manga,
                 index: index,
               });
             }

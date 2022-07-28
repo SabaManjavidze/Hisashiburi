@@ -11,11 +11,9 @@ import {
 } from "react-native";
 import React, { useEffect, useState } from "react";
 import { mal_dict, primary_color } from "../variables";
-// import { TextInput, TouchableRipple } from "react-native-paper";
 import { useGetManga } from "../../Hooks/useGetManga";
 import StatusView from "./components/StatusView";
 import Header from "./components/Header";
-// import ProgressView from "./components/ProgressView";
 import ScoreView from "./components/ScoreView";
 import DateView from "./components/DateView";
 import SubmitBtn from "./components/SubmitBtn";
@@ -49,11 +47,6 @@ export default function MalModal({
           mal.my_list_status.num_chapters_read
       );
       if (last_read) prog = last_read;
-      // console.log({
-      //   last_read,
-      //   last_read_chap: mal.my_list_status.num_chapters_read,
-      //   chap_length: chapters.length,
-      // });
     }
     user_score = "" + mal.my_list_status.score;
     start_date = new Date(mal.my_list_status.start_date).toLocaleDateString();
@@ -63,29 +56,23 @@ export default function MalModal({
   const [progress, setProgress] = useState(
     mal?.my_list_status?.num_chapters_read.toString() || 0
   );
-  useEffect(() => {
-    console.log(progress);
-  }, [progress]);
 
   const [score, setScore] = useState(user_score);
   const [startDate, setStartDate] = useState(start_date);
   const [finishDate, setFinishDate] = useState(finish_date);
   const [showDatePicker, setShowDatePicker] = useState(false);
-  // const { token } = useAuth();
 
   return (
     <Modal
       visible={modalVisible}
       transparent
       animationType="fade"
-      //   statusBarTranslucent
       style={{ width: width, height: height }}
       onRequestClose={() => setModalVisible(false)}
     >
       <View style={styles.modal}>
         <View
           style={{
-            // marginTop: 105,
             width: "90%",
             height: "100%",
           }}
@@ -102,7 +89,6 @@ export default function MalModal({
               // marginVertical: 5,
             }}
           >
-            {/* <TextInput label={"Chapters"} style={{ backgroundColor: "gray" }} /> */}
             <TextInput
               placeholder="Chapters"
               placeholderTextColor={"#ffffff94"}
@@ -113,18 +99,11 @@ export default function MalModal({
               onChangeText={(text) => {
                 setProgress(text);
               }}
-              // onChange=
             />
             <Text style={{ color: "white", fontSize: 20 }}>
               /{mal.num_chapters || "?"}
             </Text>
           </View>
-          {/* <ProgressView
-            lastChapIdx={lastChapIdx}
-            setProgress={setProgress}
-            progress={progress}
-            numChapters={mal.num_chapters}
-          /> */}
           <ScoreView score={score} setScore={setScore} />
           <DateView
             setShowDatePicker={setShowDatePicker}
@@ -140,14 +119,11 @@ export default function MalModal({
           style={{
             borderTopWidth: 1,
             borderColor: primary_color,
-            // justifyContent: "center",
             alignItems: "flex-end",
             width: "100%",
             height: 60,
             bottom: 0,
             position: "absolute",
-            // marginBottom: 150,
-            // backgroundColor: "red",
           }}
         >
           <SubmitBtn

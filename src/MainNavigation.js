@@ -179,14 +179,7 @@ export default function MainNavigation() {
               })}
               options={{
                 headerShown: false,
-                // headerTitle: "Profile",
                 title: "Profile",
-                // headerStyle: {
-                //   backgroundColor: main_color,
-                //   borderBottomColor: "#262840",
-                //   borderBottomWidth: 1.5,
-                // },
-                // headerTitleStyle: { color: "white" },
                 tabBarIcon: ({ focused, color }) =>
                   renderItem(focused, "account", color),
               }}

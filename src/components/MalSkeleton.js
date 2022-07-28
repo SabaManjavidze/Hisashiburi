@@ -22,7 +22,6 @@ export default function MalSkeleton() {
         <View style={{ height: "90%" }}>
           <SkeletonContent
             animationDirection="diagonalDownRight"
-            // boneColor={"hsla(257, 57%, 50%, 0.69)"}
             boneColor={"transparent"}
             highlightColor={primary_color}
             isLoading={true}
@@ -41,10 +40,8 @@ const styles = StyleSheet.create({
     height: height * 0.4,
     borderWidth: 1,
     borderColor: primary_color,
-    // backgroundColor: primary_color,
   },
   image: {
-    // width: "100%",
     marginTop: 40,
     borderBottomLeftRadius: 10,
     borderBottomRightRadius: 10,
@@ -52,7 +49,6 @@ const styles = StyleSheet.create({
   },
 
   title: {
-    // backgroundColor: primary_color,
     width: "75%",
     height: 20,
     borderRadius: 5,

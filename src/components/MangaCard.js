@@ -11,7 +11,7 @@ import { IconButton, TouchableRipple } from "react-native-paper";
 import { logOut } from "../Services/MalServices";
 import {
   domain,
-  img_url,
+  img_endpoint,
   light_primary_color,
   NOT_FOUND_IMAGE,
   primary_color,
@@ -24,30 +24,21 @@ const windowHeight = Dimensions.get("window").height;
 export default function MangaCard({ route, navigation, item }) {
   const goToChapter = async (i) => {
     const { chapters } = await fetchData(item.manga_id);
-    // console.log("FROM MANGA CARD ", item);
     navigation.navigate("ChapterPage", {
       chapters: chapters,
       manga: item,
       index: i,
     });
   };
-  // const imageRef = useRef(null);
-  const atHome = route.name == "Home";
+
   const mangaImage = item.img_url
     ? item.img_url
-    : `${domain}${img_url}${item.manga_id}.jpg`;
+    : `${domain}${img_endpoint}${item.manga_id}.jpg`;
   const [image, setImage] = useState(mangaImage);
-  // const atHome = true;
-  // useEffect(() => {
-  //   if (item.manga_id) console.log(item.manga_id);
-  // }, []);
 
   return (
     <View
-      style={[
-        { height: atHome ? windowHeight * 0.25 : "100%" },
-        styles.container,
-      ]}
+      style={[{ height: windowHeight * 0.25 }, styles.container]}
       key={item.manga_id}
     >
       <View style={{ flex: 1, flexDirection: "row", alignItems: "center" }}>
@@ -61,13 +52,9 @@ export default function MangaCard({ route, navigation, item }) {
           <Image
             source={{
               uri: image,
-              // "https://previews.123rf.com/images/kaymosk/kaymosk1804/kaymosk180400005/99776312-error-404-page-not-found-error-with-glitch-effect-on-screen-vector-illustration-for-your-design.jpg",
             }}
-            // resizeMethod={"auto"}
             onError={() => {
-              // console.log(imageRef);
               setImage(NOT_FOUND_IMAGE);
-              // console.log(item.title);
             }}
             style={styles.image}
           />
@@ -154,7 +141,6 @@ export default function MangaCard({ route, navigation, item }) {
                             display: "flex",
                             justifyContent: "center",
                             alignItems: "center",
-                            // backgroundColor: "black",
                             width: "100%",
                             marginLeft: 50,
                           }}

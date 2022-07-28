@@ -73,23 +73,7 @@ export default function HomePage({ navigation, route }) {
     } else {
       fetchHome();
     }
-    // console.log(token || "token is null");
   }, []);
-  // const show_alert = () => {
-  //   Alert.alert("Hold On!", "Are you sure you want to exit", [
-  //     {
-  //       text: "Cancel",
-  //       onPress: () => null,
-  //       style: "cancel",
-  //     },
-  //     {
-  //       text: "Yes",
-  //       onPress: () => {
-  //         BackHandler.exitApp();
-  //       },
-  //     },
-  //   ]);
-  // };
 
   const renderItem = ({ item }) => {
     return <MangaCard route={route} navigation={navigation} item={item} />;
@@ -150,9 +134,6 @@ export default function HomePage({ navigation, route }) {
             placeholder="Search Manga"
             placeholderTextColor={"white"}
             onChangeText={onChangeText}
-            // onSubmitEditing={(e) => {
-            //   onSubmit(e);
-            // }}
             value={input}
             ref={inputRef}
             selectionColor={primary_color}
@@ -203,15 +184,7 @@ export default function HomePage({ navigation, route }) {
               alignItems: "center",
             }}
           >
-            {/* <FlatList
-              data={initArray}
-              renderItem={({ item, index }) => {
-                return <MangaSkeleton index={index} loaded={loaded} />;
-              }}
-              keyExtractor={(item) => item.toString()}
-              style={{ height: "100%", width: "100%" }}
-            /> */}
-            <ActivityIndicator size="large" color={primary_color} />
+            <ActivityIndicator size="small" color={primary_color} />
           </View>
         )}
       </>

@@ -68,7 +68,6 @@ export default function Auth({ navigation, route }) {
       } catch (error) {
         const graphql_error = error.networkError.result.errors[0].message;
         console.log(graphql_error ? `graphql error ${graphql_error}` : error);
-        // console.log(JSON.stringify(error, null, 2));
       }
       setToken(access_token);
       setUser(user_data);
@@ -93,16 +92,12 @@ export default function Auth({ navigation, route }) {
       }}
     >
       {loading ? (
-        <ActivityIndicator size="large" color={primary_color} />
+        <ActivityIndicator size="small" color={primary_color} />
       ) : (
         <TouchableOpacity
           activeOpacity={0.6}
           onPress={() => {
-            WebBrowser.openAuthSessionAsync(
-              auth_url
-              // "http://192.168.0.109:3000/auth"
-              // "exp://192.168.0.109:19000/--/auth"
-            );
+            WebBrowser.openAuthSessionAsync(auth_url);
           }}
           style={{
             alignItems: "center",
@@ -118,7 +113,6 @@ export default function Auth({ navigation, route }) {
               color: "white",
               fontSize: 20,
               letterSpacing: 0.2,
-              // fontFamily: "Roboto",
               fontFamily: loaded ? "Mal" : "Roboto",
             }}
           >

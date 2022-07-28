@@ -19,11 +19,15 @@ export const CREATE_READ_MANGA = gql`
     $manga_id: String!
     $last_read_chapter: String!
     $read_date: String!
+    $title: String!
+    $img_url: String!
   ) {
     createReadManga(
       options: { user_id: $user_id, manga_id: $manga_id }
       last_read_chapter: $last_read_chapter
       read_date: $read_date
+      title: $title
+      img_url: $img_url
     )
   }
 `;

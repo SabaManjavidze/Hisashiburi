@@ -13,13 +13,8 @@ export default function MyMangaList({
   navigation,
   route,
 }) {
-  // useEffect(() => {
-  //   console.log(mangaList.length);
-  // }, []);
-
   const renderItem = ({ item, index }) => {
     const { node } = item;
-    // console.log(JSON.stringify(node,null,2))
     return (
       <MalCard
         node={node}

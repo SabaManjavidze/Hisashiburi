@@ -35,7 +35,6 @@ export default function ReaderAppbar({
       <View
         style={{
           flex: 1,
-          // backgroundColor: main_color,
           borderBottomColor: "black",
           borderBottomWidth: 0.7,
         }}
@@ -68,9 +67,6 @@ export default function ReaderAppbar({
           <Appbar.Action
             icon={"bookmark"}
             size={24}
-            onPress={() => {
-              // console.log("bookmark");
-            }}
             style={{ left: 15 }}
             color={primary_color}
           />

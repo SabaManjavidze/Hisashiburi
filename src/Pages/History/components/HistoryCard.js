@@ -12,13 +12,16 @@ import {
   IconButton,
   TouchableRipple,
 } from "react-native-paper";
-import { domain, img_url, primary_color } from "../../../components/variables";
+import {
+  domain,
+  img_endpoint,
+  primary_color,
+} from "../../../components/variables";
 import { fetchData } from "../../../utils/fetchData";
 
 const { width, height } = Dimensions.get("window");
 
 export default function HistoryCard({ route, navigation, item }) {
-  //   console.log(item);
   const [chapIdx, setChapIdx] = useState();
   const [chapters, setChapters] = useState([]);
   const [loaded, setLoaded] = useState(false);
@@ -61,8 +64,9 @@ export default function HistoryCard({ route, navigation, item }) {
         >
           <Image
             source={{
-              uri: img_url ? img_url : `${domain}${img_url}${manga_id}.jpg`,
-              // uri: `${domain}${img_url}${manga_id}.jpg`,
+              uri: img_url.includes(img_endpoint)
+                ? `${domain}${img_url}`
+                : img_url,
             }}
             style={styles.image}
           />
@@ -155,19 +159,7 @@ export default function HistoryCard({ route, navigation, item }) {
                 </View>
               </View>
             ) : (
-              // <View
-              //   style={{
-              //     // backgroundColor: "black",
-              //     display: "flex",
-              //     justifyContent: "center",
-              //     alignItems: "center",
-              //     flex: 1,
-              //     width: "100%",
-              //     marginBottom: 10,
-              //   }}
-              // >
               <ActivityIndicator size="small" />
-              // </View>
             )}
           </View>
         </View>
@@ -178,7 +170,6 @@ export default function HistoryCard({ route, navigation, item }) {
 
 const styles = StyleSheet.create({
   container: {
-    // marginVertical: 5,
     width: width - 20,
     backgroundColor: "#2F2C4B",
     borderRadius: 10,

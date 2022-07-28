@@ -67,9 +67,6 @@ export default function HistoryCardAnim({
           size={itemHeight.value == 0 ? 0 : 40}
           style={{
             opacity: opacity.value,
-            // height:"100%",
-            // alignItems: "center",
-            // justifyContent: "center",
           }}
         />
       </Animated.View>
@@ -91,7 +88,6 @@ const styles = StyleSheet.create({
     width: "100%",
     marginVertical: 10,
     alignItems: "center",
-    // backgroundColor: "black",
   },
   delete_container: {
     position: "absolute",

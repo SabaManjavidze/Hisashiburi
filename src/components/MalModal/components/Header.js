@@ -29,7 +29,6 @@ export default function Header({ mal, setModalVisible }) {
           flex: 1.5,
           justifyContent: "center",
           alignItems: "center",
-          // backgroundColor: "green",
         }}
       >
         <TouchableRipple
@@ -44,7 +43,6 @@ export default function Header({ mal, setModalVisible }) {
                 url: `${MAL_API_URL}/manga/${mal.id}/my_list_status`,
                 headers,
               });
-              // clg(JSON.stringify(res, null, 2));
             } catch (error) {
               throw new Error(JSON.stringify(error, null, 2));
               return;
@@ -62,7 +60,6 @@ export default function Header({ mal, setModalVisible }) {
         >
           <Text
             style={{
-              // backgroundColor: "yellow",
               color: "red",
               fontSize: 15,
               textAlign: "center",
@@ -78,7 +75,6 @@ export default function Header({ mal, setModalVisible }) {
           height: "100%",
           justifyContent: "center",
           alignItems: "flex-end",
-          // backgroundColor: "yellow",
         }}
       >
         <TouchableRipple

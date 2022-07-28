@@ -66,7 +66,6 @@ export const getMangaOnMAL = async (details, access_token) => {
   const {
     data: { data },
   } = await axios.get(url, { headers });
-  // console.log(details);
   const title_lower = removePunctuation(details.title);
   const alt_titles = details.alternative_titles;
   for (var j = 0; j < data.length - 1; j++) {
@@ -77,11 +76,9 @@ export const getMangaOnMAL = async (details, access_token) => {
     } = child.node;
     const mal_title = removePunctuation(title);
     if (mal_title === title_lower || title_lower === en) {
-      // console.log({ mal_title, title_lower, synonyms, en, ja, alt_titles });
-      // console.log("isequal");
       return child.node;
     }
-    const isEqual = alt_titles.find((alt_title) => {
+    const isEqual = alt_titles.forEach((alt_title) => {
       const lower_alt_title = removePunctuation(alt_title);
       return (
         synonyms.find((item) => removePunctuation(item) === lower_alt_title) ||
@@ -89,15 +86,9 @@ export const getMangaOnMAL = async (details, access_token) => {
       );
     });
     if (isEqual) return child.node;
-    // console.log({ mal_title, title_lower, isEqual: mal_title === title_lower });
   }
 
-  // if (obj && obj.node) {
-  //   console.log(obj.node.title, "TITLE");
-  // }
-  // console.log("NOT FOUND");
   return null;
-  // return obj ? obj.node : null;
 };
 const removePunctuation = (str) => {
   return str.replace(":", "").replace("-", "").replace(" ", "").toLowerCase();

@@ -4,18 +4,16 @@ import WebView from "react-native-webview";
 import ChapterNav from "./Components/ChapterNav";
 import ReaderAppbar from "./Components/ReaderAppbar";
 import {
-  clg,
-  curr_host,
   html,
   main_color,
   main_url,
-  transp_main_color,
+  post_web_message,
+  script,
 } from "../../components/variables";
 import { useAuth } from "../../Hooks/useAuth";
-import { gql, useMutation } from "@apollo/client";
-import { CREATE_READ_MANGA, CREATE_MANGA } from "../../graphql/Mutations";
-import throttle from "lodash.throttle";
-import { FlatList } from "react-native";
+import { useMutation } from "@apollo/client";
+import { CREATE_READ_MANGA } from "../../graphql/Mutations";
+import axios from "axios";
 
 export default function ChapterPage({ navigation, route }) {
   let { manga, chapters, index } = route.params;
@@ -24,67 +22,39 @@ export default function ChapterPage({ navigation, route }) {
 
   const [chapter, setChapter] = useState(chapters[index]);
   const [idx, setIndex] = useState(index);
-  // const [page, setPage] = useState(1);
-  const [hide, sethide] = useState(false);
-
-  const post_web_message = "window.ReactNativeWebView.postMessage";
+  const [page, setPage] = useState(1);
+  const [hide, setHide] = useState(false);
 
   const [loaded, setLoaded] = useState(false);
   const webViewRef = useRef(null);
 
   const { token, user } = useAuth();
 
-  const [
-    createReadManga,
-    { loading: rm_loading, error: rm_error, data: rm_data },
-  ] = useMutation(CREATE_READ_MANGA);
-
-  const [
-    createManga,
-    { loading: manga_loading, error: manga_error, data: manga_data },
-  ] = useMutation(CREATE_MANGA);
+  const [createReadManga] = useMutation(CREATE_READ_MANGA);
 
   const fetchChapter = async () => {
-    const url = `${main_url}/manga/${manga.manga_id}/${chapter.chap_num}`;
-    const data = await fetch(url);
-    const json = await data.json();
-    setData(json);
+    const url = `${main_url}/manga/${
+      manga?.manga_details?.manga_id ?? manga.manga_id
+    }/${chapter.chap_num}`;
+    const response = await axios.get(url);
+    setData(response.data);
     setLoaded(true);
   };
-  // useEffect(() => {
-  //   if (!rm_loading) {
-  //     clg({ rm_error, rm_data });
-  //   }
-  //   if (!manga_loading) {
-  //     clg({ manga_error, manga_data });
-  //   }
-  // }, [rm_loading, manga_loading]);
 
   const addToHistory = async () => {
     try {
-      const { user_id } = user;
-      await createManga({
-        variables: {
-          manga_id: manga.manga_id,
-          title: manga.title,
-          img_url: manga.img_url,
-        },
-      });
       const read_date = `${new Date().toLocaleDateString()}, ${new Date().toLocaleTimeString()}`;
-      // console.log(read_date);
       await createReadManga({
         variables: {
-          user_id: user_id,
-          manga_id: manga.manga_id,
+          user_id: user.user_id,
+          manga_id: manga?.manga_id ?? manga.manga_details.manga_id,
           last_read_chapter: chapter.chap_num,
           read_date,
+          title: manga?.title ?? manga.manga_details.title,
+          img_url: manga?.img_url ?? manga.manga_details.img_url,
         },
       });
     } catch (error) {
-      // console.log({
-      //   readMangaError: JSON.stringify(rm_error, null, 2),
-      //   mangaError: JSON.stringify(manga_error, null, 2),
-      // });
       throw new Error(JSON.stringify(error, null, 2));
     }
   };
@@ -93,15 +63,20 @@ export default function ChapterPage({ navigation, route }) {
       fetchChapter();
       setLoaded(true);
       navigation.setOptions({ title: chapter.chap_title });
-      if (token && manga.manga_id) {
+      if (token) {
         addToHistory();
       }
     }
   }, [chapter]);
 
   const onMessage = (e) => {
-    if (e.nativeEvent.data === "hide") {
-      sethide(!hide);
+    const value = e.nativeEvent.data;
+    if (value === "hide") {
+      setHide(!hide);
+    }
+    if (value.includes("scroll")) {
+      const pageNum = value.split("scroll")[1];
+      setPage(pageNum);
     }
   };
   return (
@@ -130,10 +105,9 @@ export default function ChapterPage({ navigation, route }) {
             }}
             originWhitelist={["*"]}
             ref={webViewRef}
-            onTouchMove={() => sethide(true)}
+            onTouchMove={() => setHide(true)}
             nestedScrollEnabled={true}
             scalesPageToFit={true}
-            showsVerticalScrollIndicator={false}
             onMessage={onMessage}
             source={{
               html: `
@@ -144,6 +118,31 @@ export default function ChapterPage({ navigation, route }) {
                         `<img src="${item.src}" id="${item.src}" onClick={${post_web_message}("hide")} />`
                     )
                     .join("")}
+                    <div style="
+                        display:flex;
+                        justify-content:center;
+                        align-items:center;
+                        flex-direction:column;
+                        width:100%;
+                        background-color:black;
+                        height:20vh;
+                        color:white">
+                      <div>
+                       <h1>End of the ${chapter.chap_title}</h1>
+                      </div>
+                      ${
+                        chapters.length - idx < chapters.length
+                          ? `
+                          <div>
+                            <h1 style="color:white">
+                              Start of the ${chapters[idx - 1].chap_title}
+                            </h1>
+                          </div>
+                          `
+                          : ""
+                      }
+                    </div>
+                    ${script}
                   </body>
                   </html>
                   `,
@@ -151,27 +150,27 @@ export default function ChapterPage({ navigation, route }) {
           />
         </View>
       )}
-      {/* <View
+      <View
         style={{
           width: "100%",
           position: "absolute",
           justifyContent: "center",
           alignItems: "center",
-          bottom: 50,
+          bottom: 0,
         }}
       >
         <View
           style={{
-            backgroundColor: "hsla(0, 0%, 0%, 0.51)",
-            borderRadius: 10,
+            backgroundColor: "hsla(0, 0%, 0%, 0.21)",
+            borderRadius: 5,
             padding: 10,
           }}
         >
           <Text
-            style={{ fontSize: 20, color: "white" }}
+            style={{ fontSize: 15, color: "white", textAlign: "center" }}
           >{`${page}/${data.length}`}</Text>
         </View>
-      </View> */}
+      </View>
       <ChapterNav
         setChapter={setChapter}
         setIndex={setIndex}
@@ -180,7 +179,6 @@ export default function ChapterPage({ navigation, route }) {
         chapters={chapters}
         hide={hide}
       />
-      {/* <ActivityIndicator animating={true} color={primary_color} /> */}
     </View>
   );
 }

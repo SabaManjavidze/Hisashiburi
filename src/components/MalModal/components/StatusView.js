@@ -32,9 +32,7 @@ export default function StatusView({ setStatus, status }) {
         <Text style={styles.ViewLabelText}>{status}</Text>
       </View>
       <FlatList
-        //   data={Object.keys(mal_dict)}
         data={["Reading", "Completed", "Plan to read", "Dropped"]}
-        //   horizontal
         renderItem={renderItem}
         keyExtractor={(item) => item}
         numColumns={3}

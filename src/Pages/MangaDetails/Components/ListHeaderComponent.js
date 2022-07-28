@@ -9,9 +9,10 @@ import {
 import { ActivityIndicator, TouchableRipple } from "react-native-paper";
 import {
   domain,
+  img_endpoint,
   main_color,
   mal_dict,
-  // mal_dict_manga,
+  NOT_FOUND_IMAGE,
   primary_color,
   secondary_color,
 } from "../../../components/variables";
@@ -31,9 +32,6 @@ export default function ListHeaderComponent({
 }) {
   const { token } = useAuth();
   const { navigation, manga } = useGetManga();
-  // useEffect(() => {
-  //   console.log(poster);
-  // }, [poster]);
 
   const getStatus = () => {
     if (mal !== null && mal) {
@@ -49,7 +47,6 @@ export default function ListHeaderComponent({
   const onPress = async () => {
     if (token) {
       mal && setModalVisible(!modalVisible);
-      // console.log(!modalVisible);
     } else {
       navigation.navigate("LogIn");
     }
@@ -75,7 +72,6 @@ export default function ListHeaderComponent({
               width: "100%",
               flex: 1,
               alignItems: "center",
-              // marginHorizontal: 20,
             }}
           >
             <View
@@ -83,7 +79,6 @@ export default function ListHeaderComponent({
                 mal
                   ? {
                       width: "50%",
-                      // backgroundColor: "yellow",
                       alignItems: "flex-end",
                     }
                   : { width: "100%", alignItems: "center" }
@@ -91,7 +86,9 @@ export default function ListHeaderComponent({
             >
               <Image
                 source={{
-                  uri: poster,
+                  uri: poster.includes(img_endpoint)
+                    ? `${domain}${poster}`
+                    : poster,
                 }}
                 style={
                   mal
@@ -112,7 +109,6 @@ export default function ListHeaderComponent({
                 width: "50%",
                 alignItems: "center",
                 justifyContent: "center",
-                // backgroundColor: "red",
               }}
             >
               {mal_loaded && mal ? (

@@ -98,7 +98,6 @@ export default function History({ navigation, route }) {
         justifyContent: "center",
         backgroundColor: main_color,
         height: "100%",
-        // flex: 1,
       }}
     >
       <StatusBar
@@ -117,7 +116,7 @@ export default function History({ navigation, route }) {
             alignItems: "center",
           }}
         >
-          <ActivityIndicator size="large" color={primary_color} />
+          <ActivityIndicator size="small" color={primary_color} />
         </View>
       ) : manga && manga.length <= 0 ? (
         <View style={{ alignItems: "center" }}>

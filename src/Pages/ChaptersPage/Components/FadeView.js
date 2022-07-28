@@ -1,5 +1,3 @@
-/* eslint-disable no-bitwise */
-
 import PropTypes from "prop-types";
 import React, { PureComponent, Children } from "react";
 import { View, Animated, StyleSheet } from "react-native";
@@ -102,7 +100,6 @@ export default class FadeView extends PureComponent {
 
 const styles = StyleSheet.create({
   container: {
-    // ...StyleSheet.absoluteFillObject,
     flexDirection: "row",
     justifyContent: "center",
     alignItems: "center",

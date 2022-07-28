@@ -26,7 +26,6 @@ export default function SubmitBtn({
       style={{
         width: "100%",
         height: "100%",
-        // backgroundColor: "yellow",
         alignItems: "center",
         justifyContent: "center",
       }}
@@ -41,7 +40,6 @@ export default function SubmitBtn({
             method: "PUT",
             url: `${MAL_API_URL}/manga/${mal.id}/my_list_status`,
             data: qs.stringify({
-              // manga_id: manga_id,
               status: Object.keys(mal_dict).find(
                 (key) => mal_dict[key].text === status
               ),
@@ -52,7 +50,6 @@ export default function SubmitBtn({
           });
           alert("Successfully updated");
           setModalVisible(false);
-          // console.log(JSON.stringify(res, null, 2));
         } catch (error) {
           console.log(error);
           throw new Error(error);
@@ -61,7 +58,6 @@ export default function SubmitBtn({
     >
       <Text
         style={{
-          // color: "white",
           color: primary_color,
           textAlign: "center",
           fontSize: 17,

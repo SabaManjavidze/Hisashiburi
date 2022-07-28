@@ -26,21 +26,14 @@ import { createMaterialTopTabNavigator } from "@react-navigation/material-top-ta
 const { height, width } = Dimensions.get("window");
 
 export default function ProfilePage({ route, navigation }) {
-  // const [profile, setProfile] = useState({});
   const [mangaList, setMangaList] = useState([]);
   const [manga_loaded, setMangaLoaded] = useState(false);
-  // const [indecies, setIndecies] = useState([]);
-  // const [profile_loaded, setProfileLoaded] = useState(true);
   const { token } = useAuth();
   const Tab = createMaterialTopTabNavigator();
   const getUserMangaList = async () => {
     if (token && token !== "null") {
-      // const profile = await getProfile(token);
-      // setProfile(profile);
-      // setProfileLoaded(true);
       const mangaList = await getMangaList(token);
       setMangaList(mangaList.data);
-      // console.log(mangaList.data);
       setMangaLoaded(true);
     } else {
       alert("You are not logged in");
@@ -77,11 +70,9 @@ export default function ProfilePage({ route, navigation }) {
         marginTop: 30,
       }}
     >
-      {/* {manga_loaded ? ( */}
       <Tab.Navigator screenOptions={screenOptions}>
         {header_arr.map((item) => (
           <Tab.Screen
-            // name={item[0].toUpperCase() + item.slice(1)}
             key={item}
             name={mal_dict[item].text}
             children={() =>
@@ -119,21 +110,7 @@ export default function ProfilePage({ route, navigation }) {
           />
         ))}
       </Tab.Navigator>
-      {/* ) } */}
     </SafeAreaView>
   );
 }
-
-// <View
-//   style={{
-//     flex: 1,
-//     flexDirection: "row",
-//     flexWrap: "wrap",
-//     alignItems: "flex-start",
-//   }}
-// >
-//   {mangaList.map((item, index) => {
-//     return renderItem({ item, index });
-//   })}
-// </View>
 const styles = StyleSheet.create({});

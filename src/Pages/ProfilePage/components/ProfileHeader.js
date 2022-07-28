@@ -56,7 +56,6 @@ export default function ProfileHeader({ navigation, route }) {
           <TouchableRipple
             style={{
               backgroundColor: primary_color,
-              // left: 80,
               justifyContent: "center",
               alignItems: "center",
               borderRadius: 10,
@@ -74,16 +73,13 @@ export default function ProfileHeader({ navigation, route }) {
         </View>
       </View>
       <View style={{ flex: 1, alignItems: "center" }}>
-        {/* {console.log(profile_loaded)} */}
         <SkeletonContent
           isLoading={false}
           highlightColor={primary_color}
-          // containerStyle={{ width: 180, height: 180 }}
           duration={1000}
           boneColor={"hsla(257, 27%, 50%, 0.6)"}
           animationDirection="diagonalDownRight"
         >
-          {/* {console.log(NOT_FOUND_IMAGE)} */}
           <Image
             source={{
               uri: profile.picture || NOT_FOUND_IMAGE,
@@ -95,16 +91,3 @@ export default function ProfileHeader({ navigation, route }) {
     </>
   );
 }
-
-// {profile_loaded ? (
-// ) : (
-//   <ActivityIndicator
-//     size={50}
-//     color={secondary_color}
-//     style={{
-//       width: "100%",
-//       height: 300,
-//       resizeMode: "cover",
-//     }}
-//   />
-// )}

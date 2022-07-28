@@ -26,7 +26,6 @@ export default function TopManga({ navigation, route }) {
   const [paging, setPaging] = useState();
   const [loaded, setLoaded] = useState(false);
   const { token } = useAuth();
-  // const fields = `alternative_titles,mean,my_list_status{status,score},authors{first_name,last_name},status,synopsis&limit=15`;
   const [currPage, setCurrPage] = useState(top_manga_url);
   const listRef = useRef(null);
 
@@ -46,19 +45,9 @@ export default function TopManga({ navigation, route }) {
   useEffect(() => {
     getData();
   }, [currPage]);
-  // useEffect(() => {
-  //   const unsub = navigation.addListener("state", () => {
-  //     if (loaded) {
-  //       listRef.current.scrollToOffset({ offset: 0, animated: true });
-  //     }
-  //   });
 
-  //   return unsub;
-  // }, [navigation]);
   const loadMoreItems = () => {
     setCurrPage(paging.next);
-    // console.log("first");
-    // console.log(JSON.stringify(data));
   };
   const initArray = [1, 2, 3, 4];
   return (

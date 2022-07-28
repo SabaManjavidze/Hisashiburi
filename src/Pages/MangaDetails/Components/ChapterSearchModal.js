@@ -99,7 +99,6 @@ export default function ChapterSearchModal({ setModalVisible, modalVisible }) {
                     }}
                   />
                 }
-                // inputStyle={{ backgroundColor: secondary_color }}
                 theme={{
                   colors: {
                     background: secondary_color,
@@ -149,9 +148,6 @@ export default function ChapterSearchModal({ setModalVisible, modalVisible }) {
                   <ChapterItem
                     child={item}
                     navigation={navigation}
-                    // manga_id={manga_id}
-                    // manga_title={manga_title}
-                    // chapters={chapters}
                     index={index}
                   />
                 );

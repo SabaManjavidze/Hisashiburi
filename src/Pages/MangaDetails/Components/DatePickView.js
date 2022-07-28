@@ -12,7 +12,6 @@ export default function DatePickView({
   mode,
   enabled = true,
 }) {
-  //   const [startDate, setStartDate] = useState("Start Date");
   return (
     <View
       style={{
@@ -61,7 +60,6 @@ export default function DatePickView({
         onPress={() => {
           if (enabled) {
             const currDate = new Date().toLocaleDateString();
-            // console.log(currDate, date);
             setDate(currDate === date ? null : new Date().toLocaleDateString());
           }
         }}

@@ -2,7 +2,6 @@ import React, { useState, createContext, useContext } from "react";
 
 export const MangaContext = createContext(null);
 export const useGetManga = () => useContext(MangaContext);
-// navigation, route, chapters, manga_id, title
 export default function useGetMangaHook({ children }) {
   const [navigation, setNav] = useState(null);
   const [route, setRoute] = useState(null);

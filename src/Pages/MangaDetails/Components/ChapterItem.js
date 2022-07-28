@@ -12,10 +12,6 @@ import { useGetManga } from "../../../Hooks/useGetManga";
 const { width, height } = Dimensions.get("window");
 
 export default function ChapterItem({
-  // navigation,
-  // manga_id,
-  // manga_title,
-  // chapters,
   uploadDateLabel = "upload date",
   index,
   borderColor,
@@ -23,7 +19,6 @@ export default function ChapterItem({
 }) {
   const { manga, chapters, navigation } = useGetManga();
   const child = chapters[index];
-  // console.log({ chapter_child: child, index });
   return (
     <View
       style={[
@@ -35,7 +30,6 @@ export default function ChapterItem({
         style={{ width: "100%" }}
         activeOpacity={0.7}
         onPress={() => {
-          // console.log("FROM CHAPTER ITEM ", manga);
           navigation.navigate("ChapterPage", {
             index: index,
             manga: manga,
@@ -81,7 +75,6 @@ const styles = StyleSheet.create({
     borderRadius: 20,
     marginBottom: 15,
     padding: 10,
-    // borderColor: primary_color,
     borderWidth: 1,
     width: width * 0.9,
   },

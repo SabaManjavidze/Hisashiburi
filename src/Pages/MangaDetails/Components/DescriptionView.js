@@ -5,9 +5,6 @@ import { useGetManga } from "../../../Hooks/useGetManga";
 
 export default function DescriptionView({ mal }) {
   const { manga } = useGetManga();
-  // useEffect(() => {
-  //   console.log(manga.title, mal.title);
-  // }, []);
 
   return (
     <ScrollView
@@ -64,14 +61,12 @@ export default function DescriptionView({ mal }) {
               return item.name;
             })
           : "No authors"}
-        {/* {JSON.stringify(mal.authors, null, 2)} */}
       </Text>
       <Text
         style={{
           color: "white",
           textAlign: "center",
           marginTop: 20,
-          // overflow: "scroll",
         }}
       >
         Synopsis : {"\n"}

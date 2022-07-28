@@ -21,8 +21,7 @@ export default function SubButton({
     startAnimation();
     navigation.navigate("ChapterPage", {
       chapters: chapters,
-      manga: item,
-      //   index: chapters.length - 1,
+      manga,
       index: index,
     });
   };
@@ -36,7 +35,6 @@ export default function SubButton({
             {
               translateY: toggleAnimation.interpolate({
                 inputRange: [0, 1],
-                // outputRange: [140, -20],
                 outputRange,
               }),
             },
@@ -52,9 +50,7 @@ export default function SubButton({
         }}
       >
         <Avatar.Icon
-          //   icon="alpha-i"
           icon={icon}
-          //   size={50}
           size={IconSize}
           style={{ backgroundColor: "transparent" }}
         />

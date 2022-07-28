@@ -67,7 +67,6 @@ export default function NavBar({ chapters, setChap, setIndex, idx, style }) {
 const styles = StyleSheet.create({
   dropDown: {
     borderWidth: 0,
-    // borderColor: primary_color,
     maxWidth: windowWidth,
     backgroundColor: main_color,
   },
