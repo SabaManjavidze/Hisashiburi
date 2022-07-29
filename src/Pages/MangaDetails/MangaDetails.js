@@ -54,7 +54,7 @@ export default function MangaDetails({ navigation, route }) {
     error,
     refetch,
   } = useQuery(GET_READ_MANGA, {
-    variables: { user_id: user.user_id, manga_id: manga_id },
+    variables: { user_id: user?.user_id ?? "", manga_id: manga_id },
   });
 
   const fetchMangaDetails = async () => {

@@ -113,4 +113,3 @@ export default function ProfilePage({ route, navigation }) {
     </SafeAreaView>
   );
 }
-const styles = StyleSheet.create({});

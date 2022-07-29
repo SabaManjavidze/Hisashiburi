@@ -3,6 +3,8 @@ import React, { useEffect } from "react";
 import MalCard from "../../../components/MalCard";
 import ProfileHeader from "./ProfileHeader";
 import { main_color } from "../../../components/variables";
+import { useAuth } from "../../../Hooks/useAuth";
+import { getProfile } from "../../../Services/MalServices";
 
 export default function MyMangaList({
   mangaList,
@@ -13,6 +15,7 @@ export default function MyMangaList({
   navigation,
   route,
 }) {
+  const { setUser, token } = useAuth();
   const renderItem = ({ item, index }) => {
     const { node } = item;
     return (
@@ -31,10 +34,16 @@ export default function MyMangaList({
       renderItem={renderItem}
       keyExtractor={(item) => item.node.id}
       numColumns={2}
-      onRefresh={() => {
+      onRefresh={async () => {
         setMangaLoaded(false);
         setMangaList([]);
         getUserMangaList();
+        const user = await getProfile(token);
+        setUser({
+          user_id: user.id,
+          user_name: user.name,
+          picture: user.picture,
+        });
       }}
       refreshing={false}
       ListHeaderComponent={showHeader ? <ProfileHeader /> : null}

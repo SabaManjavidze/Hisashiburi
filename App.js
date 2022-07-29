@@ -19,7 +19,7 @@ const client = new ApolloClient({
 
 export default function App() {
   // useEffect(() => {
-  //   startNetworkLogging();
+  // startNetworkLogging();
   // }, []);
   return (
     <ApolloProvider client={client}>

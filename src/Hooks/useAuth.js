@@ -10,24 +10,18 @@ export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
   const [user_loading, setUserLoading] = useState(true);
 
-  const get_token = async () => {
-    const token = await AsyncStorage.getItem("access_token");
-    console.log(token ? "there is token" : "there is no token");
-    if (token) {
-      setToken(token);
-      const user = await getProfile(token);
-      console.log(user ? `there is user ${user.name}` : "there is no user");
-      const user_data = {
-        user_id: user.id,
-        user_name: user.name,
-        picture: user.picture,
-      };
-      setUser(user_data);
+  const getUser = async () => {
+    const stored_token = await AsyncStorage.getItem("access_token");
+    console.log(stored_token ? "there is token" : "there is no token");
+    if (stored_token) {
+      setToken(stored_token);
+      const user_data = await AsyncStorage.getItem("user");
+      setUser(JSON.parse(user_data));
       setUserLoading(false);
     }
   };
   useEffect(() => {
-    get_token();
+    getUser();
   }, []);
 
   return (

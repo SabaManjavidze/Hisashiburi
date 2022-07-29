@@ -35,12 +35,13 @@ export default function Auth({ navigation, route }) {
   const [loaded] = useFonts({
     Mal: require("../../assets/MalFont.ttf"),
   });
-  const saveDatainAsyncStorage = async (data) => {
+  const saveDatainAsyncStorage = async (data, user_data) => {
     const { access_token, refresh_token, expires_in } = data;
     try {
       await AsyncStorage.setItem("access_token", access_token);
       await AsyncStorage.setItem("refresh_token", refresh_token);
       await AsyncStorage.setItem("expires_in", expires_in.toString());
+      await AsyncStorage.setItem("user", JSON.stringify(user_data));
     } catch (error) {
       alert(JSON.stringify(error, null, 2));
     }
@@ -51,7 +52,6 @@ export default function Auth({ navigation, route }) {
         code: authorization_code,
         state: STATE_VAR,
       });
-      saveDatainAsyncStorage(data);
       const user = await getProfile(data.access_token);
       const { id, name, picture } = user;
       const user_data = {
@@ -59,6 +59,7 @@ export default function Auth({ navigation, route }) {
         user_name: name,
         picture: picture,
       };
+      saveDatainAsyncStorage(data, user_data);
       try {
         await addUser({
           variables: {
@@ -69,7 +70,7 @@ export default function Auth({ navigation, route }) {
         const graphql_error = error.networkError.result.errors[0].message;
         console.log(graphql_error ? `graphql error ${graphql_error}` : error);
       }
-      setToken(access_token);
+      setToken(data.access_token);
       setUser(user_data);
     } catch (error) {
       throw new Error(JSON.stringify(error, null, 2));
