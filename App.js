@@ -9,7 +9,6 @@ import {
   main_color,
   primary_color,
 } from "./src/components/variables";
-// import { startNetworkLogging } from "react-native-network-logger";
 
 const client = new ApolloClient({
   // uri: "http://10.0.2.2:3000/graphql",
@@ -18,9 +17,6 @@ const client = new ApolloClient({
 });
 
 export default function App() {
-  // useEffect(() => {
-  // startNetworkLogging();
-  // }, []);
   return (
     <ApolloProvider client={client}>
       <AuthProvider>

@@ -101,17 +101,6 @@ export default function MainNavigation() {
             }}
             component={HomePageNav}
           />
-          {/* <Tab.Screen
-            name="Network Screen"
-            options={{
-              headerShown: false,
-              tabBarIcon: ({ focused, color }) =>
-                renderItem(focused, "network", color),
-              tabBarLabel: "Network",
-              tabBarStyle: { borderTopColor: "black" },
-            }}
-            children={() => <NetworkLogger theme="dark" />}
-          /> */}
           <Tab.Screen
             name="Top Manga Screen"
             options={{

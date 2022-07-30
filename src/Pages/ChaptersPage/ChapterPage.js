@@ -8,12 +8,14 @@ import {
   main_color,
   main_url,
   post_web_message,
+  primary_color,
   script,
 } from "../../components/variables";
 import { useAuth } from "../../Hooks/useAuth";
 import { useMutation } from "@apollo/client";
 import { CREATE_READ_MANGA } from "../../graphql/Mutations";
 import axios from "axios";
+import { ActivityIndicator } from "react-native-web";
 
 export default function ChapterPage({ navigation, route }) {
   let { manga, chapters, index } = route.params;
@@ -78,6 +80,10 @@ export default function ChapterPage({ navigation, route }) {
       const pageNum = value.split("scroll")[1];
       setPage(pageNum);
     }
+    if (value.includes("end reached") && loaded) {
+      console.log(value);
+      // setLoaded(true);
+    }
   };
   return (
     <View style={{ backgroundColor: main_color, flex: 1 }}>
@@ -94,8 +100,8 @@ export default function ChapterPage({ navigation, route }) {
         idx={idx}
         hide={hide}
       />
-      {loaded && (
-        <View style={{ flex: 1 }}>
+      <View style={{ flex: 1 }}>
+        {loaded ? (
           <WebView
             style={{
               backgroundColor: main_color,
@@ -112,13 +118,12 @@ export default function ChapterPage({ navigation, route }) {
             source={{
               html: `
                   ${html}
+                  <div id="img_cont" style="min-height:100vh" onClick={${post_web_message}("hide")}>
                   ${data
-                    .map(
-                      (item) =>
-                        `<img src="${item.src}" id="${item.src}" onClick={${post_web_message}("hide")} />`
-                    )
+                    .map((item) => `<img src="${item.src}" id="${item.src}" />`)
                     .join("")}
-                    <div style="
+                    </div>
+                    <footer style="
                         display:flex;
                         justify-content:center;
                         align-items:center;
@@ -126,7 +131,8 @@ export default function ChapterPage({ navigation, route }) {
                         width:100%;
                         background-color:black;
                         height:20vh;
-                        color:white">
+                        color:white"
+                        id="footer">
                       <div>
                        <h1>End of the ${chapter.chap_title}</h1>
                       </div>
@@ -141,15 +147,18 @@ export default function ChapterPage({ navigation, route }) {
                           `
                           : ""
                       }
-                    </div>
+                    </footer>
+<script>
                     ${script}
+
+</script>
                   </body>
                   </html>
                   `,
             }}
           />
-        </View>
-      )}
+        ) : null}
+      </View>
       <View
         style={{
           width: "100%",
