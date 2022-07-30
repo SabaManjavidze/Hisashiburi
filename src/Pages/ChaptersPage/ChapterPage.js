@@ -22,10 +22,10 @@ export default function ChapterPage({ navigation, route }) {
 
   const [data, setData] = useState([]);
 
-  const [chapter, setChapter] = useState(chapters[index]);
   const [idx, setIndex] = useState(index);
   const [page, setPage] = useState(1);
   const [hide, setHide] = useState(false);
+  const [fetching, setFetching] = useState(false);
 
   const [loaded, setLoaded] = useState(false);
   const webViewRef = useRef(null);
@@ -37,9 +37,10 @@ export default function ChapterPage({ navigation, route }) {
   const fetchChapter = async () => {
     const url = `${main_url}/manga/${
       manga?.manga_details?.manga_id ?? manga.manga_id
-    }/${chapter.chap_num}`;
+    }/${chapters[idx].chap_num}`;
+
     const response = await axios.get(url);
-    setData(response.data);
+    setData([...data, ...response.data]);
     setLoaded(true);
   };
 
@@ -50,7 +51,7 @@ export default function ChapterPage({ navigation, route }) {
         variables: {
           user_id: user.user_id,
           manga_id: manga?.manga_id ?? manga.manga_details.manga_id,
-          last_read_chapter: chapter.chap_num,
+          last_read_chapter: chapters[idx].chap_num,
           read_date,
           title: manga?.title ?? manga.manga_details.title,
           img_url: manga?.img_url ?? manga.manga_details.img_url,
@@ -61,15 +62,15 @@ export default function ChapterPage({ navigation, route }) {
     }
   };
   useEffect(() => {
-    if (chapter != null) {
+    if (idx != null) {
       fetchChapter();
       setLoaded(true);
-      navigation.setOptions({ title: chapter.chap_title });
+      navigation.setOptions({ title: chapters[idx].chap_title });
       if (token) {
         addToHistory();
       }
     }
-  }, [chapter]);
+  }, [idx]);
 
   const onMessage = (e) => {
     const value = e.nativeEvent.data;
@@ -80,9 +81,9 @@ export default function ChapterPage({ navigation, route }) {
       const pageNum = value.split("scroll")[1];
       setPage(pageNum);
     }
-    if (value.includes("end reached") && loaded) {
-      console.log(value);
-      // setLoaded(true);
+    if (value.includes("end reached") && !fetching) {
+      setIndex(idx - 1);
+      setFetching(true);
     }
   };
   return (
@@ -96,7 +97,6 @@ export default function ChapterPage({ navigation, route }) {
         setIndex={setIndex}
         navigation={navigation}
         route={route}
-        setChap={setChapter}
         idx={idx}
         hide={hide}
       />
@@ -134,7 +134,7 @@ export default function ChapterPage({ navigation, route }) {
                         color:white"
                         id="footer">
                       <div>
-                       <h1>End of the ${chapter.chap_title}</h1>
+                       <h1>End of the ${chapters[idx].chap_title}</h1>
                       </div>
                       ${
                         chapters.length - idx < chapters.length
@@ -181,7 +181,6 @@ export default function ChapterPage({ navigation, route }) {
         </View>
       </View>
       <ChapterNav
-        setChapter={setChapter}
         setIndex={setIndex}
         idx={idx}
         navigation={navigation}

@@ -10,7 +10,7 @@ import {
 
 const windowWidth = Dimensions.get("window").width;
 
-export default function NavBar({ chapters, setChap, setIndex, idx, style }) {
+export default function NavBar({ chapters, setIndex, idx, style }) {
   const [open, setOpen] = useState(false);
   const [value, setValue] = useState(chapters[idx].chap_title);
   const [items, setItems] = useState(chapters);
@@ -18,7 +18,6 @@ export default function NavBar({ chapters, setChap, setIndex, idx, style }) {
   const itemSelected = (item) => {
     setValue(item.chap_title);
     const index = chapters.indexOf(item);
-    setChap(item);
     setIndex(index);
   };
 

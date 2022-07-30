@@ -16,7 +16,6 @@ const windowWidth = Dimensions.get("window").width;
 const windowHeight = Dimensions.get("window").height;
 
 export default function ChapterNav({
-  setChapter,
   setIndex,
   idx,
   chapters,
@@ -51,7 +50,6 @@ export default function ChapterNav({
           onPress={() => {
             const prev = idx + 1;
             if (chapters[prev] != null) {
-              setChapter(chapters[prev]);
               setIndex(prev);
             } else {
               navigation.goBack();
@@ -66,7 +64,6 @@ export default function ChapterNav({
           onPress={() => {
             const next = idx - 1;
             if (chapters[next] != null) {
-              setChapter(chapters[next]);
               setIndex(next);
             } else {
               navigation.goBack();

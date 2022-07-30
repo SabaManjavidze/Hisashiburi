@@ -15,7 +15,6 @@ export default function ReaderAppbar({
   navigation,
   route,
   chapters,
-  setChap,
   idx,
   hide,
   setIndex,
@@ -56,7 +55,6 @@ export default function ReaderAppbar({
             <NavBar
               chapters={chapters}
               setIndex={setIndex}
-              setChap={setChap}
               idx={idx}
               style={{
                 width: "100%",
