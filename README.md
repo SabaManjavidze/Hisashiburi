@@ -10,6 +10,7 @@ React Native App for reading manga. tracking with Myanimelist
 - Authentication with MAL
 - User History (only when user is logged in and has read a chapter)
 - Using MAL API to get Top Manga
+- Updating MAL manga list from the app
 
 # Screenshots
 
